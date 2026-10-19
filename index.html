@@ -166,7 +166,7 @@ li:first-child>.xrow,li:first-child.xrow2{border-top:0}
 #ro-plan,#ro-swap{overflow-y:auto;gap:14px;padding-bottom:4px}
 .ov-top{display:flex;justify-content:space-between;gap:12px;font-weight:700;font-size:15px;opacity:.95}
 .ov-top span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ov-mid{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;padding-block:8px}
+.ov-mid{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;text-align:center;gap:6px;padding-block:8px}
 .ov-fig{width:min(72vw,280px);aspect-ratio:2/1;max-height:22vh}
 .ov-fig svg,.ov-fig img{width:100%;height:100%;display:block}
 .ov-fig img{object-fit:cover;border-radius:14px}
@@ -211,6 +211,7 @@ li:first-child>.xrow,li:first-child.xrow2{border-top:0}
 #splash b{font-size:26px;font-weight:900}
 #splash span{color:var(--ink2);font-size:14px}
 #ro-mas{height:92px}
+@media (max-height:720px){.ov-fig{display:none}#ro-mas{height:64px}.num{font-size:clamp(72px,30vw,170px)}.num.sm{font-size:clamp(56px,20vw,110px)}.num.wt{font-size:clamp(44px,14vw,84px)}.ov-mid{gap:2px}}
 .xl{display:flex;align-items:center;border-top:1px solid var(--line)}
 .xl:first-child{border-top:0}
 .xl .xrow{flex:1;min-width:0;border-top:0}
@@ -657,9 +658,10 @@ function kaStop(){
 function mediaText(){
   if(!Q||Q.done||Q.ph==='plan')return null;
   var it=Q.items[Q.ei],ph=Q.ph,timed=(ph==='prep'||ph==='work'||ph==='rest'),rem=timed?(function(v){return v<60?v+'초':Math.floor(v/60)+':'+('0'+v%60).slice(-2);})(Math.ceil(remainMs()/1000)):'';
-  var t=ph==='rest'?'휴식 '+rem:ph==='prep'?'준비 '+rem:ph==='work'?it.name+' '+rem:it.name+' · 세트 '+(Q.si+1)+'/'+it.sets;
+  var nm=it.name.length>6?it.name.slice(0,6)+'…':it.name;
+  var t=ph==='rest'?'휴식 '+rem:ph==='prep'?'준비 '+rem:ph==='work'?nm+' '+rem:nm+' '+(Q.si+1)+'/'+it.sets+'세트';
   if(Q.paused)t='⏸ '+t;
-  return {t:t,a:'우프로 운동해 · '+(Q.ei+1)+'/'+Q.items.length+'번째 운동',al:Q.title};
+  return {t:t,a:(Q.ei+1)+'/'+Q.items.length+'번째 운동',al:'우프로 운동해'};
 }
 var lastNT='';
 function ntClose(){lastNT='';try{if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)navigator.serviceWorker.getRegistration().then(function(r){if(r&&r.getNotifications)r.getNotifications({tag:'wt-timer'}).then(function(l){l.forEach(function(n){n.close();});});});}catch(e){}}
@@ -669,7 +671,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v11';
+var APPV='v13';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
