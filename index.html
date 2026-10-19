@@ -669,6 +669,29 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
+var APPV='v11';
+function ntState(){
+  var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
+  var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
+  return '앱 버전 '+APPV+' · 알림 '+st+' · '+(sa?'설치형으로 실행 중':'브라우저에서 실행 중');
+}
+function ntTest(){
+  try{
+    if(!('Notification' in window)){toast('이 화면에선 알림을 쓸 수 없어');return;}
+    var go=function(p){
+      render();
+      if(p!=='granted'){toast('알림이 허용되지 않았어. 폰 설정에서 켜줘');return;}
+      toast('5초 뒤에 알림이 갈 거야. 홈 버튼을 눌러봐!');
+      setTimeout(function(){
+        navigator.serviceWorker.getRegistration().then(function(r){
+          if(r)r.showNotification('알림 테스트',{body:'이게 보이면 성공이야 🐣',tag:'wt-test',icon:'icon-192.png'});
+          else new Notification('알림 테스트',{body:'이게 보이면 성공이야 🐣'});
+        }).catch(function(){try{new Notification('알림 테스트');}catch(e){}});
+      },5000);
+    };
+    var r=Notification.requestPermission(go);if(r&&r.then)r.then(go);
+  }catch(e){toast('알림을 못 켰어');}
+}
 function ntAsk(){try{if('Notification' in window&&Notification.permission==='default'&&S.settings.bgmedia)Notification.requestPermission();}catch(e){}}
 function mediaUpdate(){
   var m=mediaText();if(!m)return;
@@ -1101,7 +1124,7 @@ function soundCard(){
   return '<section class="card"><div class="fld"><span>소리 크기 <b id="vol-n">'+v+'%</b></span><input type="range" min="0" max="100" step="5" value="'+v+'" data-in="vol" aria-label="소리 크기"><small>삐삐 소리와 음성 크기야. 폰 미디어 볼륨보다 크게는 안 돼.</small></div>'+
     '<button class="btn ghost sm" data-act="soundtest">소리 테스트</button>'+
     '<h2>무게 증감 단위</h2><div class="seg" role="group" aria-label="무게 증감 단위">'+[1,2.5,5].map(function(n){return '<button data-act="kgs" data-v="'+n+'" aria-pressed="'+(ks===n)+'">'+n+'kg</button>';}).join('')+'</div>'+
-    tg('bgmedia','백그라운드 표시','알림창에 남은 시간을 보여줘. 무음을 재생해서 듣던 음악이 멈출 수 있어')+'</section>';
+    tg('bgmedia','백그라운드 표시','알림창에 남은 시간을 보여줘. 무음을 재생해서 듣던 음악이 멈출 수 있어')+'<p class="hint">'+esc(ntState())+'</p><button class="btn ghost sm" data-act="nttest">알림 허용 · 테스트</button></section>';
 }
 function rSettings(){
   var canShare=typeof navigator.share==='function',hid=S.ex.filter(function(e){return BI[e.id]&&e.hidden;}).length;
@@ -1515,6 +1538,7 @@ var acts={
     bd.kg=bd.fat=bd.muscle=bd.waist='';render();toast('몸 기록을 저장했어');},
   bdel:function(b){if(arm('b'+b.dataset.id)){S.body=S.body.filter(function(x){return x.id!==b.dataset.id;});save();render();toast('삭제했어');}},
   eff:function(b){if(!Q||!Q.entry)return;Q.entry.effort=+b.dataset.v;if(Q.saved)save();Array.prototype.forEach.call(document.querySelectorAll('#d-eff .ob'),function(x){x.setAttribute('aria-pressed',String(x===b));});},
+  nttest:function(){ntTest();},
   soundtest:function(){unlockAudio();beep(880,0.18);setTimeout(function(){beep(880,0.18);},350);setTimeout(function(){beep(1320,0.5);},700);speak('소리 테스트');},
   kgs:function(b){S.settings.kgStep=+b.dataset.v;save();render();},
   shopen:function(b){
