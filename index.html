@@ -638,7 +638,7 @@ function silentWav(){
   return 'data:audio/wav;base64,'+btoa(str);
 }
 function kaStart(){
-  if(!S.settings.bgmedia)return;
+  if(!S.settings.bgmedia)return;ntAsk();
   try{
     if(!KA){KA=new Audio(silentWav());KA.loop=true;}
     KA.volume=1;var p=KA.play();if(p&&p.catch)p.catch(function(){toast('백그라운드 표시를 못 켰어. 설정에서 다시 켜봐');});
@@ -652,16 +652,30 @@ function kaStart(){
 }
 function kaStop(){
   try{if(KA)KA.pause();if('mediaSession' in navigator){navigator.mediaSession.metadata=null;navigator.mediaSession.playbackState='none';}}catch(e){}
-  lastMT='';
+  lastMT='';ntClose();
 }
-function mediaUpdate(){
-  if(!KA||KA.paused||!('mediaSession' in navigator)||!Q||Q.done||Q.ph==='plan')return;
+function mediaText(){
+  if(!Q||Q.done||Q.ph==='plan')return null;
   var it=Q.items[Q.ei],ph=Q.ph,timed=(ph==='prep'||ph==='work'||ph==='rest'),rem=timed?(function(v){return v<60?v+'초':Math.floor(v/60)+':'+('0'+v%60).slice(-2);})(Math.ceil(remainMs()/1000)):'';
   var t=ph==='rest'?'휴식 '+rem:ph==='prep'?'준비 '+rem:ph==='work'?it.name+' '+rem:it.name+' · 세트 '+(Q.si+1)+'/'+it.sets;
   if(Q.paused)t='⏸ '+t;
-  var a='우프로 운동해 · '+(Q.ei+1)+'/'+Q.items.length+'번째 운동';
-  if(t+a===lastMT)return;lastMT=t+a;
-  try{navigator.mediaSession.metadata=new MediaMetadata({title:t,artist:a,album:Q.title,artwork:[{src:'icon-512.png',sizes:'512x512',type:'image/png'}]});navigator.mediaSession.playbackState='playing';}catch(e){}
+  return {t:t,a:'우프로 운동해 · '+(Q.ei+1)+'/'+Q.items.length+'번째 운동',al:Q.title};
+}
+var lastNT='';
+function ntClose(){lastNT='';try{if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration)navigator.serviceWorker.getRegistration().then(function(r){if(r&&r.getNotifications)r.getNotifications({tag:'wt-timer'}).then(function(l){l.forEach(function(n){n.close();});});});}catch(e){}}
+function ntUpdate(m){
+  if(!S.settings.bgmedia||!m||!document.hidden||!('Notification' in window)||Notification.permission!=='granted')return;
+  var k=m.t+'|'+m.a;if(k===lastNT)return;lastNT=k;
+  try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
+}
+document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
+function ntAsk(){try{if('Notification' in window&&Notification.permission==='default'&&S.settings.bgmedia)Notification.requestPermission();}catch(e){}}
+function mediaUpdate(){
+  var m=mediaText();if(!m)return;
+  ntUpdate(m);
+  if(!KA||KA.paused||!('mediaSession' in navigator))return;
+  if(m.t+m.a===lastMT)return;lastMT=m.t+m.a;
+  try{navigator.mediaSession.metadata=new MediaMetadata({title:m.t,artist:m.a,album:m.al,artwork:[{src:'icon-512.png',sizes:'512x512',type:'image/png'}]});navigator.mediaSession.playbackState='playing';}catch(e){}
 }
 var toastT=0;
 function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show');},2300);}
