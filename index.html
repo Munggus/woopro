@@ -276,6 +276,18 @@ input[type=range]{width:100%;accent-color:var(--work);height:36px}
 #view.vl{animation:vin-l .2s ease-out}#view.vr{animation:vin-r .2s ease-out}
 @media (prefers-reduced-motion: reduce){#view.vl,#view.vr{animation:none}}
 
+#heq{position:fixed;inset:0;z-index:85;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center}
+#heq .shd>*{flex-shrink:0}
+#heq .shd{background:var(--bg);width:min(100%,520px);max-height:94vh;overflow-y:auto;border-radius:22px 22px 0 0;padding:16px max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px}
+.hx{border:1px solid var(--line);border-radius:16px;padding:12px;display:grid;gap:4px;background:var(--surface)}
+.hxh{display:flex;justify-content:space-between;align-items:center;gap:8px}.hxh b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hs{display:flex;align-items:center;gap:6px;margin:4px 0}.hs .hn{width:22px;color:var(--ink2);font-weight:700;text-align:center}.hs small{color:var(--ink2);margin-right:4px}
+.hi{width:64px;height:46px;text-align:center;font:700 18px/1 var(--f-num);border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:0}
+.hs .ib{margin-left:auto}
+.hdt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hdt input{width:100%;height:48px;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:0 10px;font-size:16px}
+.hpick{display:grid;grid-template-columns:1fr auto;gap:8px}
+
 #toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:90;max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .2s;text-align:center}
 #toast.show{opacity:1}
 @media (prefers-reduced-motion: reduce){.ov,.sw i,#toast,#splash{transition:none}}
@@ -328,6 +340,7 @@ input[type=range]{width:100%;accent-color:var(--work);height:36px}
     </div>
   </div>
   <div id="bkq" hidden role="dialog" aria-modal="true" aria-label="백업 알림"><div class="shd"><div class="shh"><b>백업할 때 됐어!</b><button class="ib" data-act="bkno" aria-label="닫기">✕</button></div><div id="bk-body"></div></div></div>
+  <div id="heq" hidden role="dialog" aria-modal="true" aria-label="기록 수정"><div class="shd" id="he-body"></div></div>
   <div id="shq" hidden role="dialog" aria-modal="true" aria-label="운동 공유"><div class="shd" id="sh-body"></div></div>
   <div id="exitq" hidden role="dialog" aria-modal="true" aria-label="앱 종료 확인"><div class="dlg"><img id="exit-mas" class="mas" alt="" style="height:132px"><b>정말 종료할까?</b><span>진행 중인 건 저장돼 있어. 다음에 또 같이 하자!</span><div class="two"><button class="btn ghost" data-act="exitno">계속 쓰기</button><button class="btn primary" data-act="exityes">종료</button></div></div></div>
   <input type="file" id="photo-in" accept="image/*" hidden>
@@ -516,7 +529,7 @@ function sanitize(o){
   return {settings:s,ex:ex,routines:rs,history:hs,body:bd};
 }
 var storeOk=(function(){try{localStorage.setItem('wt.t','1');localStorage.removeItem('wt.t');return true;}catch(e){return false;}})();
-function load(){try{var raw=localStorage.getItem(KEY);if(raw)return sanitize(JSON.parse(raw));}catch(e){}return defaults();}
+function load(){var raw=null;try{raw=localStorage.getItem(KEY);if(raw)return sanitize(JSON.parse(raw));}catch(e){if(raw){try{localStorage.setItem(KEY+'.corrupt',raw);}catch(e2){}}}return defaults();}
 var S=load(), warnedFull=false;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){if(storeOk&&!warnedFull){warnedFull=true;toast('저장 공간이 가득 찼어. 사진을 줄이거나 백업 후 정리해줘');}}}
 function applyTheme(){var r=document.documentElement;if(S.settings.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',S.settings.theme);}
@@ -684,7 +697,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v15';
+var APPV='v16';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -990,7 +1003,7 @@ function hrow(h){
   var open=openH===h.id;
   return '<li class="hrow"><button class="hbtn" data-act="hopen" data-id="'+h.id+'" aria-expanded="'+open+'"><span class="hmain"><b>'+esc(h.name)+'</b><span>'+fmtDate(h.ts)+(h.effort?' · 강도 '+EFN[h.effort]:'')+'</span></span><span class="hmeta">'+fmtLong(h.seconds)+'<br><small>운동 '+h.items.length+'개 · '+h.items.reduce(function(a,it){return a+it.sets.length;},0)+'세트</small></span></button>'+
   (open?'<div class="hdet">'+h.items.map(function(it){return '<div class="rec"><span>'+esc(it.name)+((PRM.flags[h.id]&&PRM.flags[h.id][it.id])?' 🏆':'')+'</span><span>'+esc(setsText(it))+'</span></div>';}).join('')+
-    '<div class="hbtns"><a class="mini" href="'+calHref(h)+'" target="_blank" rel="noopener">캘린더에 추가</a><button class="mini" data-act="hdel" data-id="'+h.id+'">'+(armed==='h'+h.id?'정말 삭제?':'삭제')+'</button></div></div>':'')+'</li>';
+    '<div class="hbtns"><a class="mini" href="'+calHref(h)+'" target="_blank" rel="noopener">캘린더에 추가</a><button class="mini" data-act="hedit" data-id="'+h.id+'">수정</button><button class="mini" data-act="hdel" data-id="'+h.id+'">'+(armed==='h'+h.id?'정말 삭제?':'삭제')+'</button></div></div>':'')+'</li>';
 }
 function rHistory(){
   if(!cal){var n0=new Date();cal={y:n0.getFullYear(),m:n0.getMonth(),sel:dayKey(Date.now())};}
@@ -1008,7 +1021,7 @@ function rHistory(){
   var dayCard;
   if(cal.sel){
     var sp=cal.sel.split('-'),dt=new Date(+sp[0],+sp[1]-1,+sp[2]),list=by[cal.sel]||[];
-    dayCard='<section class="card" id="day-card"><h2>'+(dt.getMonth()+1)+'월 '+dt.getDate()+'일 ('+DAYS[dt.getDay()]+')</h2>'+(list.length?'<ul class="list">'+list.map(hrow).join('')+'</ul>':emptyBox('blank','이날은 운동 기록이 없어'))+'</section>';
+    dayCard='<section class="card" id="day-card"><h2>'+(dt.getMonth()+1)+'월 '+dt.getDate()+'일 ('+DAYS[dt.getDay()]+')</h2>'+(list.length?'<ul class="list">'+list.map(hrow).join('')+'</ul>':emptyBox('blank','이날은 운동 기록이 없어'))+'<button class="btn ghost sm" data-act="hadd">+ 이날 운동 직접 추가</button>'+(lastDel?'<button class="btn ghost sm" data-act="hundo">방금 삭제한 기록 되돌리기 ('+esc(lastDel.name)+')</button>':'')+'</section>';
   }else dayCard='<section class="card" id="day-card">'+emptyBox('what','날짜를 눌러서 그날 한 운동을 봐')+'</section>';
   var hd='<header class="top brand">'+mas('thumb',67)+'<div class="bt"><h1>기록</h1></div><button class="mini pri" data-act="shopen" data-ref="sel">공유</button></header><div class="seg" role="group" aria-label="기록 종류"><button data-act="hv" data-v="ex" aria-pressed="'+(hv==='ex')+'">운동 기록</button><button data-act="hv" data-v="body" aria-pressed="'+(hv==='body')+'">몸 기록</button></div>';
   if(hv==='body')return hd+rBody();
@@ -1126,6 +1139,74 @@ function copyPlain(t){
   setTimeout(function(){if(ta.parentNode)ta.parentNode.removeChild(ta);},1500);
 }
 
+/* ---------- 기록 수정 / 직접 추가 ---------- */
+var he=null,lastDel=null;
+function heOpen(id){
+  var h=id?S.history.filter(function(x){return x.id===id;})[0]:null;
+  if(h){he=JSON.parse(JSON.stringify(h));he.isNew=false;}
+  else{
+    var sp=(cal&&cal.sel||dayKey(Date.now())).split('-'),n=new Date(),d=new Date(+sp[0],+sp[1]-1,+sp[2],18,0);
+    if(dayKey(n.getTime())===sp.join('-')||d.getTime()>n.getTime())d=new Date(n.getTime()-3600000);
+    he={id:uid(),ts:d.getTime(),type:'workout',name:'직접 입력',seconds:3600,items:[],effort:0,isNew:true};
+  }
+  var dt=new Date(he.ts);he.d=dayKey(he.ts);he.t=p2(dt.getHours())+':'+p2(dt.getMinutes());
+  hePaint();$('heq').hidden=false;
+}
+function hePaint(){
+  var b=$('he-body'),keep=b.scrollTop;
+  var ex=he.items.map(function(it,i){
+    var rows=it.sets.map(function(s,j){
+      var a='data-i="'+i+'" data-j="'+j+'"';
+      return '<div class="hs"><span class="hn">'+(j+1)+'</span>'+(it.type==='time'
+        ?'<input class="hi" inputmode="numeric" data-he="sm" '+a+' value="'+Math.floor(s.sec/60)+'" aria-label="'+(j+1)+'세트 분"><small>분</small><input class="hi" inputmode="numeric" data-he="ss" '+a+' value="'+(s.sec%60)+'" aria-label="'+(j+1)+'세트 초"><small>초</small>'
+        :'<input class="hi" inputmode="decimal" data-he="kg" '+a+' value="'+(s.kg||0)+'" aria-label="'+(j+1)+'세트 무게"><small>kg</small><input class="hi" inputmode="numeric" data-he="reps" '+a+' value="'+s.reps+'" aria-label="'+(j+1)+'세트 횟수"><small>회</small>')+
+        '<button class="ib" data-act="hesetdel" '+a+' aria-label="'+(j+1)+'세트 지우기">✕</button></div>';}).join('');
+    return '<div class="hx"><div class="hxh"><b>'+esc(it.name)+'</b><button class="mini" data-act="hexdel" data-i="'+i+'">운동 빼기</button></div>'+rows+'<button class="mini" data-act="hesetadd" data-i="'+i+'">+ 세트 추가</button></div>';
+  }).join('');
+  var opts=allEx().map(function(e){return '<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>';}).join('');
+  b.innerHTML='<div class="shh"><b>'+(he.isNew?'기록 직접 추가':'기록 수정')+'</b><button class="ib" data-act="heclose" aria-label="닫기">✕</button></div>'+
+    '<label class="fld"><span>이름</span><input type="text" maxlength="30" data-he="name" value="'+esc(he.name)+'"></label>'+
+    '<div class="hdt"><label class="fld"><span>날짜</span><input type="date" data-he="d" value="'+esc(he.d)+'"></label><label class="fld"><span>시작 시간</span><input type="time" data-he="t" value="'+esc(he.t)+'"></label></div>'+
+    '<label class="fld"><span>운동 시간 (분)</span><input type="text" class="hi" style="width:100%;text-align:left;padding:0 12px" inputmode="numeric" data-he="min" value="'+Math.round(he.seconds/60)+'"></label>'+
+    '<div class="fld"><span>오늘 힘들기</span><div class="seg" role="group" aria-label="강도">'+[['0','선택 안 함'],['1','쉬움'],['2','보통'],['3','힘듦']].map(function(a){return '<button data-act="heeff" data-v="'+a[0]+'" aria-pressed="'+(String(he.effort||0)===a[0])+'">'+a[1]+'</button>';}).join('')+'</div></div>'+
+    ex+
+    '<div class="hpick"><select id="he-add" aria-label="운동 고르기">'+opts+'</select><button class="btn ghost sm" style="width:auto;padding:0 16px" data-act="heexadd">+ 운동 추가</button></div>'+
+    '<div class="two"><button class="btn ghost" data-act="heclose">취소</button><button class="btn primary" data-act="hesave">저장</button></div>';
+  b.scrollTop=keep;
+}
+function heSave(){
+  var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(he.d||''),t=/^(\d{2}):(\d{2})$/.exec(he.t||'');
+  if(!m||!t){toast('날짜와 시간을 확인해줘');return;}
+  var ts=new Date(+m[1],+m[2]-1,+m[3],+t[1],+t[2]).getTime();
+  if(!isFinite(ts)){toast('날짜와 시간을 확인해줘');return;}
+  if(ts>Date.now()+60000){toast('미래 시간은 기록할 수 없어');return;}
+  var items=he.items.map(function(it){
+    var sets=it.sets.filter(function(s){return it.type==='time'?s.sec>0:s.reps>0;});
+    return sets.length?{id:it.id,name:it.name,type:it.type,rest:it.rest||0,sets:sets}:null;
+  }).filter(Boolean);
+  if(!items.length){toast('운동을 하나 이상 넣고 세트를 채워줘');return;}
+  var entry={id:he.id,ts:ts,type:'workout',name:(he.name||'').trim()||'운동',seconds:clamp(Math.round(he.seconds)||0,0,86400),items:items,effort:he.effort||0},done=false;
+  S.history=S.history.map(function(x){if(x.id===entry.id){done=true;return entry;}return x;});
+  if(!done)S.history.unshift(entry);
+  S.history.sort(function(a,b){return b.ts-a.ts;});save();
+  var dd=new Date(ts);cal={y:dd.getFullYear(),m:dd.getMonth(),sel:dayKey(ts)};hv='ex';openH=entry.id;
+  $('heq').hidden=true;he=null;render();toast(done?'기록을 고쳤어':'기록을 추가했어');
+}
+document.addEventListener('input',function(e){
+  var t=e.target,k=t.dataset&&t.dataset.he;if(!k||!he)return;
+  var i=+t.dataset.i,j=+t.dataset.j;
+  if(k==='name')he.name=t.value.slice(0,30);
+  else if(k==='d')he.d=t.value;
+  else if(k==='t')he.t=t.value;
+  else if(k==='min')he.seconds=Math.max(0,Math.round((parseFloat(String(t.value).replace(',','.'))||0)*60));
+  else{
+    var it=he.items[i],st=it&&it.sets[j];if(!st)return;
+    if(k==='kg')st.kg=clamp(parseFloat(String(t.value).replace(',','.'))||0,0,1000);
+    else if(k==='reps')st.reps=clamp(Math.round(+t.value)||0,0,1000);
+    else if(k==='sm'||k==='ss'){var row=t.closest('.hs');st.sec=clamp((parseInt(row.querySelector('[data-he="sm"]').value,10)||0)*60+(parseInt(row.querySelector('[data-he="ss"]').value,10)||0),0,86400);}
+  }
+});
+
 /* ---------- 설정 탭 ---------- */
 function tg(k,label,sub){return '<div class="srow"><div><b>'+label+'</b><small>'+sub+'</small></div><button class="sw" role="switch" aria-checked="'+S.settings[k]+'" aria-label="'+label+'" data-act="tgl" data-k="'+k+'"><i></i></button></div>';}
 function enc(o){var b=new TextEncoder().encode(JSON.stringify(o)),s='';b.forEach(function(x){s+=String.fromCharCode(x);});return 'WT2:'+btoa(s);}
@@ -1145,7 +1226,7 @@ function bkOpen(){
     '<button class="btn primary wide" data-act="bksend">카톡으로 백업 보내기</button><button class="btn ghost wide" data-act="bklater">내일 다시 알려줘</button>';
   $('bkq').hidden=false;
 }
-function bkCheck(){if(!bkDue()||Q||!$('bkq').hidden||!$('shq').hidden||!$('exitq').hidden)return;bkOpen();}
+function bkCheck(){if(!bkDue()||Q||!$('bkq').hidden||!$('shq').hidden||!$('heq').hidden||!$('exitq').hidden)return;bkOpen();}
 function bkSend(){
   var code=makeCodeWith(true,incImg),name='우프로운동해-백업-'+ymd(Date.now())+'.txt',ok=function(){markBk();$('bkq').hidden=true;render();toast('백업을 보냈어! 🐣');},
       bad=function(e){if(!e||e.name!=='AbortError')toast('공유가 안 됐어. 설정의 코드 복사를 써줘');};
@@ -1410,7 +1491,7 @@ function finishWorkout(auto){
   var entry=items.length?{id:uid(),ts:Q.t0,type:'workout',name:Q.title,seconds:Math.max(1,secs),items:items}:null;
   Q.entry=entry;
   var prev={},prs={},prN=0;if(entry)items.forEach(function(i){prev[i.id]=lastRec(i.id,i.type);var kv=itKV(i),pb=kv?prevBest(i.id,kv.kind):null;if(kv&&pb!=null&&kv.v>pb){prs[i.id]=true;prN++;}});
-  if(entry&&auto){S.history.unshift(entry);S.history=S.history.slice(0,1000);save();Q.saved=true;}
+  if(entry){S.history.unshift(entry);S.history.sort(function(a,b){return b.ts-a.ts;});S.history=S.history.slice(0,1000);save();Q.saved=true;if(!auto)setTimeout(function(){toast('여기까지 기록했어');},300);}
   if(auto){speak('완료! 수고했어');beep(1400,0.5);buzz([200,100,200,100,400]);}
   showPane('done');
   $('d-mas').src=MAS[!entry?'cry':(auto?'good':'thumb')];
@@ -1511,7 +1592,22 @@ var acts={
   exreset:function(){if(!arm('exreset'))return;var id=nav.sub.id,img=null,fv=false;S.ex=S.ex.filter(function(e){if(e.id===id){img=e.img;fv=e.fav;return false;}return true;});if(img||fv){var np={id:id};if(img)np.img=img;if(fv)np.fav=true;S.ex.push(np);}save();toast('기본 내용으로 되돌렸어');render();},
   unhide:function(){S.ex.forEach(function(e){if(BI[e.id])delete e.hidden;});S.ex=S.ex.filter(function(e){return !BI[e.id]||Object.keys(e).length>1;});save();toast('숨긴 운동을 되돌렸어');render();},
   hopen:function(b){openH=openH===b.dataset.id?null:b.dataset.id;render();},
-  hdel:function(b){if(arm('h'+b.dataset.id)){S.history=S.history.filter(function(x){return x.id!==b.dataset.id;});openH=null;save();render();toast('삭제했어');}},
+  hdel:function(b){if(arm('h'+b.dataset.id)){lastDel=S.history.filter(function(x){return x.id===b.dataset.id;})[0]||null;S.history=S.history.filter(function(x){return x.id!==b.dataset.id;});openH=null;save();render();toast('삭제했어. 아래에서 되돌릴 수 있어');}},
+  hundo:function(){if(!lastDel)return;S.history.unshift(lastDel);S.history.sort(function(a,b){return b.ts-a.ts;});var d=new Date(lastDel.ts);cal={y:d.getFullYear(),m:d.getMonth(),sel:dayKey(lastDel.ts)};lastDel=null;save();render();toast('되돌렸어');},
+  hedit:function(b){heOpen(b.dataset.id);},
+  hadd:function(){heOpen(null);},
+  heclose:function(){$('heq').hidden=true;he=null;},
+  heeff:function(b){if(!he)return;he.effort=+b.dataset.v;hePaint();},
+  hesetdel:function(b){if(!he)return;var it=he.items[+b.dataset.i];if(it){it.sets.splice(+b.dataset.j,1);hePaint();}},
+  hesetadd:function(b){if(!he)return;var it=he.items[+b.dataset.i];if(!it)return;var l=it.sets[it.sets.length-1];it.sets.push(l?Object.assign({},l):(it.type==='time'?{sec:30}:{kg:0,reps:10}));hePaint();},
+  hexdel:function(b){if(!he)return;he.items.splice(+b.dataset.i,1);hePaint();},
+  heexadd:function(){
+    if(!he)return;var sel=$('he-add'),ex=sel&&getEx(sel.value);if(!ex)return;var p=defPlan(ex),sets=[],n=p.sets||3,q;
+    for(q=0;q<n;q++)sets.push(ex.type==='time'?{sec:p.work||40}:{kg:p.kg||0,reps:p.reps||10});
+    he.items.push({id:ex.id,name:ex.name,type:ex.type==='time'?'time':'weight',rest:p.rest||0,sets:sets});hePaint();
+    var bb=$('he-body');bb.scrollTop=bb.scrollHeight;
+  },
+  hesave:function(){heSave();},
   tgl:function(b){var k=b.dataset.k;S.settings[k]=!S.settings[k];save();render();},
   sstep:function(b){setPrep(S.settings.prep+(+b.dataset.d));},
   theme:function(b){S.settings.theme=b.dataset.v;save();applyTheme();render();},
@@ -1612,6 +1708,7 @@ document.addEventListener('click',function(e){var b=e.target.closest('[data-act]
 
 /* ---------- 뒤로가기: 첫 번째는 메인 화면, 두 번 누르면 종료 ---------- */
 function appBack(){
+  if(!$('heq').hidden){acts.heclose();return true;}
   if(!$('bkq').hidden){acts.bkno();return true;}
   if(!$('shq').hidden){acts.shclose();return true;}
   if(Q&&!$('ro-swap').hidden){acts.swback();return true;}
@@ -1704,7 +1801,7 @@ document.addEventListener('visibilitychange',function(){if(!document.hidden&&!$(
     return false;
   }
   m.addEventListener('touchstart',function(e){
-    ok=false;if(e.touches.length!==1||nav.sub||Q||!$('shq').hidden||!$('bkq').hidden||!$('exitq').hidden||$('splash'))return;
+    ok=false;if(e.touches.length!==1||nav.sub||Q||!$('shq').hidden||!$('heq').hidden||!$('bkq').hidden||!$('exitq').hidden||$('splash'))return;
     var t=e.target;if(t.closest&&t.closest('input,textarea,select,[data-noswipe],.dh'))return;if(xScroll(t))return;
     sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();ok=true;
   },{passive:true});
