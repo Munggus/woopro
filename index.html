@@ -210,6 +210,7 @@ li:first-child>.xrow,li:first-child.xrow2{border-top:0}
 #splash.hide{opacity:0;pointer-events:none}
 #splash b{font-size:26px;font-weight:900}
 #splash span{color:var(--ink2);font-size:14px}
+#splash em{position:absolute;right:16px;bottom:calc(14px + env(safe-area-inset-bottom,0px));font-style:normal;font-size:12px;color:var(--ink2);opacity:.6}
 #ro-mas{height:150px}
 #ro[data-ph=rest] .ov-fig,#ro[data-ph=prep] .ov-fig{display:none}
 @media (max-height:720px){.ov-fig{display:none}#ro-mas{height:104px}.num{font-size:clamp(72px,30vw,170px)}.num.sm{font-size:clamp(56px,20vw,110px)}.num.wt{font-size:clamp(44px,14vw,84px)}.ov-mid{gap:2px}}
@@ -698,7 +699,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v18';
+var APPV='v19';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1794,7 +1795,7 @@ document.addEventListener('keydown',function(e){
   pick=cand[Math.floor(Math.random()*cand.length)]||'hi';
   try{localStorage.setItem('wt.splash',pick);}catch(e){}
   var sp=document.createElement('div');sp.id='splash';
-  sp.innerHTML=mas(pick,182)+'<b>우프로 운동해</b><span>오늘도 힘내자!</span>';
+  sp.innerHTML=mas(pick,182)+'<b>우프로 운동해</b><span>오늘도 힘내자!</span><em>'+APPV+'</em>';
   document.body.appendChild(sp);$('exit-mas').src=MAS.cry;
   var gone=false,rm=function(){if(gone)return;gone=true;sp.classList.add('hide');setTimeout(function(){if(sp.parentNode)sp.parentNode.removeChild(sp);bkCheck();},500);};
   sp.addEventListener('click',rm);setTimeout(rm,2500);
@@ -1832,4 +1833,4 @@ render();
 })();
 </script>
 
-<script>if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){window.addEventListener("load",function(){try{navigator.serviceWorker.register("sw.js").catch(function(){});}catch(e){}});}</script></body></html>
+<script>if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){(function(){var had=!!navigator.serviceWorker.controller,pend=false;function rl(){if(window.__rl)return;window.__rl=1;location.reload();}navigator.serviceWorker.addEventListener("controllerchange",function(){if(!had){had=true;return;}if(document.getElementById("splash")||document.hidden)rl();else pend=true;});document.addEventListener("visibilitychange",function(){if(document.hidden&&pend)rl();});window.addEventListener("load",function(){try{navigator.serviceWorker.register("sw.js").then(function(r){try{r.update();}catch(e){}}).catch(function(){});}catch(e){}});})();}</script></body></html>
