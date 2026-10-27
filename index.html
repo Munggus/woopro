@@ -706,7 +706,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v27';
+var APPV='v28';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1421,6 +1421,7 @@ function paintSwap(){
 }
 function switchTo(ch,isNew){
   var cur=Q.items[Q.ei],curDone=cur.log.length>=cur.sets;
+  if(Q.ph==='work'&&cur.type!=='weight'&&!curDone){cur.part=(cur.part||0)+Math.max(0,Math.round(Q.dur-remainMs()/1000));}
   if(Q.paused){Q.paused=false;Q.pausedMs+=Date.now()-Q.pauseAt;}Q.swapP=false;
   if(!isNew){var ix=Q.items.indexOf(ch);if(ix>=0)Q.items.splice(ix,1);}
   var ci=Q.items.indexOf(cur);Q.items.splice(curDone?ci+1:ci,0,ch);Q.ei=Q.items.indexOf(ch);
@@ -1441,7 +1442,7 @@ function beginSession(){
 function enterExercise(){
   var it=Q.items[Q.ei];Q.si=it.log.length;
   if(it.type==='weight'){Q.ph='set';speak(it.name+', '+(it.kg>0?fmtKg(it.kg)+'킬로 ':'')+it.reps+'회');}
-  else{Q.ph='work';startCount(it.work);speak(it.name);}
+  else{Q.ph='work';startCount(Math.max(5,it.work-(it.part||0)));speak(it.name);}
   beep(1100,0.3);buzz(200);paintRun();
 }
 function afterSet(){
@@ -1462,7 +1463,7 @@ function advance(){
 function phaseDone(){
   var it=Q.items[Q.ei];
   if(Q.ph==='prep')enterExercise();
-  else if(Q.ph==='work'){it.log.push({sec:it.work});afterSet();}
+  else if(Q.ph==='work'){it.log.push({sec:Math.round((it.part||0)+Q.dur)});it.part=0;afterSet();}
   else if(Q.ph==='rest')advance();
 }
 function tick(){
@@ -1502,7 +1503,7 @@ function paintRun(){
   num.classList.toggle('wt',ph==='set');
   if(ph==='prep'){label.textContent='준비';ex.textContent='첫 운동: '+it.name;adj.innerHTML='';}
   else if(ph==='rest'){label.textContent='휴식';ex.textContent=nextTarget();adj.innerHTML='<button class="adjb" data-act="trest">+15초</button>';}
-  else if(ph==='work'){label.textContent=it.name;ex.textContent=lastLine;adj.innerHTML='';}
+  else if(ph==='work'){label.textContent=it.name;ex.textContent=lastLine;var xe=getEx(it.id)||it;adj.innerHTML=xe.cat==='cardio'?'<button class="adjb" data-act="twork">+1분 더</button>':'';}
   else{
     label.textContent=it.name;ex.textContent=lastLine;
     num.innerHTML=(it.kg>0?fmtKg(it.kg)+'<small>kg</small>× ':'')+it.reps+'<small>회</small>';
@@ -1523,7 +1524,8 @@ function paintRun(){
 function finishWorkout(auto){
   clearInterval(Q.iv);kaStop();
   var now=Date.now(),secs=Math.round((now-Q.t0-Q.pausedMs-(Q.paused?now-Q.pauseAt:0))/1000);
-  if(!auto&&(Q.ph==='work')){var it=Q.items[Q.ei],part=Math.round(it.work-remainMs()/1000);if(part>=5)it.log.push({sec:part});}
+  if(!auto&&(Q.ph==='work')){var it=Q.items[Q.ei],part=Math.round((it.part||0)+Q.dur-remainMs()/1000);it.part=0;if(part>=5)it.log.push({sec:part});}
+  Q.items.forEach(function(i){if(i.type!=='weight'&&i.part>=5){i.log.push({sec:Math.round(i.part)});}i.part=0;});
   var items=Q.items.filter(function(i){return i.log.length;}).map(function(i){return {id:i.id,name:i.name,type:i.type,rest:i.rest,sets:i.log.map(function(s){return Object.assign({},s);})};});
   Q.done=true;
   var entry=items.length?{id:uid(),ts:Q.t0,type:'workout',name:Q.title,seconds:Math.max(1,secs),items:items}:null;
@@ -1675,6 +1677,7 @@ var acts={
   pcancel:function(){closeSession();},
   pgo:beginSession,
   qadj:function(b){var it=Q.items[Q.ei],k=b.dataset.k,st=k==='kg'?kgStep():1;it[k]=numClamp(k,it[k]+(+b.dataset.d)*st,it[k]);paintRun();},
+  twork:function(){if(!Q||Q.done||Q.ph!=='work')return;if(Q.paused)Q.remain+=60000;else Q.endAt+=60000;Q.dur+=60;toast('1분 늘렸어!');paintRun();paintTick();},
   trest:function(){if(Q.paused)Q.remain+=15000;else Q.endAt+=15000;Q.dur+=15;paintRun();},
   tmain:function(){
     if(!Q||Q.done)return;
@@ -1687,7 +1690,7 @@ var acts={
     if(!Q||Q.done)return;
     if(Q.ph==='set'){Q.ei++;if(Q.ei>=Q.items.length)finishWorkout(true);else enterExercise();return;}
     if(Q.ph==='prep'){unpause();enterExercise();return;}
-    if(Q.ph==='work'){var it=Q.items[Q.ei];it.log.push({sec:Math.max(1,Math.round(it.work-remainMs()/1000))});unpause();afterSet();return;}
+    if(Q.ph==='work'){var it=Q.items[Q.ei];it.log.push({sec:Math.max(1,Math.round((it.part||0)+Q.dur-remainMs()/1000))});it.part=0;unpause();afterSet();return;}
     if(Q.ph==='rest'){unpause();advance();}
   },
   tstop:function(){if(Q&&!Q.done&&arm('tstop'))finishWorkout(false);},
