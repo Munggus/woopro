@@ -542,6 +542,18 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 @media (prefers-reduced-motion:reduce){.ssr *{animation-duration:.01s!important}}
 @keyframes ssrhint{to{opacity:.85}}
 
+.goffp{position:fixed;inset:0;z-index:9000;background:rgba(20,5,40,.62);display:flex;align-items:center;justify-content:center;padding:24px;animation:gcf .25s ease-out}
+.goffc{background:var(--surface);color:var(--ink);border-radius:22px;padding:20px 22px;width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.4);animation:gcnp .45s cubic-bezier(.2,1.5,.4,1) both}
+.goffc img{height:110px;width:auto;object-fit:contain}
+.goffh{font-weight:900;font-size:19px}
+.goffs{font-size:14px;color:var(--ink2)}
+.gofft{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.gofft div{background:var(--surface2);border-radius:14px;padding:10px 4px}
+.gofft b{display:block;font-size:17px;font-variant-numeric:tabular-nums}
+.gofft small{font-size:11px;color:var(--ink2)}
+.gevob{background:var(--work);color:#fff}
+.gevob:disabled{opacity:.45;cursor:default}
+
 </style>
 
 <div id="app">
@@ -949,7 +961,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v33';
+var APPV='v34';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1881,7 +1893,7 @@ function gSecHtml(g){
 }
 function rGame(){
   var g=gGet();gCatch();if(!(g.hp>0))g.hp=g.farm?gHp(Math.max(1,g.stage-1)):gHp(g.stage);
-  var off=gOff?'<section class="card goff"><b>자리를 비운 동안</b><span>'+(gOff.sec>=3600?Math.floor(gOff.sec/3600)+'시간 ':'')+Math.floor(gOff.sec%3600/60)+'분'+(gOff.cap?' (최대 8시간까지만 쌓여요)':'')+' · 💗 +'+gFmt(gOff.h)+(gOff.s?' · '+gOff.s+'층 올랐어':'')+'</span><button class="mini" data-act="gokoff">확인</button></section>':'';
+  var off='';
   return '<header class="top brand">'+mas('love',67)+'<div class="bt"><h1>사랑이 키우기</h1><small>운동하면 루비랑 성장이 쑥쑥!</small></div></header>'+off+'<div class="gtop">'+gArena(g)+gMenuHtml()+'</div><div class="gsec" id="g-sec">'+gSecHtml(g)+'</div><div style="height:60vh" aria-hidden="true"></div>';
 }
 function gRefresh(){
@@ -1940,15 +1952,25 @@ function gHearts(host,n){
     document.body.appendChild(s);setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},1000);}
 }
 function gBindScroll(){
-  if(gBindScroll.d)return;var m=$('main');if(!m)return;gBindScroll.d=1;var tk=0;
+  if(gBindScroll.d)return;var m=$('main');if(!m)return;gBindScroll.d=1;var tk=0,last=0,dir='',anchor=0;
   m.addEventListener('scroll',function(){
     if(nav.tab!=='game'||tk)return;
-    tk=requestAnimationFrame(function(){tk=0;var y=m.scrollTop,a=$('g-arena');if(!a)return;
-      if(!gSm&&y>90){gSm=true;a.classList.add('sm');}else if(gSm&&y<30){gSm=false;a.classList.remove('sm');}});
+    tk=requestAnimationFrame(function(){tk=0;var y=m.scrollTop,a=$('g-arena');if(!a){last=y;return;}
+      if(y>last){if(dir!=='d'){dir='d';anchor=last;}if(!gSm&&y>150&&y-anchor>40){gSm=true;a.classList.add('sm');}}
+      else if(y<last){if(dir!=='u'){dir='u';anchor=last;}if(gSm&&(anchor-y>=180||y<=8)){gSm=false;a.classList.remove('sm');}}
+      last=y;});
   },{passive:true});
+}
+function gOffShow(){
+  if(!gOff||document.getElementById('goffp'))return;
+  var o=gOff,el=document.createElement('div');el.className='goffp';el.id='goffp';
+  var t=(o.sec>=3600?Math.floor(o.sec/3600)+'시간 ':'')+Math.floor(o.sec%3600/60)+'분';
+  el.innerHTML='<div class="goffc"><img alt="" src="'+(MAS.q_sleep||MAS.r_zzz||'')+'"><div class="goffh">자리를 비운 동안 🌙</div><div class="goffs">'+t+' 동안 사랑이가 열심히 싸웠어!</div><div class="gofft"><div><b>💗 +'+gFmt(o.h)+'</b><small>모은 하트</small></div><div><b>🪜 +'+o.s+'층</b><small>올라간 층</small></div></div>'+(o.cap?'<div class="goffs" style="font-size:12px;opacity:.7">최대 8시간까지만 쌓여요</div>':'')+'<button class="btn sm gevob" data-act="gokoff">확인</button></div>';
+  document.body.appendChild(el);
 }
 function gSync(){
   gBindScroll();
+  if(nav.tab==='game'&&gOff)gOffShow();
   if(nav.tab==='game'){if(!gIv){gIv=setInterval(gTick,250);}}
   else if(gIv){clearInterval(gIv);gIv=0;gSave();}
 }
@@ -2084,7 +2106,7 @@ document.addEventListener('click',function(e){
 },true);
 /* ---- 동작 ---- */
 var G_A={
-  okoff:function(){gOff=null;render();},
+  okoff:function(){gOff=null;var e=document.getElementById('goffp');if(e&&e.parentNode)e.parentNode.removeChild(e);},
   buy:function(b){var g=gGet(),k=b.dataset.k;if(!g.lv.hasOwnProperty(k))return;var c=gCost(k,g.lv[k]);if(g.hearts<c)return;g.hearts-=c;g.lv[k]++;gSave();gRefresh();},
   rbuy:function(b){var g=gGet(),k=b.dataset.k;if(!g.rl.hasOwnProperty(k))return;var c=gRCost(g.rl[k]);if(g.rubies<c)return;g.rubies-=c;g.rl[k]++;gSave();gRefresh();},
   rpbuy:function(b){var g=gGet(),k=b.dataset.k,u=G_RPU.filter(function(x){return x[0]===k;})[0];if(!u)return;var l=g.rp[k];if(u[6]&&l>=u[6])return;var c=gRPCost(u,l);if(g.rpt<c)return;g.rpt-=c;g.rp[k]++;gSave();gRefresh();},
