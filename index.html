@@ -305,14 +305,14 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gres .chip{background:rgba(255,255,255,.82);color:#274b6b;padding:4px 10px;font-size:13px}
 .chip.rb{display:inline-flex;align-items:center;gap:5px}
 .gruby{flex:none;vertical-align:-3px}
-.gtop{position:sticky;top:0;z-index:6;background:var(--bg);display:flex;flex-direction:column;gap:6px;padding:4px 0 6px;margin-top:-4px}
-.garena{--k:1;position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);padding:8px 8px 10px;color:#274b6b;box-shadow:0 6px 14px rgba(0,0,0,.12)}
+.gtop{position:sticky;top:var(--gh,0px);z-index:6;background:var(--bg);display:flex;flex-direction:column;gap:6px;padding:4px 0 6px;margin-top:-4px}
+.garena{--k:1.1;position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);padding:8px 8px 10px;color:#274b6b;box-shadow:0 6px 14px rgba(0,0,0,.12)}
 .garena.sm{--k:.5}
 .garena.dk{color:#fff}
 .gst{font-weight:900;font-size:14px;text-align:center;margin-top:4px}
 .garena.sm .gst{font-size:12px;margin-top:2px}
-.gfield{position:relative;height:calc(250px*var(--k));display:flex;align-items:flex-end;justify-content:space-between;padding:0 6px;transition:height .25s ease}
-.ghw{position:relative;width:calc(180px*var(--k));height:calc(180px*var(--k));flex:none;animation:glunge var(--ad,1s) ease-in-out infinite;transform-origin:bottom center;transition:width .25s,height .25s}
+.gfield{position:relative;height:calc(250px*var(--k));display:flex;align-items:flex-end;justify-content:space-between;padding:0 6px;transition:height .4s cubic-bezier(.4,0,.2,1)}
+.ghw{position:relative;width:calc(180px*var(--k));height:calc(180px*var(--k));flex:none;animation:glunge var(--ad,1s) ease-in-out infinite;transform-origin:bottom center;transition:width .4s cubic-bezier(.4,0,.2,1),height .4s cubic-bezier(.4,0,.2,1)}
 .ghero{position:relative;z-index:3;width:100%;height:100%;object-fit:contain;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .ghw i{position:absolute;pointer-events:none;display:none}
 .ghw .a1{display:block}
@@ -353,7 +353,7 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 @keyframes gflapL{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(-34deg)}}
 @keyframes gflapR{0%,100%{transform:rotate(8deg)}50%{transform:rotate(34deg)}}
 @keyframes gfall{0%{transform:translateY(0) rotate(0);opacity:0}15%{opacity:1}100%{transform:translateY(300px) rotate(240deg);opacity:0}}
-.gmon{position:relative;z-index:3;width:calc(150px*var(--k));height:calc(150px*var(--k));animation:gwob var(--ad,1s) ease-in-out infinite;transform-origin:bottom center;transition:width .25s,height .25s}
+.gmon{position:relative;z-index:3;width:calc(150px*var(--k));height:calc(150px*var(--k));animation:gwob var(--ad,1s) ease-in-out infinite;transform-origin:bottom center;transition:width .4s cubic-bezier(.4,0,.2,1),height .4s cubic-bezier(.4,0,.2,1)}
 .gmon.big{width:calc(196px*var(--k));height:calc(196px*var(--k))}
 .gmon svg{width:100%;height:100%;display:block;overflow:visible}
 .gmon.pop{animation:gpop .45s ease-out,gwob var(--ad,1s) ease-in-out .45s infinite}
@@ -554,15 +554,17 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gevob{background:var(--work);color:#fff}
 .gevob:disabled{opacity:.45;cursor:default}
 
-/* 큰 전투화면(처음 화면) */
-#view.gfull{min-height:100%}
-.gfull .gtop{flex:1;position:static;margin-top:0;display:flex;flex-direction:column;background:transparent;padding:0 0 4px}
-.gfull .garena{flex:1;display:flex;flex-direction:column;--k:1.1}
-.gfull .gfield{flex:1;height:auto;min-height:calc(250px*var(--k))}
-.gfull .gsec{display:none}
+/* 큰 전투화면 / 전환 */
 .gmenu{padding-bottom:2px}
 .gm{min-height:52px}
 .gtop{box-shadow:none}
+
+.ghead{position:sticky;top:0;z-index:7;background:var(--bg);margin-top:-12px;padding-top:12px;padding-bottom:6px}
+.gsec:empty{display:none}
+.gsec.in{animation:gsecin .42s ease .1s both}
+.gsec.out{opacity:0;transition:opacity .12s}
+@keyframes gsecin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.garena{transition:none}
 
 </style>
 
@@ -971,7 +973,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v36';
+var APPV='v37';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1906,7 +1908,7 @@ function rGame(){
   gSm=gSub!=='';
   var g=gGet();gCatch();if(!(g.hp>0))g.hp=g.farm?gHp(Math.max(1,g.stage-1)):gHp(g.stage);
   var off='';
-  return '<header class="top brand">'+mas('love',67)+'<div class="bt"><h1>사랑이 키우기</h1><small>운동하면 루비랑 성장이 쑥쑥!</small></div></header>'+off+'<div class="gtop">'+gArena(g)+gMenuHtml()+'</div><div class="gsec" id="g-sec">'+gSecHtml(g)+'</div>';
+  return '<header class="top brand ghead">'+mas('love',67)+'<div class="bt"><h1>사랑이 키우기</h1><small>운동하면 루비랑 성장이 쑥쑥!</small></div></header>'+off+'<div class="gtop">'+gArena(g)+gMenuHtml()+'</div><div class="gsec" id="g-sec">'+gSecHtml(g)+'</div>';
 }
 function gRefresh(){
   var g=gGet(),s=$('g-sec');
@@ -1944,7 +1946,7 @@ function gTick(){
   var bt=$('g-bt');
   if(bt){var isb=sh%10===0&&!g.farm;if(bt.hidden===isb)bt.hidden=!isb;if(isb){var T=gBossT(g);$('g-bti').style.width=Math.max(0,(T-(g.bt||0))/T*100)+'%';}}
   var nk=g.stage+'|'+g.farm+'|'+g.hold;
-  if(nk!==gNoteKey){gNoteKey=nk;gSetH('g-note',gNoteHtml(g));}
+  if(nk!==gNoteKey){gNoteKey=nk;gSetH('g-note',gNoteHtml(g));if(gSub==='')gFit(false);}
   gSet('g-hearts','💗 '+gFmt(g.hearts));gSet('g-pps','⚔️ '+gFmt(gDps(g))+'/초');
   ['atk','inc','spd'].forEach(function(k){var b=$('gb-'+k);if(b)b.disabled=!(g.hearts>=gCost(k,g.lv[k]));});
   if(!gTick.c)gTick.c=0;if(++gTick.c%4===0){gDmg(g);var rr=$('g-reb');if(rr&&g.evo>=3&&armed!=='greb'){var t='🌸 환생하기 (+'+gRPGain(g)+' 포인트)';if(rr.textContent!==t)rr.textContent=t;}}
@@ -1963,11 +1965,26 @@ function gHearts(host,n){
     s.style.setProperty('--dx',((Math.random()-.5)*60)+'px');s.style.setProperty('--dy',(-40-Math.random()*40)+'px');
     document.body.appendChild(s);setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},1000);}
 }
-function gApplyMode(){
+function gFit(noAnim){
+  var v=$('view'),f=$('g-field'),h=document.querySelector('.ghead'),gt=document.querySelector('.gtop'),m=$('main');
+  if(!v||!f||!h||!gt||!m||nav.tab!=='game')return;
+  v.style.setProperty('--gh',h.offsetHeight+'px');
+  if(gSub!==''){f.style.height='';return;}
+  var cs=getComputedStyle(v),hs=getComputedStyle(h);
+  var top=parseFloat(cs.paddingTop)+parseFloat(hs.marginTop)+h.offsetHeight+(parseFloat(cs.rowGap)||14);
+  var non=gt.offsetHeight-f.offsetHeight,full=m.clientHeight-top-parseFloat(cs.paddingBottom)-non;
+  full=Math.max(260,Math.round(full));
+  if(noAnim)f.style.transition='none';
+  f.style.height=full+'px';
+  if(noAnim){void f.offsetHeight;f.style.transition='';}
+}
+function gApplyMode(anim){
   gSm=gSub!=='';
   var a=$('g-arena');if(a)a.classList.toggle('sm',gSm);
   var v=$('view');if(v)v.classList.toggle('gfull',nav.tab==='game'&&gSub==='');
+  if(nav.tab==='game')requestAnimationFrame(function(){gFit(!anim);});
 }
+window.addEventListener('resize',function(){if(nav.tab==='game')gFit(true);});
 function gOffShow(){
   if(!gOff||document.getElementById('goffp'))return;
   var o=gOff,el=document.createElement('div');el.className='goffp';el.id='goffp';
@@ -1976,7 +1993,7 @@ function gOffShow(){
   document.body.appendChild(el);
 }
 function gSync(){
-  gApplyMode();
+  gApplyMode(false);
   if(nav.tab==='game'&&gOff)gOffShow();
   if(nav.tab==='game'){if(!gIv){gIv=setInterval(gTick,250);}}
   else if(gIv){clearInterval(gIv);gIv=0;gSave();}
@@ -2128,7 +2145,17 @@ var G_A={
   tku:function(b){var L=+b.dataset.k,g=gGet(),t=null;g.tk.forEach(function(x){if(x.lvl===L)t=x;});if(t)gTkShare(t);},
   tkused:function(b){var L=+b.dataset.k,g=gGet(),t=null;g.tk.forEach(function(x){if(x.lvl===L)t=x;});if(!t||t.used)return;if(!arm('tk'+L))return;t.used=Date.now();gSave();render();toast('사용 완료로 표시했어 ✅');},
   boss:function(){var g=gGet();if(g.stage%10!==0||!g.farm)return;g.farm=false;g.hp=gHp(g.stage);g.bt=0;g.dlyLeft=0;g.last=Date.now();gSave();gPaintStage(g,true);gNoteKey='';gSetH('g-note',gNoteHtml(g));gSet('g-st',gStText(g));},
-  menu:function(b){var k=b.dataset.k;gSub=gSub===k?'':k;gApplyMode();gRefresh();var m=$('main');if(m)m.scrollTop=0;},
+  menu:function(b){
+    var k=b.dataset.k,m=$('main'),sec=$('g-sec');
+    if(gSub===k){
+      if(sec)sec.classList.add('out');
+      setTimeout(function(){gSub='';gApplyMode(true);gRefresh();if(sec)sec.classList.remove('out');if(m)m.scrollTo({top:0,behavior:'smooth'});},130);
+      return;
+    }
+    var was=gSub;gSub=k;gApplyMode(true);gRefresh();
+    if(was===''&&sec){sec.classList.remove('in');void sec.offsetWidth;sec.classList.add('in');}
+    if(m)m.scrollTop=0;
+  },
   chip:function(b){
     var T={h:'💗 하트: 몬스터를 잡으면 저절로 모여. 하트 강화랑 환생 점수에 쓰여!',d:'⚔️ 초당 공격력: 내 공격력 × 공격 속도야. 보스를 못 깨면 이 숫자가 모자란 거야.',r:'루비: 운동을 끝내면 받아. 루비 강화에 쓰고, 환생해도 안 사라져!',t:'🎟️ 뽑기권: 운동 한 번 끝낼 때마다 받아. 뽑기 탭에서 사랑이 이모티콘을 뽑아봐!'};
     var e=$('g-chtip');if(!e)return;var k=b.dataset.k;
