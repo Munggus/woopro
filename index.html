@@ -566,6 +566,13 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 @keyframes gsecin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .garena{transition:none}
 
+.gm{position:relative}
+.gdot{position:absolute;top:3px;right:5px;width:10px;height:10px;border-radius:50%;background:#ff3b5c;box-shadow:0 0 0 2px var(--surface)}
+.gm.on .gdot{box-shadow:0 0 0 2px var(--work)}
+.gseg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.gsg{min-height:42px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font-weight:800;font-size:14px}
+.gsg.on{background:var(--work);color:#fff;border-color:var(--work)}
+
 </style>
 
 <div id="app">
@@ -973,7 +980,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v37';
+var APPV='v38';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1569,17 +1576,17 @@ function rSettings(){
   '<section class="card">'+emptyBox('sparkle','우프로 운동해 · 오늘도 수고했어!',72)+'</section>';
 }
 
-var GP={H0:13,PW:2.1,BM:6,KR:0.62,BOSS_T:30,A0:3,AM:1.07,SS:0.024,SCAP:4,DLY:1.2,CA0:10,CAg:1.155,CS0:60,CSg:1.22,CI0:25,CIg:1.10,EM:1.08,RAT:0.03,RHT:0.03,IM:0.17,EH:0.45,EK:1.5};
+var GP={H0:13,PW:2.1,BM:6,KR:0.62,BOSS_T:30,A0:3,AM:1.07,SS:0.024,SCAP:4,DLY:1.2,CA0:10,CAg:1.155,CS0:60,CSg:1.22,CI0:25,CIg:1.10,EM:1.08,RAT:0.12,RHT:0.12,IM:0.17,EH:0.45,EK:1.5};
 var G_EVOM=function(e){return Math.pow(GP.EM,e);};
 function gEH(n){return n>=100?1:(GP.EH+(1-GP.EH)*n/100);}
 function gEK(n){return n>=100?1:(1+GP.EK*(1-n/100));}
 function gDexB(g){var b=0;if(g.dex&&typeof G_RB!=='undefined'){var c=[0,0,0,0];for(var k in g.dex){b+=(G_RB[G_RAR[k]]||0);c[G_RAR[k]]++;}for(var r=0;r<4;r++)if(c[r]>=G_RTOT[r])b+=G_SETB[r];}return b/100;}
 function gHp(n){return GP.H0*Math.pow(n,GP.PW)*(n%10===0?GP.BM:1)*gEH(n);}
 function gBase(n){return GP.H0*Math.pow(n,GP.PW);}
-function gInc(g){return (1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+0.12*(g.rp.inc||0));}
+function gInc(g){return (1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+0.30*(g.rp.inc||0));}
 function gKill(g,n){return gBase(n)*gEK(n)*GP.KR*gInc(g)*(n%10===0?4:1);}
-function gAtk(g){return (1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*(1+GP.RAT*g.rl.atk)*(1+0.12*(g.rp.atk||0));}
-function gSpd(g){return Math.min(GP.SCAP,1+GP.SS*g.lv.spd)*(1+0.03*(g.rp.spd||0));}
+function gAtk(g){return (1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*(1+GP.RAT*g.rl.atk)*(1+0.30*(g.rp.atk||0));}
+function gSpd(g){return Math.min(GP.SCAP,1+GP.SS*g.lv.spd)*(1+0.05*(g.rp.spd||0));}
 function gDps(g){return gAtk(g)*gSpd(g);}
 function gDly(g){return Math.max(0.25,GP.DLY*Math.pow(0.93,g.rp.mv||0));}
 function gBossT(g){return GP.BOSS_T+Math.min(20,(g.rp.bt||0));}
@@ -1587,8 +1594,8 @@ function gSkipP(g){return Math.min(0.4,0.02*(g.rp.sk||0));}
 function gCost(k,l){return k==='atk'?GP.CA0*Math.pow(GP.CAg,l):k==='inc'?GP.CI0*Math.pow(GP.CIg,l):GP.CS0*Math.pow(GP.CSg,l);}
 function gRCost(l){return Math.ceil(5*Math.pow(1.5,l));}
 function gCanBoss(g,n){return gDps(g)*gBossT(g)>=gHp(n);}
-function gRPGain(g){return Math.floor(Math.pow(Math.log10(1+g.hearts/1e6),1.6)*(0.5+0.5*g.evo));}
-var G_RPU=[['atk','⚔️','공격력','+12%',3,1.55,0],['inc','💗','하트 수입','+12%',3,1.55,0],['spd','⚡','공격 속도','+3%',5,1.6,0],['sk','🪜','층 건너뛰기','확률 +2% (최대 40%)',8,1.5,20],['mv','🏃','이동 속도','층 이동 대기시간 −7%',6,1.5,20],['bt','⏱️','보스 제한시간','+1초 (최대 +20초)',6,1.5,20],['tk','🎟️','뽑기권 획득','운동 1회마다 +1장',20,2,10]];
+function gRPGain(g){return Math.floor(Math.pow(Math.log10(1+g.hearts/1e6),1.6)*(0.5+0.5*g.evo)*(1+0.1*((g.rp&&g.rp.rpg)||0)));}
+var G_RPU=[['atk','⚔️','공격력','+30%',3,1.55,0],['inc','💗','하트 수입','+30%',3,1.55,0],['spd','⚡','공격 속도','+5%',5,1.6,0],['sk','🪜','층 건너뛰기','확률 +2% (최대 40%)',8,1.5,20],['mv','🏃','이동 속도','층 이동 대기시간 −7%',6,1.5,20],['bt','⏱️','보스 제한시간','+1초 (최대 +20초)',6,1.5,20],['tk','🎟️','뽑기권 획득','운동 1회마다 +1장',20,2,10],['rub','RUBY','루비 획득량','운동 보상 루비 +10%',5,1.6,0],['rpg','🌸','환생포인트 획득량','환생 때 받는 포인트 +10%',6,1.6,0]];
 function gRPCost(u,l){return Math.ceil(u[4]*Math.pow(u[5],l));}
 function gAdvance(g,dt){
   if(!(dt>0))return {h:0,s:0};
@@ -1717,7 +1724,7 @@ var gSub='',gChT=0,gS=null,gIv=0,gOff=null,gSaveT=0,gSm=false,gTipK=0,gLastShown
 function gNum(v,d){v=+v;return isFinite(v)?v:d;}
 function gDayKey(ts){var d=new Date(ts);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function gMidnight(){var d=new Date();d.setHours(0,0,0,0);return d.getTime();}
-function gDef(){var t=Date.now();return {ver:2,start:gMidnight(),last:t,hearts:0,rubies:0,tickets:1,stage:1,hp:0,kills:0,best:1,farm:false,hold:false,sk:0,dlyLeft:0,bt:0,fails:0,evo:0,credit:0,day:{d:'',t:0,w:0,c:0},lv:{atk:0,inc:0,spd:0},rl:{atk:0,heart:0},rp:{atk:0,inc:0,spd:0,sk:0,mv:0,bt:0,tk:0},rpt:0,rebirths:0,gift1:1,st:{kg:0,sec:0,n:0,rub:0,tsec:0,days:0},done:{},tk:[],tkMade:{},dex:{},pity:0,pity2:0,pulls:0,hero:'',bossLock:false};}
+function gDef(){var t=Date.now();return {ver:2,start:gMidnight(),last:t,hearts:0,rubies:0,tickets:1,stage:1,hp:0,kills:0,best:1,farm:false,hold:false,sk:0,dlyLeft:0,bt:0,fails:0,evo:0,credit:0,day:{d:'',t:0,w:0,c:0},lv:{atk:0,inc:0,spd:0},rl:{atk:0,heart:0},rp:{atk:0,inc:0,spd:0,sk:0,mv:0,bt:0,tk:0,rub:0,rpg:0},rpt:0,rebirths:0,gift1:1,st:{kg:0,sec:0,n:0,rub:0,tsec:0,days:0},done:{},tk:[],tkMade:{},dex:{},pity:0,pity2:0,pulls:0,hero:'',bossLock:false,rbEvo:0,ach:{}};}
 function gLoad(){
   var d=gDef(),o=null;try{o=JSON.parse(localStorage.getItem(GKEY)||'null');}catch(e){}
   if(!o||typeof o!=='object')return d;
@@ -1734,6 +1741,8 @@ function gLoad(){
   if(o.tkMade&&typeof o.tkMade==='object')Object.keys(o.tkMade).forEach(function(k){if(G_TKAMT[k])d.tkMade[k]=1;});
   if(o.dex&&typeof o.dex==='object')Object.keys(o.dex).forEach(function(k){if(G_RAR.hasOwnProperty(k))d.dex[k]=Math.min(9999,Math.max(1,Math.floor(gNum(o.dex[k],1))));});
   d.hero=(typeof o.hero==='string'&&d.dex[o.hero])?o.hero:'';
+  d.rbEvo=Math.min(10,Math.max(0,Math.floor(gNum(o.rbEvo,0))));
+  if(o.ach&&typeof o.ach==='object')Object.keys(o.ach).forEach(function(k){if(/^[a-z]+\d+$/.test(k))d.ach[k]=1;});
   ['pity','pity2','pulls'].forEach(function(k){d[k]=Math.max(0,Math.floor(gNum(o[k],0)));});
   if(Array.isArray(o.tk))d.tk=o.tk.slice(0,12).map(function(t){return t&&G_TKAMT[t.lvl]?{lvl:+t.lvl,amt:G_TKAMT[t.lvl],ts:gNum(t.ts,0),used:gNum(t.used,0),no:String(t.no||'').slice(0,20)}:null;}).filter(Boolean);
   return d;
@@ -1748,8 +1757,8 @@ function gFmt(v){
 }
 function gRuby(sz){sz=sz||16;return '<svg class="gruby" width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12l4 6-10 12L2 9z" fill="#E0245E"/><path d="M6 3l-4 6h20l-4-6z" fill="#FF6B93"/><path d="M2 9l10 12L8 9zM22 9L12 21l4-12z" fill="#B3123F" opacity=".55"/><path d="M8 9l4 12 4-12z" fill="#FF4D7E" opacity=".9"/></svg>';}
 /* ---- 레벨/크레딧 ---- */
-function gNeed(L){return Math.pow(2,L)-1;}
-function gLvOf(c){var L=0;while(L<10&&c>=gNeed(L+1)-1e-9)L++;return L;}
+function gNeed(L,g){g=g||gGet();var r=Math.min(10,g.rbEvo||0),n=Math.pow(2,L)-1;if(!r||L<=0)return n;if(L<=r)return n/2;var nr=Math.pow(2,r)-1;return nr/2+(n-nr);}
+function gLvOf(c,g){var L=0;while(L<10&&c>=gNeed(L+1,g)-1e-9)L++;return L;}
 function gF(x){return x<=1?x:1+0.3*(x-1);}
 function gScore(t,w){return Math.min(2,(gF(t/900)+gF(w/2700))/2);}
 function gBodyKg(){try{var b=S.body.filter(function(x){return x.kg>0;});return b.length?b[0].kg:60;}catch(e){return 60;}}
@@ -1775,12 +1784,12 @@ function gReward(entry,prN){
   g.done[entry.id]=1;
   var kg=0,sec=0,sets=0;
   (entry.items||[]).forEach(function(i){sets+=i.sets.length;if(i.type==='weight')kg+=gEffKg(i);else i.sets.forEach(function(s){sec+=s.sec||0;});});
-  var rub=Math.min(80,Math.max(3,Math.round(2+sets*0.5+kg/1000+sec/300+(prN||0)*3)));
+  var rub=Math.min(80,Math.max(3,Math.round(2+sets*0.5+kg/1000+sec/300+(prN||0)*3)));rub=Math.max(1,Math.round(rub*(1+0.1*(g.rp.rub||0))));
   var tk=1+(g.rp.tk||0);
   var k=gDayKey(entry.ts);if(g.day.d!==k){g.day={d:k,t:0,w:0,c:0};g.st.days++;}
   g.day.t+=sec;g.day.w+=kg;
   var nc=gScore(g.day.t,g.day.w),dc=Math.max(0,nc-g.day.c);g.day.c=nc;g.credit+=dc;
-  var before=g.evo,after=gLvOf(g.credit),newTk=[];
+  var before=g.evo,after=gLvOf(g.credit,g),newTk=[];
   if(after>before){g.evo=after;for(var L=before+1;L<=after;L++){if(G_TKAMT[L]&&!g.tkMade[L]){gMkTk(g,L);newTk.push(L);}}}
   g.st.kg+=kg;g.st.sec+=sec;g.st.n+=1;g.st.rub+=rub;g.st.tsec+=entry.seconds||0;
   g.rubies+=rub;g.tickets+=tk;
@@ -1823,9 +1832,9 @@ function gBar(p,cls){return '<span class="gbar '+(cls||'')+'"><i style="width:'+
 function gEvoCard(g){
   var dv=gDayView(g),L=g.evo,h='<h2>성장 · Lv.'+L+'</h2><div class="gevo"><img class="mas" alt="" src="'+(MAS[G_SPR[L]]||'')+'" style="height:84px"><div class="xt"><b>'+G_NAMES[L]+' 사랑이</b><small>공격력 ×'+G_EVOM(L).toFixed(2)+'</small></div></div>';
   if(L>=10)return h+'<p class="hint">최종 단계야! 환생해서 더 강해질 수 있어 🌟</p>';
-  var a=g.credit-gNeed(L),b=gNeed(L+1)-gNeed(L);
+  var a=g.credit-gNeed(L,g),b=gNeed(L+1,g)-gNeed(L,g);
   h+='<p class="hint">다음 <b>Lv.'+(L+1)+' '+G_NAMES[L+1]+'</b> (×'+G_EVOM(L+1).toFixed(2)+')까지 운동 점수 '+Math.max(0,a).toFixed(1)+' / '+b+'</p>'+gBar(a/b,'pk');
-  return h+'<p class="hint">운동 점수는 하루 최대 2점! 시간 운동 15분 + 2.7톤을 채우면 1점이고, 넘치면 30%만큼 더 쳐줘.</p>';
+  return h+(g.rbEvo?'<p class="hint">🌸 환생 보너스: Lv.'+g.rbEvo+'까지는 필요한 점수가 절반이야!</p>':'')+'<p class="hint">운동 점수는 하루 최대 2점! 시간 운동 15분 + 2.7톤을 채우면 1점이고, 넘치면 30%만큼 더 쳐줘.</p>';
 }
 function gTodayCard(g){
   var dv=gDayView(g);
@@ -1840,15 +1849,15 @@ function gUpRows(g){
   return U.map(function(u){var c=gCost(u[0],g.lv[u[0]]);return '<li class="grow"><span class="gic">'+u[1]+'</span><span class="xt"><b>'+u[2]+' <em>Lv.'+g.lv[u[0]]+'</em></b><small>'+u[3]+'</small><small class="gtot">지금까지 총 +'+gPct(u[4])+'</small></span><button class="mini pri" data-act="gbuy" data-k="'+u[0]+'" id="gb-'+u[0]+'"'+(g.hearts>=c?'':' disabled')+'>💗 '+gFmt(c)+'</button></li>';}).join('');
 }
 function gRUpRows(g){
-  return [['atk','루비 특훈','공격력 +3%',GP.RAT*g.rl.atk*100],['heart','루비 간식','하트 수입 +3%',GP.RHT*g.rl.heart*100]].map(function(u){var c=gRCost(g.rl[u[0]]);return '<li class="grow"><span class="gic">'+gRuby(26)+'</span><span class="xt"><b>'+u[1]+' <em>Lv.'+g.rl[u[0]]+'</em></b><small>'+u[2]+' (환생해도 유지)</small><small class="gtot">지금까지 총 +'+gPct(u[3])+'</small></span><button class="mini rb" data-act="grbuy" data-k="'+u[0]+'" id="gr-'+u[0]+'"'+(g.rubies>=c?'':' disabled')+'>'+gRuby(14)+' '+gFmt(c)+'</button></li>';}).join('');
+  return [['atk','루비 특훈','공격력 +12%',GP.RAT*g.rl.atk*100],['heart','루비 간식','하트 수입 +12%',GP.RHT*g.rl.heart*100]].map(function(u){var c=gRCost(g.rl[u[0]]);return '<li class="grow"><span class="gic">'+gRuby(26)+'</span><span class="xt"><b>'+u[1]+' <em>Lv.'+g.rl[u[0]]+'</em></b><small>'+u[2]+' (환생해도 유지)</small><small class="gtot">지금까지 총 +'+gPct(u[3])+'</small></span><button class="mini rb" data-act="grbuy" data-k="'+u[0]+'" id="gr-'+u[0]+'"'+(g.rubies>=c?'':' disabled')+'>'+gRuby(14)+' '+gFmt(c)+'</button></li>';}).join('');
 }
 function gRPTot(k,l){
-  if(k==='atk'||k==='inc')return '+'+gPct(12*l);if(k==='spd')return '+'+gPct(3*l);if(k==='sk')return '+'+gPct(Math.min(40,2*l));
+  if(k==='atk'||k==='inc')return '+'+gPct(30*l);if(k==='spd')return '+'+gPct(5*l);if(k==='rub'||k==='rpg')return '+'+gPct(10*l);if(k==='sk')return '+'+gPct(Math.min(40,2*l));
   if(k==='mv')return '−'+gPct((1-Math.pow(0.93,l))*100);if(k==='bt')return '+'+l+'초';return '+'+l+'장';
 }
 function gRPRows(g){
   return G_RPU.map(function(u){var l=g.rp[u[0]],mx=u[6],c=gRPCost(u,l),full=mx&&l>=mx;
-    return '<li class="grow"><span class="gic">'+u[1]+'</span><span class="xt"><b>'+u[2]+' <em>Lv.'+l+(mx?'/'+mx:'')+'</em></b><small>'+u[3]+'</small><small class="gtot">지금까지 총 '+gRPTot(u[0],l)+'</small></span><button class="mini rp" data-act="grpbuy" data-k="'+u[0]+'" id="gp-'+u[0]+'"'+(!full&&g.rpt>=c?'':' disabled')+'>'+(full?'MAX':'🌸 '+gFmt(c))+'</button></li>';}).join('');
+    return '<li class="grow"><span class="gic">'+(u[1]==='RUBY'?gRuby(26):u[1])+'</span><span class="xt"><b>'+u[2]+' <em>Lv.'+l+(mx?'/'+mx:'')+'</em></b><small>'+u[3]+'</small><small class="gtot">지금까지 총 '+gRPTot(u[0],l)+'</small></span><button class="mini rp" data-act="grpbuy" data-k="'+u[0]+'" id="gp-'+u[0]+'"'+(!full&&g.rpt>=c?'':' disabled')+'>'+(full?'MAX':'🌸 '+gFmt(c))+'</button></li>';}).join('');
 }
 function gRebirthCard(g){
   var gain=gRPGain(g),ok=g.evo>=3;
@@ -1876,8 +1885,8 @@ function gStatCard(g){
   var c=[[fmtLong(st.tsec),'총 운동 시간'],[fmtLong(st.sec),'시간 운동 합계'],[Math.floor(st.kg).toLocaleString('en-US')+'kg','누적 중량'],[Math.floor(st.n)+'회','운동 횟수'],[Math.floor(st.days)+'일','운동한 날'],[gFmt(st.rub),'받은 루비'],[g.rebirths+'회','환생'],[g.best+'층','최고 기록']];
   return '<h2>통계 <small style="font-weight:400;font-size:12px;color:var(--ink2)">'+(d.getMonth()+1)+'월 '+d.getDate()+'일부터</small></h2><div class="gstat">'+c.map(function(x){return '<div><b>'+x[0]+'</b><small>'+x[1]+'</small></div>';}).join('')+'</div>';
 }
-var G_MENU=[['grow','🌱','성장'],['up','💪','강화'],['reb','🌸','환생'],['tk','🎁','보상권'],['gac','🎟️','뽑기'],['dex','📖','도감'],['stat','📊','통계']];
-function gMenuHtml(){return '<nav class="gmenu">'+G_MENU.map(function(m){return '<button class="gm'+(gSub===m[0]?' on':'')+'" data-act="gmenu" data-k="'+m[0]+'"><span>'+m[1]+'</span>'+m[2]+'</button>';}).join('')+'</nav>';}
+var G_MENU=[['grow','🌱','성장'],['up','💪','강화'],['reb','🌸','환생'],['tk','🎁','보상'],['gac','🎟️','뽑기'],['dex','📖','도감'],['stat','📊','통계']];
+function gMenuHtml(){var rd=gAchReady(gGet())>0;return '<nav class="gmenu">'+G_MENU.map(function(m){return '<button class="gm'+(gSub===m[0]?' on':'')+'" data-act="gmenu" data-k="'+m[0]+'"><span>'+m[1]+'</span>'+m[2]+(m[0]==='tk'&&rd?'<i class="gdot"></i>':'')+'</button>';}).join('')+'</nav>';}
 function gDexBonus(g){return gDexB(g)*100;}
 function gDexN(g){return Object.keys(g.dex).length;}
 function gGacCard(g){
@@ -1894,10 +1903,35 @@ function gDexCard(g){
   return '<h2>📖 도감 '+n+'/'+ks.length+'</h2><p class="hint">모은 이모티콘 보너스: 공격력 +'+gPct(b)+' · 하트 수입 +'+gPct(b)+' (환생해도 유지)<br><small>하나당 N +0.5% · R +1% · SR +2% · SSR +4%</small></p><div class="gsets">'+sets+'</div><p class="hint" style="font-size:12px">모은 이모티콘을 누르면 전투 캐릭터로 장착돼. 한 번 더 누르면 해제!</p>'+
    '<div class="gdx">'+ks.map(function(k){var cn=g.dex[k]||0,r=G_RAR[k];return '<div class="gdxi'+(cn?'':' no')+(g.hero===k?' eq':'')+'" style="--rc:'+G_RC[r]+'" data-act="gdexi" data-k="'+k+'"><img alt="" src="'+MAS[k]+'"><i>'+G_RN[r]+'</i>'+(cn>1?'<b>×'+cn+'</b>':'')+(g.hero===k?'<em class="geq">장착</em>':'')+'<small>'+(cn?G_DX[k][0]:'???')+'</small></div>';}).join('')+'</div>';
 }
+var G_ACH=[
+ {t:'🏔️ 층 돌파',cur:function(g){return g.best;},fmt:function(v){return Math.floor(v)+'층';},p:'f',l:[[100,10],[200,10],[300,10],[400,10],[500,10],[600,10],[700,10],[800,10],[900,10],[1000,10]],nm:function(n){return n+'층 도달';}},
+ {t:'🌸 환생',cur:function(g){return g.rebirths;},fmt:function(v){return Math.floor(v)+'번';},p:'r',l:[[1,10],[3,10],[5,10],[7,10],[9,10],[11,10]],nm:function(n){return n+'번 환생';}},
+ {t:'⏱ 총 운동 시간',cur:function(g){return g.st.tsec/3600;},fmt:function(v){return (Math.floor(v*10)/10)+'시간';},p:'t',l:[[1,2],[5,3],[10,5],[30,10],[50,15],[100,20]],nm:function(n){return '총 '+n+'시간 운동';}},
+ {t:'🏋️ 총 운동 무게',cur:function(g){return g.st.kg/1000;},fmt:function(v){return (Math.floor(v*10)/10)+'톤';},p:'w',l:[[10,2],[50,3],[100,5],[250,10],[500,15],[1000,20]],nm:function(n){return '총 '+n+'톤 들기';}},
+ {t:'🔥 운동 횟수',cur:function(g){return g.st.n;},fmt:function(v){return Math.floor(v)+'회';},p:'c',l:[[1,1],[10,3],[30,5],[50,8],[100,12],[200,20]],nm:function(n){return '운동 '+n+'번 하기';}}
+];
+function gAchReady(g){var n=0;G_ACH.forEach(function(G){var c=G.cur(g);G.l.forEach(function(x){if(c>=x[0]&&!g.ach[G.p+x[0]])n++;});});return n;}
+var gRw='ach';
+function gAchCard(g){
+  var h='';
+  G_ACH.forEach(function(G){
+    var c=G.cur(g),done=0;G.l.forEach(function(x){if(g.ach[G.p+x[0]])done++;});
+    h+='<h2>'+G.t+' <small style="font-weight:400">'+done+'/'+G.l.length+'</small></h2><ul class="list">';
+    G.l.forEach(function(x){var id=G.p+x[0],cl=g.ach[id],ok=c>=x[0];
+      h+='<li class="grow"><span class="gic">'+(cl?'✅':ok?'🏆':'🔒')+'</span><span class="xt"><b>'+G.nm(x[0])+' <em>🎟️ +'+x[1]+'장</em></b>'+(cl?'':gBar(c/x[0],'pk')+'<small>'+G.fmt(Math.min(c,x[0]))+' / '+G.fmt(x[0])+'</small>')+'</span>'+(cl?'<span class="gstmp u">받음</span>':'<button class="mini pri" data-act="gach" data-k="'+id+'"'+(ok?'':' disabled')+'>'+(ok?'받기':'진행 중')+'</button>')+'</li>';});
+    h+='</ul>';
+  });
+  return h;
+}
+function gRwCard(g){
+  var seg='<div class="gseg"><button class="gsg'+(gRw==='ach'?' on':'')+'" data-act="grw" data-k="ach">🏆 업적 보상</button><button class="gsg'+(gRw==='cash'?' on':'')+'" data-act="grw" data-k="cash">💰 현금 보상</button></div>';
+  return seg+(gRw==='ach'?gAchCard(g):gTkCard(g));
+}
+function gDot(){var g=gGet(),b=document.querySelector('.gm[data-k=tk]');if(!b)return;var has=gAchReady(g)>0,d=b.querySelector('.gdot');if(has&&!d){var i=document.createElement('i');i.className='gdot';b.appendChild(i);}else if(!has&&d)d.parentNode.removeChild(d);}
 function gSecHtml(g){
   if(gSub==='up')return '<section class="card"><h2>하트로 강화</h2><ul class="list" id="g-ups">'+gUpRows(g)+'</ul></section><section class="card"><h2>루비로 강화</h2><ul class="list" id="g-rups">'+gRUpRows(g)+'</ul><p class="hint">루비는 운동을 끝내면 받아요. 많이 하고 무겁게 들수록 더 많이!</p></section>';
   if(gSub==='reb')return '<section class="card" id="g-rebirth">'+gRebirthCard(g)+'</section>';
-  if(gSub==='tk')return '<section class="card" id="g-tkc">'+gTkCard(g)+'</section>';
+  if(gSub==='tk')return '<section class="card" id="g-tkc">'+gRwCard(g)+'</section>';
   if(gSub==='gac')return '<section class="card" id="g-gac">'+gGacCard(g)+'</section>';
   if(gSub==='dex')return '<section class="card" id="g-dex">'+gDexCard(g)+'</section>';
   if(gSub==='stat')return '<section class="card" id="g-stat">'+gStatCard(g)+'</section>';
@@ -1918,6 +1952,7 @@ function gRefresh(){
   gSet('g-hearts','💗 '+gFmt(g.hearts));gSet('g-pps','⚔️ '+gFmt(gDps(g))+'/초');gSet('g-tk','🎟️ '+g.tickets);
   gSetH('g-rub',gRuby(15)+' '+gFmt(g.rubies));
   var h=$('g-hero'),src=gHeroSrc(g);if(h&&h.getAttribute('src')!==src)h.setAttribute('src',src);
+  gDot();
 }
 /* ---- 틱 ---- */
 function gSet(id,t){var e=$(id);if(e&&e.textContent!==t)e.textContent=t;}
@@ -1949,7 +1984,7 @@ function gTick(){
   if(nk!==gNoteKey){gNoteKey=nk;gSetH('g-note',gNoteHtml(g));if(gSub==='')gFit(false);}
   gSet('g-hearts','💗 '+gFmt(g.hearts));gSet('g-pps','⚔️ '+gFmt(gDps(g))+'/초');
   ['atk','inc','spd'].forEach(function(k){var b=$('gb-'+k);if(b)b.disabled=!(g.hearts>=gCost(k,g.lv[k]));});
-  if(!gTick.c)gTick.c=0;if(++gTick.c%4===0){gDmg(g);var rr=$('g-reb');if(rr&&g.evo>=3&&armed!=='greb'){var t='🌸 환생하기 (+'+gRPGain(g)+' 포인트)';if(rr.textContent!==t)rr.textContent=t;}}
+  if(!gTick.c)gTick.c=0;if(++gTick.c%4===0){gDmg(g);if(gTick.c%20===0)gDot();var rr=$('g-reb');if(rr&&g.evo>=3&&armed!=='greb'){var t='🌸 환생하기 (+'+gRPGain(g)+' 포인트)';if(rr.textContent!==t)rr.textContent=t;}}
   if(now-gSaveT>5000){gSaveT=now;gSave();}
 }
 function gDmg(g){
@@ -2137,13 +2172,20 @@ var G_A={
   reb:function(){
     var g=gGet();if(g.evo<3)return;
     if(!arm('greb'))return;
-    var gain=gRPGain(g),fromSrc=gHeroSrc(g);g.rpt+=gain;g.rebirths++;
+    var gain=gRPGain(g),fromSrc=gHeroSrc(g);g.rbEvo=Math.max(g.rbEvo||0,g.evo);g.rpt+=gain;g.rebirths++;
     g.evo=0;g.credit=0;g.stage=1;g.hp=0;g.hearts=0;g.lv={atk:0,inc:0,spd:0};g.farm=false;g.hold=false;g.bossLock=false;g.sk=0;g.bt=0;g.dlyLeft=0;g.fails=0;g.last=Date.now();
     gSave();render();gRebirthFx(fromSrc,gain);
   },
   tip:function(b){var L=+b.dataset.k;gTipK=gTipK===L?0:L;gRefresh();},
   tku:function(b){var L=+b.dataset.k,g=gGet(),t=null;g.tk.forEach(function(x){if(x.lvl===L)t=x;});if(t)gTkShare(t);},
   tkused:function(b){var L=+b.dataset.k,g=gGet(),t=null;g.tk.forEach(function(x){if(x.lvl===L)t=x;});if(!t||t.used)return;if(!arm('tk'+L))return;t.used=Date.now();gSave();render();toast('사용 완료로 표시했어 ✅');},
+  rw:function(b){gRw=b.dataset.k==='cash'?'cash':'ach';gRefresh();},
+  ach:function(b){
+    var id=b.dataset.k,g=gGet(),f=null,rw=0;
+    G_ACH.forEach(function(G){var c=G.cur(g);G.l.forEach(function(x){if(G.p+x[0]===id){f=x;rw=x[1];if(!(c>=x[0]))f=null;}});});
+    if(!f||g.ach[id])return;
+    g.ach[id]=1;g.tickets+=rw;gSave();gRefresh();toast('업적 달성! 뽑기권 +'+rw+'장 🎟️');
+  },
   boss:function(){var g=gGet();if(g.stage%10!==0||!g.farm)return;g.farm=false;g.hp=gHp(g.stage);g.bt=0;g.dlyLeft=0;g.last=Date.now();gSave();gPaintStage(g,true);gNoteKey='';gSetH('g-note',gNoteHtml(g));gSet('g-st',gStText(g));},
   menu:function(b){
     var k=b.dataset.k,m=$('main'),sec=$('g-sec');
@@ -2481,6 +2523,8 @@ var acts={
   gchip:function(b){G_A.chip(b);},
   gpull:function(b){G_A.pull(b);},
   gdexi:function(b){G_A.dexi(b);},
+  grw:function(b){G_A.rw(b);},
+  gach:function(b){G_A.ach(b);},
   back:function(){
     armed=null;
     if(nav.tab==='exercises'&&nav.sub&&nav.sub.k==='exform'&&nav.sub.mode==='edit'){exv.edit=false;nav.sub={k:'exd',id:nav.sub.id};render();return;}
