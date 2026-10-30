@@ -631,6 +631,12 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gbleft b{font-size:22px;color:#ff5e62;font-variant-numeric:tabular-nums}
 .gbinfo{width:100%;text-align:left;font-size:12.5px;line-height:1.5;color:var(--ink2);background:var(--bg);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:3px}
 
+.rbx.evo{background:#ffe9c4}
+.rbx.evo .rbx-bg{background:radial-gradient(circle at 50% 46%,#fff 0,rgba(255,240,200,.92) 30%,rgba(255,170,190,.88) 82%)}
+.rbx.evo .rbx-t{text-shadow:0 4px 0 #e0763c,0 0 22px #ffd27a}
+.rbx.evo .rbx-g{text-shadow:0 3px 0 #e0763c;line-height:1.35}
+.rbx.evo .rbx-h{color:#a35a1a}
+
 </style>
 
 <div id="app">
@@ -1038,7 +1044,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v42';
+var APPV='v43';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1634,7 +1640,7 @@ function rSettings(){
   '<section class="card">'+emptyBox('sparkle','우프로 운동해 · 오늘도 수고했어!',72)+'</section>';
 }
 
-var GP={H0:13,PW:2.1,BM:6,KR:0.62,BOSS_T:30,A0:3,AM:1.07,SS:0.024,SCAP:4,DLY:1.2,CA0:10,CAg:1.155,CS0:60,CSg:1.22,CI0:25,CIg:1.10,EM:1.08,RAT:0.12,RHT:0.12,IM:0.17,EH:0.45,EK:1.5};
+var GP={H0:13,PW:2.1,BM:6,KR:0.62,BOSS_T:30,A0:3,AM:1.07,SS:0.024,SCAP:4,DLY:1.2,CA0:10,CAg:1.155,CS0:60,CSg:1.22,CI0:25,CIg:1.10,EM:1.3,RAT:0.12,RHT:0.12,IM:0.17,EH:0.45,EK:1.5};
 var G_EVOM=function(e){return Math.pow(GP.EM,e);};
 function gEH(n){return n>=100?1:(GP.EH+(1-GP.EH)*n/100);}
 function gEK(n){return n>=100?1:(1+GP.EK*(1-n/100));}
@@ -1643,7 +1649,7 @@ function gHp(n){return GP.H0*Math.pow(n,GP.PW)*(n%10===0?GP.BM:1)*gEH(n);}
 function gBase(n){return GP.H0*Math.pow(n,GP.PW);}
 function gStkExp(s){var d=new Date(s.ld);return new Date(d.getFullYear(),d.getMonth(),d.getDate()+2+(s.sh?1:0)).getTime();}
 function gStkB(g){var s=g.stk;if(!s||!s.n||!s.ld)return 0;return Date.now()<gStkExp(s)?0.05*s.n:0;}
-function gInc(g){return (1+gStkB(g))*(1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+0.30*(g.rp.inc||0));}
+function gInc(g){return G_EVOM(g.evo)*(1+gStkB(g))*(1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+0.30*(g.rp.inc||0));}
 function gKill(g,n){return gBase(n)*gEK(n)*GP.KR*gInc(g)*(n%10===0?4:1);}
 function gAtk(g){return (1+gStkB(g))*(1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*(1+GP.RAT*g.rl.atk)*(1+0.30*(g.rp.atk||0));}
 function gSpd(g){return Math.min(GP.SCAP,1+GP.SS*g.lv.spd)*(1+0.05*(g.rp.spd||0));}
@@ -1848,7 +1854,7 @@ function gReward(entry,prN){
   g.done[entry.id]=1;
   var kg=0,sec=0,sets=0;
   (entry.items||[]).forEach(function(i){sets+=i.sets.length;if(i.type==='weight')kg+=gEffKg(i);else i.sets.forEach(function(s){sec+=s.sec||0;});});
-  var rub=Math.min(80,Math.max(3,Math.round(10+sets*0.5+kg/1000+sec/300+(prN||0)*3)));rub=Math.max(1,Math.round(rub*(1+0.1*(g.rp.rub||0))));
+  var rub=Math.min(80,Math.max(3,Math.round(10+sets*0.5+kg/1000+sec/300+(prN||0)*3)));rub=Math.max(1,Math.round(rub*(1+0.1*(g.rp.rub||0))*(1+0.1*g.evo)));
   var tk=1+(g.rp.tk||0);
   var k=gDayKey(entry.ts);if(g.day.d!==k){g.day={d:k,t:0,w:0,c:0};g.st.days++;}
   g.day.t+=sec;g.day.w+=kg;
@@ -1895,10 +1901,10 @@ function gArena(g){
 }
 function gBar(p,cls){return '<span class="gbar '+(cls||'')+'"><i style="width:'+Math.round(Math.max(0,Math.min(1,p))*100)+'%"></i></span>';}
 function gEvoCard(g){
-  var dv=gDayView(g),L=g.evo,h='<h2>성장 · Lv.'+L+'</h2><div class="gevo"><img class="mas" alt="" src="'+(MAS[G_SPR[L]]||'')+'" style="height:84px"><div class="xt"><b>'+G_NAMES[L]+' 사랑이</b><small>공격력 ×'+G_EVOM(L).toFixed(2)+'</small></div></div>';
+  var dv=gDayView(g),L=g.evo,h='<h2>성장 · Lv.'+L+'</h2><div class="gevo"><img class="mas" alt="" src="'+(MAS[G_SPR[L]]||'')+'" style="height:84px"><div class="xt"><b>'+G_NAMES[L]+' 사랑이</b><small>공격·수입 ×'+G_EVOM(L).toFixed(2)+' · 루비 +'+L*10+'%</small></div></div>';
   if(L>=10)return h+'<p class="hint">최종 단계야! 환생해서 더 강해질 수 있어 🌟</p>';
   var a=g.credit-gNeed(L,g),b=gNeed(L+1,g)-gNeed(L,g);
-  h+='<p class="hint">다음 <b>Lv.'+(L+1)+' '+G_NAMES[L+1]+'</b> (×'+G_EVOM(L+1).toFixed(2)+')까지 운동 점수 '+Math.max(0,a).toFixed(1)+' / '+b+'</p>'+gBar(a/b,'pk');
+  h+='<p class="hint">다음 <b>Lv.'+(L+1)+' '+G_NAMES[L+1]+'</b> (공격·수입 ×'+G_EVOM(L+1).toFixed(2)+' · 루비 +'+(L+1)*10+'%)까지 운동 점수 '+Math.max(0,a).toFixed(1)+' / '+b+'</p>'+gBar(a/b,'pk');
   return h+(g.rbEvo?'<p class="hint">🌸 환생 보너스: Lv.'+g.rbEvo+'까지는 필요한 점수가 절반이야!</p>':'')+'<p class="hint">운동 점수는 하루 최대 2점! 시간 운동 15분 + 2.7톤을 채우면 1점이고, 넘치면 30%만큼 더 쳐줘.</p>';
 }
 function gTodayCard(g){
@@ -2209,6 +2215,7 @@ var G_SFX={
  pull:function(){for(var i=0;i<6;i++)gTn(900+i*220,i*.07,.14,'sine',.1);},
  star:function(){[523,659,784,1047,1319].forEach(function(f,i){gTn(f,i*.09,.3,'triangle',.12);});gTn(2093,.5,.6,'sine',.08);},
  ssr:function(){[523,659,784,1047,1319,1568].forEach(function(f,i){gTn(f,i*.12,.5,'triangle',.12);gTn(f/2,i*.12,.5,'sine',.08);});gTn(2093,.8,1.2,'sine',.1);},
+ evo:function(){[523,659,784,1047,1319].forEach(function(f,i){gTn(f,i*.1,.35,'triangle',.12);});gTn(1568,.55,.7,'sine',.09);},
  reb:function(){[392,523,659,784,1047].forEach(function(f,i){gTn(f,i*.14,.45,'sine',.12);});}
 };
 function gSfx(n){
@@ -2253,7 +2260,7 @@ function gCelebrate(r){
   var n=r.rub,t0=Date.now();
   var iv=setInterval(function(){var p=Math.min(1,(Date.now()-t0)/900),c=$('gcn');if(!c){clearInterval(iv);return;}c.textContent='+'+Math.max(1,Math.round(n*p));if(p>=1)clearInterval(iv);},40);
   var life=(r.lvUp||r.newTk.length||(r.stk&&(r.stk.used||r.stk.got)))?5200:3600;
-  function close(){clearInterval(iv);clearTimeout(tm);el.classList.add('out');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},320);}
+  var closed=false;function close(){if(closed)return;closed=true;clearInterval(iv);clearTimeout(tm);el.classList.add('out');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);if(r.lvUp)gEvoFx(r.lvUp[0],r.lvUp[1]);},320);}
   var tm=setTimeout(close,life);
   el.addEventListener('click',close);
 }
@@ -2322,6 +2329,26 @@ function gGachaShow(res){
   el.addEventListener('click',function(){if(!ok)return;el.classList.add('out');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},320);});
 }
 /* ---- 환생 연출 ---- */
+function gEvoFx(from,to){
+  var nm=G_NAMES[to]+' 사랑이',mul=G_EVOM(to).toFixed(2),big=(to===5||to===10);
+  var sub='💪 공격력 ×'+mul+' · 💗 수입 ×'+mul+' · 💎 루비 +'+to*10+'%';
+  var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+  if(reduce){toast('성장! Lv.'+to+' '+nm);return;}
+  if(big){gSsrShow(G_SPR[to],nm,function(){toast(sub);},{t:'Lv.'+to,sub:'성장! 공격·수입 ×'+mul+' · 루비 +'+to*10+'%'});return;}
+  gSfx('evo');
+  var old=document.getElementById('evx');if(old&&old.parentNode)old.parentNode.removeChild(old);
+  var el=document.createElement('div');el.className='rbx evo';el.id='evx';
+  var pt='',P=['⭐','✨','💗','🎀'];
+  for(var i=0;i<24;i++){var a=Math.random()*Math.PI*2,d=24+Math.random()*30,vm=Math.min(window.innerWidth,window.innerHeight)/100;
+    pt+='<span style="--dx:'+Math.round(Math.cos(a)*d*vm*1.1)+'px;--dy:'+Math.round(Math.sin(a)*d*vm*1.1-8*vm)+'px;--rt:'+Math.round(Math.random()*300-150)+'deg;animation-delay:'+(Math.random()*.3)+'s;font-size:'+(16+Math.random()*16)+'px">'+P[i%P.length]+'</span>';}
+  el.innerHTML='<div class="rbx-bg"></div><div class="rbx-rays"></div><div class="rbx-ring"></div><img class="rbx-old" src="'+(MAS[G_SPR[from]]||'')+'" alt=""><div class="rbx-flash"></div><img class="rbx-new" src="'+(MAS[G_SPR[to]]||'')+'" alt=""><div class="rbx-pet">'+pt+'</div><div class="rbx-t">성장!</div><div class="rbx-g">Lv.'+to+' '+nm+'<br><small style="font-size:.55em">'+sub+'</small></div><div class="rbx-h">화면을 눌러서 계속</div>';
+  document.body.appendChild(el);
+  var T=[],fin=false;
+  function end(){if(fin)return;fin=true;T.forEach(clearTimeout);el.classList.add('out');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},420);}
+  T.push(setTimeout(function(){el.classList.add('go');try{navigator.vibrate&&navigator.vibrate([60,40,120]);}catch(e){}},1500));
+  T.push(setTimeout(end,4800));
+  el.addEventListener('click',end);
+}
 function gRebirthFx(fromSrc,gain){
   gSfx('reb');
   var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
