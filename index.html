@@ -554,6 +554,16 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gevob{background:var(--work);color:#fff}
 .gevob:disabled{opacity:.45;cursor:default}
 
+/* 큰 전투화면(처음 화면) */
+#view.gfull{min-height:100%}
+.gfull .gtop{flex:1;position:static;margin-top:0;display:flex;flex-direction:column;background:transparent;padding:0 0 4px}
+.gfull .garena{flex:1;display:flex;flex-direction:column;--k:1.1}
+.gfull .gfield{flex:1;height:auto;min-height:calc(250px*var(--k))}
+.gfull .gsec{display:none}
+.gmenu{padding-bottom:2px}
+.gm{min-height:52px}
+.gtop{box-shadow:none}
+
 </style>
 
 <div id="app">
@@ -961,7 +971,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v35';
+var APPV='v36';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1701,7 +1711,7 @@ var G_DX={hi:['안녕',0],what:['응?',0],hehe:['헤헤',0],sleepy:['졸려',0],
 var G_RAR={},G_RB=[.5,1,2,4],G_RN=['N','R','SR','SSR'],G_RC=['#9aa3ad','#4aa3ff','#b06cff','#ffb300'];
 var G_RTOT=[0,0,0,0],G_SETB=[5,8,12,20];
 Object.keys(G_DX).forEach(function(k){G_RAR[k]=G_DX[k][1];G_RTOT[G_DX[k][1]]++;});
-var gSub='grow',gChT=0,gS=null,gIv=0,gOff=null,gSaveT=0,gSm=false,gTipK=0,gLastShown=0,gNoteKey='',gHfxT=0,gCycle=-1;
+var gSub='',gChT=0,gS=null,gIv=0,gOff=null,gSaveT=0,gSm=false,gTipK=0,gLastShown=0,gNoteKey='',gHfxT=0,gCycle=-1;
 function gNum(v,d){v=+v;return isFinite(v)?v:d;}
 function gDayKey(ts){var d=new Date(ts);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function gMidnight(){var d=new Date();d.setHours(0,0,0,0);return d.getTime();}
@@ -1889,12 +1899,14 @@ function gSecHtml(g){
   if(gSub==='gac')return '<section class="card" id="g-gac">'+gGacCard(g)+'</section>';
   if(gSub==='dex')return '<section class="card" id="g-dex">'+gDexCard(g)+'</section>';
   if(gSub==='stat')return '<section class="card" id="g-stat">'+gStatCard(g)+'</section>';
-  return '<section class="card" id="g-evo">'+gEvoCard(g)+'</section><section class="card" id="g-today">'+gTodayCard(g)+'</section>';
+  if(gSub==='grow')return '<section class="card" id="g-evo">'+gEvoCard(g)+'</section><section class="card" id="g-today">'+gTodayCard(g)+'</section>';
+  return '';
 }
 function rGame(){
+  gSm=gSub!=='';
   var g=gGet();gCatch();if(!(g.hp>0))g.hp=g.farm?gHp(Math.max(1,g.stage-1)):gHp(g.stage);
   var off='';
-  return '<header class="top brand">'+mas('love',67)+'<div class="bt"><h1>사랑이 키우기</h1><small>운동하면 루비랑 성장이 쑥쑥!</small></div></header>'+off+'<div class="gtop">'+gArena(g)+gMenuHtml()+'</div><div class="gsec" id="g-sec">'+gSecHtml(g)+'</div><div style="height:60vh" aria-hidden="true"></div>';
+  return '<header class="top brand">'+mas('love',67)+'<div class="bt"><h1>사랑이 키우기</h1><small>운동하면 루비랑 성장이 쑥쑥!</small></div></header>'+off+'<div class="gtop">'+gArena(g)+gMenuHtml()+'</div><div class="gsec" id="g-sec">'+gSecHtml(g)+'</div>';
 }
 function gRefresh(){
   var g=gGet(),s=$('g-sec');
@@ -1951,16 +1963,10 @@ function gHearts(host,n){
     s.style.setProperty('--dx',((Math.random()-.5)*60)+'px');s.style.setProperty('--dy',(-40-Math.random()*40)+'px');
     document.body.appendChild(s);setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},1000);}
 }
-function gBindScroll(){
-  if(gBindScroll.d)return;var m=$('main');if(!m)return;gBindScroll.d=1;var tk=0,mn=1e9,mx=0;
-  m.addEventListener('scroll',function(){
-    if(nav.tab!=='game'||tk)return;
-    tk=requestAnimationFrame(function(){tk=0;var y=m.scrollTop,a=$('g-arena');if(!a)return;
-      var q=Math.max(120,Math.round(window.innerHeight/4));
-      if(!gSm){mn=Math.min(mn,y);if(y-mn>=q){gSm=true;mx=y;a.classList.add('sm');}}
-      else{mx=Math.max(mx,y);if(mx-y>=q||y<=8){gSm=false;mn=y;a.classList.remove('sm');}}
-    });
-  },{passive:true});
+function gApplyMode(){
+  gSm=gSub!=='';
+  var a=$('g-arena');if(a)a.classList.toggle('sm',gSm);
+  var v=$('view');if(v)v.classList.toggle('gfull',nav.tab==='game'&&gSub==='');
 }
 function gOffShow(){
   if(!gOff||document.getElementById('goffp'))return;
@@ -1970,7 +1976,7 @@ function gOffShow(){
   document.body.appendChild(el);
 }
 function gSync(){
-  gBindScroll();
+  gApplyMode();
   if(nav.tab==='game'&&gOff)gOffShow();
   if(nav.tab==='game'){if(!gIv){gIv=setInterval(gTick,250);}}
   else if(gIv){clearInterval(gIv);gIv=0;gSave();}
@@ -2122,7 +2128,7 @@ var G_A={
   tku:function(b){var L=+b.dataset.k,g=gGet(),t=null;g.tk.forEach(function(x){if(x.lvl===L)t=x;});if(t)gTkShare(t);},
   tkused:function(b){var L=+b.dataset.k,g=gGet(),t=null;g.tk.forEach(function(x){if(x.lvl===L)t=x;});if(!t||t.used)return;if(!arm('tk'+L))return;t.used=Date.now();gSave();render();toast('사용 완료로 표시했어 ✅');},
   boss:function(){var g=gGet();if(g.stage%10!==0||!g.farm)return;g.farm=false;g.hp=gHp(g.stage);g.bt=0;g.dlyLeft=0;g.last=Date.now();gSave();gPaintStage(g,true);gNoteKey='';gSetH('g-note',gNoteHtml(g));gSet('g-st',gStText(g));},
-  menu:function(b){gSub=b.dataset.k;gRefresh();},
+  menu:function(b){var k=b.dataset.k;gSub=gSub===k?'':k;gApplyMode();gRefresh();var m=$('main');if(m)m.scrollTop=0;},
   chip:function(b){
     var T={h:'💗 하트: 몬스터를 잡으면 저절로 모여. 하트 강화랑 환생 점수에 쓰여!',d:'⚔️ 초당 공격력: 내 공격력 × 공격 속도야. 보스를 못 깨면 이 숫자가 모자란 거야.',r:'루비: 운동을 끝내면 받아. 루비 강화에 쓰고, 환생해도 안 사라져!',t:'🎟️ 뽑기권: 운동 한 번 끝낼 때마다 받아. 뽑기 탭에서 사랑이 이모티콘을 뽑아봐!'};
     var e=$('g-chtip');if(!e)return;var k=b.dataset.k;
