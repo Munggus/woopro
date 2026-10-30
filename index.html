@@ -1038,7 +1038,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v41';
+var APPV='v42';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1848,7 +1848,7 @@ function gReward(entry,prN){
   g.done[entry.id]=1;
   var kg=0,sec=0,sets=0;
   (entry.items||[]).forEach(function(i){sets+=i.sets.length;if(i.type==='weight')kg+=gEffKg(i);else i.sets.forEach(function(s){sec+=s.sec||0;});});
-  var rub=Math.min(80,Math.max(3,Math.round(2+sets*0.5+kg/1000+sec/300+(prN||0)*3)));rub=Math.max(1,Math.round(rub*(1+0.1*(g.rp.rub||0))));
+  var rub=Math.min(80,Math.max(3,Math.round(10+sets*0.5+kg/1000+sec/300+(prN||0)*3)));rub=Math.max(1,Math.round(rub*(1+0.1*(g.rp.rub||0))));
   var tk=1+(g.rp.tk||0);
   var k=gDayKey(entry.ts);if(g.day.d!==k){g.day={d:k,t:0,w:0,c:0};g.st.days++;}
   g.day.t+=sec;g.day.w+=kg;
