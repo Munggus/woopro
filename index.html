@@ -961,7 +961,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v34';
+var APPV='v35';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1952,13 +1952,14 @@ function gHearts(host,n){
     document.body.appendChild(s);setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},1000);}
 }
 function gBindScroll(){
-  if(gBindScroll.d)return;var m=$('main');if(!m)return;gBindScroll.d=1;var tk=0,last=0,dir='',anchor=0;
+  if(gBindScroll.d)return;var m=$('main');if(!m)return;gBindScroll.d=1;var tk=0,mn=1e9,mx=0;
   m.addEventListener('scroll',function(){
     if(nav.tab!=='game'||tk)return;
-    tk=requestAnimationFrame(function(){tk=0;var y=m.scrollTop,a=$('g-arena');if(!a){last=y;return;}
-      if(y>last){if(dir!=='d'){dir='d';anchor=last;}if(!gSm&&y>150&&y-anchor>40){gSm=true;a.classList.add('sm');}}
-      else if(y<last){if(dir!=='u'){dir='u';anchor=last;}if(gSm&&(anchor-y>=180||y<=8)){gSm=false;a.classList.remove('sm');}}
-      last=y;});
+    tk=requestAnimationFrame(function(){tk=0;var y=m.scrollTop,a=$('g-arena');if(!a)return;
+      var q=Math.max(120,Math.round(window.innerHeight/4));
+      if(!gSm){mn=Math.min(mn,y);if(y-mn>=q){gSm=true;mx=y;a.classList.add('sm');}}
+      else{mx=Math.max(mx,y);if(mx-y>=q||y<=8){gSm=false;mn=y;a.classList.remove('sm');}}
+    });
   },{passive:true});
 }
 function gOffShow(){
