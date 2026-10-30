@@ -611,6 +611,26 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gsfx-b{position:relative!important;font-weight:800;font-size:17px;color:#5a3200;animation:gcnp .5s ease-out .7s both}
 .gsfx-h{position:relative!important;font-size:13px;color:#7a4a00;opacity:0;animation:ssrhint .5s ease-out 1.6s forwards;margin-top:6px}
 
+/* 버프·말풍선·소리 */
+.gbuff{position:absolute;left:8px;top:6px;z-index:5;display:flex;flex-direction:column;align-items:flex-start;gap:0;border:2px solid #fff;border-radius:14px;padding:3px 10px 4px;background:linear-gradient(135deg,#ff9a3c,#ff5e62);color:#fff;box-shadow:0 3px 10px rgba(255,94,98,.45);font-family:inherit;cursor:pointer;animation:gbfl 2s ease-in-out infinite}
+.gbuff b{font-size:13px;font-weight:900;line-height:1.2;text-shadow:0 1px 0 rgba(0,0,0,.2)}
+.gbuff small{font-size:11px;font-weight:700;opacity:.95;line-height:1.2}
+.gbuff.off{background:rgba(255,255,255,.72);color:#5a6b80;border-color:rgba(255,255,255,.9);box-shadow:none;animation:none}
+.gbuff.off b{text-shadow:none}
+.garena.sm .gbuff{padding:1px 7px 2px;border-radius:10px;top:2px;left:4px}
+.garena.sm .gbuff b{font-size:10px}.garena.sm .gbuff small{display:none}
+@keyframes gbfl{0%,100%{box-shadow:0 3px 10px rgba(255,94,98,.4)}50%{box-shadow:0 3px 16px 3px rgba(255,150,60,.85)}}
+.gsnd{position:absolute;right:6px;top:6px;z-index:5;width:32px;height:32px;border-radius:50%;border:2px solid #fff;background:rgba(255,255,255,.75);font-size:15px;line-height:1;padding:0;cursor:pointer}
+.garena.sm .gsnd{width:22px;height:22px;font-size:11px;top:2px;right:3px}
+.gbub{position:absolute;z-index:6;max-width:62%;background:#fff;color:#4a3a5a;font-weight:800;font-size:14px;line-height:1.35;padding:6px 12px;border-radius:16px;box-shadow:0 3px 10px rgba(0,0,0,.18);pointer-events:none;transform-origin:20% 100%}
+.gbub::after{content:'';position:absolute;left:22px;bottom:-7px;border:7px solid transparent;border-top-color:#fff;border-bottom:0}
+.gbub.in{animation:gbpop .35s cubic-bezier(.2,1.6,.4,1) both}
+.garena.sm .gbub{font-size:11px;padding:3px 8px;border-radius:12px}
+@keyframes gbpop{0%{opacity:0;transform:scale(.3)}100%{opacity:1;transform:scale(1)}}
+.gleft,.gbleft{font-size:13px;color:var(--ink2);line-height:1.5}
+.gbleft b{font-size:22px;color:#ff5e62;font-variant-numeric:tabular-nums}
+.gbinfo{width:100%;text-align:left;font-size:12.5px;line-height:1.5;color:var(--ink2);background:var(--bg);border-radius:12px;padding:8px 10px;display:flex;flex-direction:column;gap:3px}
+
 </style>
 
 <div id="app">
@@ -1018,7 +1038,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v39';
+var APPV='v40';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1621,9 +1641,11 @@ function gEK(n){return n>=100?1:(1+GP.EK*(1-n/100));}
 function gDexB(g){var b=0;if(g.dex&&typeof G_RB!=='undefined'){var c=[0,0,0,0];for(var k in g.dex){b+=(G_RB[G_RAR[k]]||0)*(G_SM[(g.star&&g.star[k])||1]||1);c[G_RAR[k]]++;}for(var r=0;r<4;r++)if(c[r]>=G_RTOT[r])b+=G_SETB[r];}return b/100;}
 function gHp(n){return GP.H0*Math.pow(n,GP.PW)*(n%10===0?GP.BM:1)*gEH(n);}
 function gBase(n){return GP.H0*Math.pow(n,GP.PW);}
-function gInc(g){return (1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+0.30*(g.rp.inc||0));}
+function gStkExp(s){var d=new Date(s.ld);return new Date(d.getFullYear(),d.getMonth(),d.getDate()+2+(s.sh?1:0)).getTime();}
+function gStkB(g){var s=g.stk;if(!s||!s.n||!s.ld)return 0;return Date.now()<gStkExp(s)?0.05*s.n:0;}
+function gInc(g){return (1+gStkB(g))*(1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+0.30*(g.rp.inc||0));}
 function gKill(g,n){return gBase(n)*gEK(n)*GP.KR*gInc(g)*(n%10===0?4:1);}
-function gAtk(g){return (1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*(1+GP.RAT*g.rl.atk)*(1+0.30*(g.rp.atk||0));}
+function gAtk(g){return (1+gStkB(g))*(1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*(1+GP.RAT*g.rl.atk)*(1+0.30*(g.rp.atk||0));}
 function gSpd(g){return Math.min(GP.SCAP,1+GP.SS*g.lv.spd)*(1+0.05*(g.rp.spd||0));}
 function gDps(g){return gAtk(g)*gSpd(g);}
 function gDly(g){return Math.max(0.25,GP.DLY*Math.pow(0.93,g.rp.mv||0));}
@@ -1762,7 +1784,7 @@ var gSub='',gChT=0,gS=null,gIv=0,gOff=null,gSaveT=0,gSm=false,gTipK=0,gLastShown
 function gNum(v,d){v=+v;return isFinite(v)?v:d;}
 function gDayKey(ts){var d=new Date(ts);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function gMidnight(){var d=new Date();d.setHours(0,0,0,0);return d.getTime();}
-function gDef(){var t=Date.now();return {ver:2,start:gMidnight(),last:t,hearts:0,rubies:0,tickets:1,stage:1,hp:0,kills:0,best:1,farm:false,hold:false,sk:0,dlyLeft:0,bt:0,fails:0,evo:0,credit:0,day:{d:'',t:0,w:0,c:0},lv:{atk:0,inc:0,spd:0},rl:{atk:0,heart:0},rp:{atk:0,inc:0,spd:0,sk:0,mv:0,bt:0,tk:0,rub:0,rpg:0},rpt:0,rebirths:0,gift1:1,st:{kg:0,sec:0,n:0,rub:0,tsec:0,days:0},done:{},tk:[],tkMade:{},dex:{},star:{},dup:{},pity:0,pity2:0,pulls:0,hero:'',bossLock:false,rbEvo:0,ach:{}};}
+function gDef(){var t=Date.now();return {ver:2,start:gMidnight(),last:t,hearts:0,rubies:0,tickets:1,stage:1,hp:0,kills:0,best:1,farm:false,hold:false,sk:0,dlyLeft:0,bt:0,fails:0,evo:0,credit:0,day:{d:'',t:0,w:0,c:0},lv:{atk:0,inc:0,spd:0},rl:{atk:0,heart:0},rp:{atk:0,inc:0,spd:0,sk:0,mv:0,bt:0,tk:0,rub:0,rpg:0},rpt:0,rebirths:0,gift1:1,st:{kg:0,sec:0,n:0,rub:0,tsec:0,days:0},done:{},tk:[],tkMade:{},dex:{},star:{},dup:{},stk:{n:0,ld:0,sh:0},snd:1,pity:0,pity2:0,pulls:0,hero:'',bossLock:false,rbEvo:0,ach:{}};}
 function gLoad(){
   var d=gDef(),o=null;try{o=JSON.parse(localStorage.getItem(GKEY)||'null');}catch(e){}
   if(!o||typeof o!=='object')return d;
@@ -1780,6 +1802,8 @@ function gLoad(){
   if(o.dex&&typeof o.dex==='object')Object.keys(o.dex).forEach(function(k){if(G_RAR.hasOwnProperty(k))d.dex[k]=Math.min(9999,Math.max(1,Math.floor(gNum(o.dex[k],1))));});
   d.star={};d.dup={};
   Object.keys(d.dex).forEach(function(k){d.star[k]=Math.min(5,Math.max(1,Math.floor(gNum(o.star&&o.star[k],1))));d.dup[k]=(o.dup&&typeof o.dup==='object')?Math.min(99999,Math.max(0,Math.floor(gNum(o.dup[k],0)))):Math.max(0,d.dex[k]-1);});
+  if(o.stk&&typeof o.stk==='object'){d.stk={n:Math.min(99999,Math.max(0,Math.floor(gNum(o.stk.n,0)))),ld:Math.max(0,gNum(o.stk.ld,0)),sh:gNum(o.stk.sh,0)>0?1:0};}
+  d.snd=o.snd===0?0:1;
   d.hero=(typeof o.hero==='string'&&d.dex[o.hero])?o.hero:'';
   d.rbEvo=Math.min(10,Math.max(0,Math.floor(gNum(o.rbEvo,0))));
   if(o.ach&&typeof o.ach==='object')Object.keys(o.ach).forEach(function(k){if(/^[a-z]+\d+$/.test(k))d.ach[k]=1;});
@@ -1828,13 +1852,14 @@ function gReward(entry,prN){
   var tk=1+(g.rp.tk||0);
   var k=gDayKey(entry.ts);if(g.day.d!==k){g.day={d:k,t:0,w:0,c:0};g.st.days++;}
   g.day.t+=sec;g.day.w+=kg;
+  var stk=gStreak(g,entry.ts);
   var nc=gScore(g.day.t,g.day.w),dc=Math.max(0,nc-g.day.c);g.day.c=nc;g.credit+=dc;
   var before=g.evo,after=gLvOf(g.credit,g),newTk=[];
   if(after>before){g.evo=after;for(var L=before+1;L<=after;L++){if(G_TKAMT[L]&&!g.tkMade[L]){gMkTk(g,L);newTk.push(L);}}}
   g.st.kg+=kg;g.st.sec+=sec;g.st.n+=1;g.st.rub+=rub;g.st.tsec+=entry.seconds||0;
   g.rubies+=rub;g.tickets+=tk;
   gSave();
-  return {rub:rub,tk:tk,lvUp:after>before?[before,after]:null,newTk:newTk,score:nc};
+  return {stk:stk,rub:rub,tk:tk,lvUp:after>before?[before,after]:null,newTk:newTk,score:nc};
 }
 /* ---- 화면 조각 ---- */
 function gShown(g){return g.farm?Math.max(1,g.stage-1):g.stage;}
@@ -1863,7 +1888,7 @@ function gArena(g){
   gLastShown=sh;gNoteKey='';
   return '<div class="garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'')+'" id="g-arena" style="'+gArenaStyle(sh)+'">'+gChips(g)+
    '<div class="glv" id="g-lv">Lv.'+g.evo+' '+G_NAMES[g.evo]+' 사랑이</div><div class="gst" id="g-st">'+gStText(g)+'</div>'+
-   '<div class="gfield" id="g-field">'+gRainHtml(g.evo>=10)+gHeroHtml(g)+'<div class="gmon'+(boss?' big':'')+'" id="g-mon">'+gMonSvg(sh)+'</div></div>'+
+   '<div class="gfield" id="g-field">'+gRainHtml(g.evo>=10)+'<div id="g-buffw">'+gBuffHtml(g)+'</div><button class="gsnd" id="g-snd" data-act="gsnd" aria-label="효과음">'+(g.snd?'🔊':'🔇')+'</button><div class="gbub" id="g-bub" hidden></div>'+gHeroHtml(g)+'<div class="gmon'+(boss?' big':'')+'" id="g-mon">'+gMonSvg(sh)+'</div></div>'+
    '<div class="gbt" id="g-bt"'+(boss?'':' hidden')+'><i id="g-bti" style="width:100%"></i></div>'+
    '<div class="ghp"><i id="g-hp" style="width:'+Math.max(0,Math.min(100,gFrac(g,Date.now())*100))+'%"></i></div>'+
    '<div class="gmn" id="g-mn">'+gMonName(sh)+'</div><div class="gnote" id="g-note">'+gNoteHtml(g)+'</div></div>';
@@ -1964,6 +1989,7 @@ function gDexModal(k){
 }
 function gDexModalClose(){var e=document.getElementById('gdm');if(e&&e.parentNode)e.parentNode.removeChild(e);}
 function gStarFx(k,n,done){
+  gSfx('star');
   var g=gGet(),old=document.getElementById('gsfx');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var el=document.createElement('div');el.className='gsfx';el.id='gsfx';
   var sp='';for(var i=0;i<16;i++){var a=i/16*Math.PI*2,d=90+Math.random()*80;sp+='<span style="--dx:'+Math.round(Math.cos(a)*d)+'px;--dy:'+Math.round(Math.sin(a)*d)+'px;animation-delay:'+(.35+Math.random()*.15)+'s">'+(i%2?'✨':'⭐')+'</span>';}
@@ -2043,7 +2069,8 @@ function gTick(){
   var pf=g.farm,pst=g.stage,pfail=g.fails,psh=gShown(g);
   gAdvance(g,dt);g.last=now;
   var sh=gShown(g),hp=$('g-hp');if(!hp)return;
-  if(g.fails!==pfail)toast('보스한테 졌어… 아래 층에서 힘을 모을게! 💪');
+  if(g.fails!==pfail){toast('보스한테 졌어… 아래 층에서 힘을 모을게! 💪');gSfx('fail');gBubble('farm');}
+  else if(g.stage>pst){if(pst%10===0&&!pf){gSfx('clear');gBubble('clear');}else if(g.stage%10===0){gSfx('boss');gBubble('boss');}else gSfx('kill');}
   if(sh!==gLastShown||g.farm!==pf){gPaintStage(g,true);if(now-gHfxT>500){gHfxT=now;gHearts($('g-arena'),3);}}
   gSet('g-st',gStText(g));
   var frac=gFrac(g,now);
@@ -2051,11 +2078,12 @@ function gTick(){
   hp.style.width=Math.max(0,Math.min(100,frac*100))+'%';
   var bt=$('g-bt');
   if(bt){var isb=sh%10===0&&!g.farm;if(bt.hidden===isb)bt.hidden=!isb;if(isb){var T=gBossT(g);$('g-bti').style.width=Math.max(0,(T-(g.bt||0))/T*100)+'%';}}
+  gBubTick(g,now);
   var nk=g.stage+'|'+g.farm+'|'+g.hold;
   if(nk!==gNoteKey){gNoteKey=nk;gSetH('g-note',gNoteHtml(g));if(gSub==='')gFit(false);}
   gSet('g-hearts','💗 '+gFmt(g.hearts));gSet('g-pps','⚔️ '+gFmt(gDps(g))+'/초');
   ['atk','inc','spd'].forEach(function(k){var b=$('gb-'+k);if(b)b.disabled=!(g.hearts>=gCost(k,g.lv[k]));});
-  if(!gTick.c)gTick.c=0;if(++gTick.c%4===0){gDmg(g);if(gTick.c%20===0)gDot();var rr=$('g-reb');if(rr&&g.evo>=3&&armed!=='greb'){var t='🌸 환생하기 (+'+gRPGain(g)+' 포인트)';if(rr.textContent!==t)rr.textContent=t;}}
+  if(!gTick.c)gTick.c=0;if(++gTick.c%4===0){gDmg(g);if(gTick.c%20===0)gDot();if(gTick.c%8===0)gSetH('g-buffw',gBuffHtml(g));var rr=$('g-reb');if(rr&&g.evo>=3&&armed!=='greb'){var t='🌸 환생하기 (+'+gRPGain(g)+' 포인트)';if(rr.textContent!==t)rr.textContent=t;}}
   if(now-gSaveT>5000){gSaveT=now;gSave();}
 }
 function gDmg(g){
@@ -2091,6 +2119,104 @@ function gApplyMode(anim){
   if(nav.tab==='game')requestAnimationFrame(function(){gFit(!anim);});
 }
 window.addEventListener('resize',function(){if(nav.tab==='game')gFit(true);});
+/* ---- 연속 운동 버프 ---- */
+function gDN(ts){var d=new Date(ts);return Math.round(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);}
+function gStreak(g,ts){
+  var s=g.stk,dn=gDN(ts),ln=s.ld?gDN(s.ld):-1e9;
+  if(s.ld&&dn<=ln)return null;
+  var gap=dn-ln,used=false,got=false;
+  if(!s.ld)s.n=1;else if(gap===1)s.n++;else if(gap===2&&s.sh){s.sh=0;s.n++;used=true;}else s.n=1;
+  s.ld=ts;if(s.n%30===0&&!s.sh){s.sh=1;got=true;}
+  return {n:s.n,used:used,got:got};
+}
+function gBuffOn(g){return gStkB(g)>0;}
+function gBuffHtml(g){
+  var s=g.stk;
+  if(gBuffOn(g))return '<button class="gbuff" data-act="gbuff"><b>🔥 연속 '+s.n+'일</b><small>공격·수입 +'+gPct(s.n*5)+(s.sh?' · 🛡️':'')+'</small></button>';
+  return '<button class="gbuff off" data-act="gbuff"><b>🔥 버프 없음</b><small>운동하면 켜져요</small></button>';
+}
+function gBuffLeft(g){var ms=gStkExp(g.stk)-Date.now();return Math.max(0,ms);}
+function gHms(ms){var t=Math.floor(ms/1000),h=Math.floor(t/3600),m=Math.floor(t%3600/60),s=t%60;return h+'시간 '+('0'+m).slice(-2)+'분 '+('0'+s).slice(-2)+'초';}
+var gBuffIv=0;
+function gBuffClose(){clearInterval(gBuffIv);gBuffIv=0;var e=document.getElementById('gbm');if(e&&e.parentNode)e.parentNode.removeChild(e);}
+function gBuffModal(){
+  gBuffClose();var g=gGet(),s=g.stk,on=gBuffOn(g),today=s.ld&&gDN(s.ld)===gDN(Date.now());
+  var toNext=30-(s.n%30||30);if(s.n%30===0&&s.n>0)toNext=30;
+  var el=document.createElement('div');el.className='gdm gbm';el.id='gbm';
+  var body;
+  if(!s.n)body='<div class="gdmb">아직 연속 기록이 없어.<br>운동을 기록하면 <b>🔥 연속 버프</b>가 켜져!</div>';
+  else body='<div class="gdmn">🔥 연속 '+s.n+'일째</div><div class="gdmb">'+(on?'지금 <b>공격력·하트 수입 +'+gPct(s.n*5)+'</b> 적용 중!':'버프가 꺼졌어 😢 운동하면 다시 1일부터 시작해')+'</div>'+(on?'<div class="gbleft">남은 시간<br><b id="gbt">'+gHms(gBuffLeft(g))+'</b></div><div class="gdmi">'+(today?'오늘 운동 완료 ✅ 내일도 하면 '+(s.n+1)+'일째 (+'+gPct((s.n+1)*5)+')':'⚠️ 오늘 운동하면 연속이 이어져! 안 하면 시간이 끝나고 꺼져')+'</div>':'');
+  el.innerHTML='<div class="gdmc" style="--rc:#ff7a3c"><div class="gdmst" style="color:#ff7a3c">🔥</div>'+body+
+   '<div class="gbinfo"><div>📈 하루 연속할 때마다 <b>+5%</b>씩 쌓여요</div><div>🛡️ 한 달(30일) 연속하면 <b>방지권 1장</b> · 하루 빠져도 연속 유지 (최대 1장)</div><div>'+(s.sh?'🛡️ 방지권 <b>1장</b> 보유 중':'🛡️ 방지권 없음 · 다음까지 '+toNext+'일')+'</div></div>'+
+   '<div class="gdmbt"><button class="mini" data-act="gbx">닫기</button></div></div>';
+  el.addEventListener('click',function(e){if(e.target===el)gBuffClose();});
+  document.body.appendChild(el);
+  if(on)gBuffIv=setInterval(function(){var t=document.getElementById('gbt');if(!t){gBuffClose();return;}t.textContent=gHms(gBuffLeft(gGet()));},1000);
+}
+/* ---- 말풍선 ---- */
+var G_BUB={
+ idle:['오늘도 화이팅! 💪','같이 놀자아~','나 잘하고 있지?','쑥쑥 크는 중이야 🌱','사랑해요 💗','우와~ 하트다!','운동하면 나 힘세져!','헤헤 😊','오늘도 반짝반짝 ✨','냠냠 간식 먹고 싶다~','최고 최고! 👍','같이 있어서 좋아 🥰'],
+ tap:['꺄르르 😆','간지러워~','쪽 💋','안아줘요~ 🤗','히히 사랑해!','또 눌러줘 💗','까꿍! 👶','나 여기 있어요~'],
+ boss:['으으 크다… 그래도 할 수 있어!','보스다! 긴장돼 😳','나 지금 용기 100%!'],
+ clear:['해냈다! 짝짝짝 👏','내가 이겼다~ 야호!','나 멋있었지? 😎'],
+ farm:['다음엔 꼭 이길 거야!','힘 더 모아서 다시!','괜찮아~ 또 하면 돼 💪'],
+ night:['zZ… 졸려…','이제 코~ 자야지 🌙','별님도 반짝~ ⭐'],
+ morn:['좋은 아침! ☀️','잘 잤어요? 🥱'],
+ skip:['오늘 운동 아직이야? 🥺','같이 운동하자아~','운동하면 나 더 커져!']
+};
+var gBubNext=0,gBubHide=0,gBubTm=0;
+function gBubble(kind,force){
+  var b=$('g-bub'),f=$('g-field'),h=$('g-hero');if(!b||!f||!h||nav.tab!=='game')return;
+  var now=Date.now();if(!force&&kind!=='tap'&&now<gBubHide)return;
+  var g=gGet(),p=G_BUB[kind]||G_BUB.idle,t=p[Math.floor(Math.random()*p.length)];
+  b.textContent=t;b.hidden=false;b.classList.remove('in');void b.offsetWidth;
+  var fr=f.getBoundingClientRect(),hr=h.getBoundingClientRect();
+  b.style.bottom=Math.max(0,fr.bottom-hr.top+2)+'px';
+  var l=hr.left-fr.left+hr.width*.25;l=Math.max(4,Math.min(fr.width-b.offsetWidth-4,l));b.style.left=l+'px';
+  b.classList.add('in');gBubHide=now+3300;clearTimeout(gBubTm);gBubTm=setTimeout(function(){var e=$('g-bub');if(e)e.hidden=true;},3300);
+  gBubNext=now+(14+Math.random()*12)*1000;if(kind==='idle'||kind==='tap')gSfx('bub');
+}
+function gBubTick(g,now){
+  if(now<gBubNext)return;
+  if(!gBubNext){gBubNext=now+4000;return;}
+  var h=new Date().getHours(),k='idle',r=Math.random();
+  if(g.stage%10===0&&!g.farm&&r<.5)k='boss';
+  else if(h>=22||h<5){if(r<.6)k='night';}
+  else if(h>=6&&h<10){if(r<.3)k='morn';}
+  if(k==='idle'&&g.stk.n&&!(g.stk.ld&&gDN(g.stk.ld)===gDN(now))&&r<.4)k='skip';
+  gBubble(k);
+}
+/* ---- 효과음 (WebAudio로 직접 만든 소리) ---- */
+var gAC=null,gSfxT={};
+function gAudio(){try{if(!gAC){var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;gAC=new C();}if(gAC.state==='suspended')gAC.resume();return gAC;}catch(e){return null;}}
+document.addEventListener('pointerdown',function(){if(gS&&gS.snd)gAudio();},{passive:true});
+function gTn(f,t,d,ty,v,f2){
+  var a=gAC,o=a.createOscillator(),gn=a.createGain(),t0=a.currentTime+t;
+  o.type=ty||'sine';o.frequency.setValueAtTime(f,t0);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t0+d);
+  gn.gain.setValueAtTime(0.0001,t0);gn.gain.exponentialRampToValueAtTime(v||.15,t0+.01);gn.gain.exponentialRampToValueAtTime(0.0001,t0+d);
+  o.connect(gn);gn.connect(a.destination);o.start(t0);o.stop(t0+d+.05);
+}
+var G_SFX={
+ tap:function(){gTn(660,0,.09,'sine',.12,990);},
+ bub:function(){gTn(880,0,.07,'sine',.06,1320);},
+ kill:function(){gTn(520,0,.07,'triangle',.07,780);},
+ buy:function(){gTn(784,0,.08,'square',.05);gTn(1175,.06,.1,'square',.05);},
+ coin:function(){[988,1319,1568,1976].forEach(function(f,i){gTn(f,i*.09,.16,'triangle',.12);});},
+ boss:function(){gTn(150,0,.3,'sawtooth',.1,90);gTn(110,.15,.35,'sawtooth',.1,70);},
+ clear:function(){[523,659,784,1047].forEach(function(f,i){gTn(f,i*.1,.22,'square',.07);});gTn(1047,.4,.5,'triangle',.1);},
+ fail:function(){gTn(400,0,.2,'triangle',.12,300);gTn(300,.18,.35,'triangle',.12,180);},
+ pull:function(){for(var i=0;i<6;i++)gTn(900+i*220,i*.07,.14,'sine',.1);},
+ star:function(){[523,659,784,1047,1319].forEach(function(f,i){gTn(f,i*.09,.3,'triangle',.12);});gTn(2093,.5,.6,'sine',.08);},
+ ssr:function(){[523,659,784,1047,1319,1568].forEach(function(f,i){gTn(f,i*.12,.5,'triangle',.12);gTn(f/2,i*.12,.5,'sine',.08);});gTn(2093,.8,1.2,'sine',.1);},
+ reb:function(){[392,523,659,784,1047].forEach(function(f,i){gTn(f,i*.14,.45,'sine',.12);});}
+};
+function gSfx(n){
+  try{
+    if(!gS||!gS.snd||!G_SFX[n])return;
+    var now=Date.now(),th={kill:200,buy:60,tap:80,bub:500}[n]||0;if(th&&now-(gSfxT[n]||0)<th)return;gSfxT[n]=now;
+    if(!gAudio()||gAC.state!=='running')return;G_SFX[n]();
+  }catch(e){}
+}
 function gOffShow(){
   if(!gOff||document.getElementById('goffp'))return;
   var o=gOff,el=document.createElement('div');el.className='goffp';el.id='goffp';
@@ -2118,12 +2244,14 @@ function gCelebrate(r){
   var ban='';
   if(r.lvUp)ban+='<div class="gcb">🎉 성장! Lv.'+r.lvUp[1]+' '+G_NAMES[r.lvUp[1]]+' 사랑이</div>';
   r.newTk.forEach(function(L){ban+='<div class="gcb t">🎁 '+G_TKAMT[L]+'만원 보상권 도착!</div>';});
+  if(r.stk){ban+='<div class="gcb" style="background:linear-gradient(135deg,#ff9a3c,#ff5e62)">🔥 연속 '+r.stk.n+'일째! 공격력·하트 수입 +'+gPct(r.stk.n*5)+'</div>';if(r.stk.used)ban+='<div class="gcb t">🛡️ 방지권으로 연속 기록을 지켰어!</div>';if(r.stk.got)ban+='<div class="gcb t">🛡️ 한 달 연속! 방지권 1장 획득</div>';}
+  gSfx('coin');
   el.innerHTML='<div class="gcfall">'+fall+'</div><div class="gcin"><div class="gcray"></div><div class="gcsp">'+sp+'</div><div class="gcbig">'+gRuby(150)+'</div><div class="gcn" id="gcn">+0</div><div class="gcs">루비를 받았어!  ·  🎟️ 뽑기권 +'+r.tk+'</div>'+ban+'</div>';
   document.body.appendChild(el);
   try{navigator.vibrate&&navigator.vibrate([60,40,60,40,160]);}catch(e){}
   var n=r.rub,t0=Date.now();
   var iv=setInterval(function(){var p=Math.min(1,(Date.now()-t0)/900),c=$('gcn');if(!c){clearInterval(iv);return;}c.textContent='+'+Math.max(1,Math.round(n*p));if(p>=1)clearInterval(iv);},40);
-  var life=(r.lvUp||r.newTk.length)?5200:3200;
+  var life=(r.lvUp||r.newTk.length||(r.stk&&(r.stk.used||r.stk.got)))?5200:3600;
   function close(){clearInterval(iv);clearTimeout(tm);el.classList.add('out');setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},320);}
   var tm=setTimeout(close,life);
   el.addEventListener('click',close);
@@ -2176,6 +2304,7 @@ function gRollOne(g){
   return {k:k,rar:rar,nw:isNew,h:hh};
 }
 function gGachaShow(res){
+  gSfx('pull');
   var old=document.getElementById('gcel');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var el=document.createElement('div');el.className='gcel';el.id='gcel';
   var tot=0,nn=0,best=res[0];res.forEach(function(r){tot+=r.h;if(r.nw)nn++;if(r.rar>best.rar)best=r;});
@@ -2193,6 +2322,7 @@ function gGachaShow(res){
 }
 /* ---- 환생 연출 ---- */
 function gRebirthFx(fromSrc,gain){
+  gSfx('reb');
   var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
   if(reduce){toast('환생했어! 환생포인트 +'+gain+' 🌸');return;}
   var old=document.getElementById('rbx');if(old&&old.parentNode)old.parentNode.removeChild(old);
@@ -2239,9 +2369,9 @@ document.addEventListener('click',function(e){
 /* ---- 동작 ---- */
 var G_A={
   okoff:function(){gOff=null;var e=document.getElementById('goffp');if(e&&e.parentNode)e.parentNode.removeChild(e);},
-  buy:function(b){var g=gGet(),k=b.dataset.k;if(!g.lv.hasOwnProperty(k))return;var c=gCost(k,g.lv[k]);if(g.hearts<c)return;g.hearts-=c;g.lv[k]++;gSave();gRefresh();},
-  rbuy:function(b){var g=gGet(),k=b.dataset.k;if(!g.rl.hasOwnProperty(k))return;var c=gRCost(g.rl[k]);if(g.rubies<c)return;g.rubies-=c;g.rl[k]++;gSave();gRefresh();},
-  rpbuy:function(b){var g=gGet(),k=b.dataset.k,u=G_RPU.filter(function(x){return x[0]===k;})[0];if(!u)return;var l=g.rp[k];if(u[6]&&l>=u[6])return;var c=gRPCost(u,l);if(g.rpt<c)return;g.rpt-=c;g.rp[k]++;gSave();gRefresh();},
+  buy:function(b){var g=gGet(),k=b.dataset.k;if(!g.lv.hasOwnProperty(k))return;var c=gCost(k,g.lv[k]);if(g.hearts<c)return;g.hearts-=c;g.lv[k]++;gSfx('buy');gSave();gRefresh();},
+  rbuy:function(b){var g=gGet(),k=b.dataset.k;if(!g.rl.hasOwnProperty(k))return;var c=gRCost(g.rl[k]);if(g.rubies<c)return;g.rubies-=c;g.rl[k]++;gSfx('buy');gSave();gRefresh();},
+  rpbuy:function(b){var g=gGet(),k=b.dataset.k,u=G_RPU.filter(function(x){return x[0]===k;})[0];if(!u)return;var l=g.rp[k];if(u[6]&&l>=u[6])return;var c=gRPCost(u,l);if(g.rpt<c)return;g.rpt-=c;g.rp[k]++;gSfx('buy');gSave();gRefresh();},
   reb:function(){
     var g=gGet();if(g.evo<3)return;
     if(!arm('greb'))return;
@@ -2299,10 +2429,13 @@ var G_A={
     if(g.star[k]>=5)gSsrShow(k,G_DX[k][0],function(){gRefresh();},{t:'★ 5',sub:'최고 강화 달성!'});
     else gStarFx(k,g.star[k],function(){gRefresh();});
   },
-  hero:function(){var h=$('g-hero');gHearts($('g-arena'),5);if(h){h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop');}}
+  buffx:function(){gBuffClose();},
+  snd:function(){var g=gGet();g.snd=g.snd?0:1;gSave();var b=$('g-snd');if(b)b.textContent=g.snd?'🔊':'🔇';if(g.snd)gSfx('buy');toast(g.snd?'효과음 켰어 🔊':'효과음 껐어 🔇');},
+  buff:function(){gBuffModal();},
+  hero:function(){gSfx('tap');gBubble('tap');var h=$('g-hero');gHearts($('g-arena'),5);if(h){h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop');}}
 };
 /* ===== SSR 연출 ===== */
-function gSsrShow(key,name,done,o){o=o||{};
+function gSsrShow(key,name,done,o){o=o||{};gSfx('ssr');
   var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
   if(reduce){done();return;}
   var old=document.getElementById('ssr');if(old&&old.parentNode)old.parentNode.removeChild(old);
@@ -2610,6 +2743,9 @@ var acts={
   gdexi:function(b){G_A.dexi(b);},
   grw:function(b){G_A.rw(b);},
   gdxx:function(){G_A.dxx();},
+  gbuff:function(){G_A.buff();},
+  gbx:function(){G_A.buffx();},
+  gsnd:function(){G_A.snd();},
   gdxeq:function(b){G_A.dxeq(b);},
   gdxup:function(b){G_A.dxup(b);},
   gach:function(b){G_A.ach(b);},
