@@ -1038,7 +1038,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v40';
+var APPV='v41';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1959,7 +1959,8 @@ function gGacCard(g){
   return '<h2>🎟️ 뽑기</h2><p class="hint">운동을 끝낼 때마다 뽑기권을 받아. 사랑이 이모티콘을 뽑아서 도감을 채우면 공격력이랑 하트 수입이 영구로 올라가!</p>'+
    '<div class="gneed" style="grid-template-columns:1fr auto"><span>내 뽑기권</span><b style="font-size:16px">🎟️ '+g.tickets+'장</b></div>'+
    '<p class="hint" style="font-size:12px">확률: N 55% · R 33% · SR 10% · SSR 2%<br>SR 이상 확정까지 '+pr+'번 · SSR 확정까지 '+ps+'번<br>이미 가진 이모티콘이 또 나오면 도감에서 ⭐ 별 강화에 쓸 수 있어!</p>'+
-   '<div style="display:flex;gap:8px"><button class="btn sm gevob" style="flex:1" data-act="gpull" data-k="1"'+(g.tickets>=1?'':' disabled')+'>1번 뽑기 (🎟️1)</button><button class="btn sm gevob" style="flex:1" data-act="gpull" data-k="10"'+(g.tickets>=10?'':' disabled')+'>10번 뽑기 (🎟️10)</button></div>';
+   '<div style="display:flex;gap:8px"><button class="btn sm gevob" style="flex:1" data-act="gpull" data-k="1"'+(g.tickets>=1?'':' disabled')+'>1번 뽑기 (🎟️1)</button><button class="btn sm gevob" style="flex:1" data-act="gpull" data-k="10"'+(g.tickets>=10?'':' disabled')+'>10번 뽑기 (🎟️10)</button></div>'+
+   '<h2 style="margin-top:16px">🛒 루비 상점</h2><ul class="list"><li class="grow"><span class="gic">🎟️</span><span class="xt"><b>뽑기권 1장</b><small>루비 10개로 바꿔줘</small></span><button class="mini rb" data-act="gbtk"'+(g.rubies>=10?'':' disabled')+'>'+gRuby(14)+' 10</button></li><li class="grow"><span class="gic">🛡️</span><span class="xt"><b>연속 방지권</b><small>'+(g.stk.sh?'이미 1장 가지고 있어 (최대 1장)':'운동 하루 빠져도 연속 유지')+'</small></span><button class="mini rb" data-act="gbsh"'+(g.rubies>=100&&!g.stk.sh?'':' disabled')+'>'+(armed==='gsh'?'정말? 한 번 더!':gRuby(14)+' 100')+'</button></li></ul>';
 }
 function gStarStr(n,big){var h='';for(var i=1;i<=5;i++)h+='<span class="'+(i<=n?'on':'off')+'">★</span>';return h;}
 function gMonoB(g,k){return (G_RB[G_RAR[k]]||0)*(G_SM[g.star[k]||1]||1);}
@@ -2148,7 +2149,7 @@ function gBuffModal(){
   else body='<div class="gdmn">🔥 연속 '+s.n+'일째</div><div class="gdmb">'+(on?'지금 <b>공격력·하트 수입 +'+gPct(s.n*5)+'</b> 적용 중!':'버프가 꺼졌어 😢 운동하면 다시 1일부터 시작해')+'</div>'+(on?'<div class="gbleft">남은 시간<br><b id="gbt">'+gHms(gBuffLeft(g))+'</b></div><div class="gdmi">'+(today?'오늘 운동 완료 ✅ 내일도 하면 '+(s.n+1)+'일째 (+'+gPct((s.n+1)*5)+')':'⚠️ 오늘 운동하면 연속이 이어져! 안 하면 시간이 끝나고 꺼져')+'</div>':'');
   el.innerHTML='<div class="gdmc" style="--rc:#ff7a3c"><div class="gdmst" style="color:#ff7a3c">🔥</div>'+body+
    '<div class="gbinfo"><div>📈 하루 연속할 때마다 <b>+5%</b>씩 쌓여요</div><div>🛡️ 한 달(30일) 연속하면 <b>방지권 1장</b> · 하루 빠져도 연속 유지 (최대 1장)</div><div>'+(s.sh?'🛡️ 방지권 <b>1장</b> 보유 중':'🛡️ 방지권 없음 · 다음까지 '+toNext+'일')+'</div></div>'+
-   '<div class="gdmbt"><button class="mini" data-act="gbx">닫기</button></div></div>';
+   '<div class="gdmbt">'+(s.sh?'':'<button class="mini rb" data-act="gbsh"'+(g.rubies>=100?'':' disabled')+'>'+(armed==='gsh'?'정말? 한 번 더!':'🛡️ 방지권 사기 ('+gRuby(13)+' 100)')+'</button>')+'<button class="mini" data-act="gbx">닫기</button></div></div>';
   el.addEventListener('click',function(e){if(e.target===el)gBuffClose();});
   document.body.appendChild(el);
   if(on)gBuffIv=setInterval(function(){var t=document.getElementById('gbt');if(!t){gBuffClose();return;}t.textContent=gHms(gBuffLeft(gGet()));},1000);
@@ -2432,6 +2433,8 @@ var G_A={
   buffx:function(){gBuffClose();},
   snd:function(){var g=gGet();g.snd=g.snd?0:1;gSave();var b=$('g-snd');if(b)b.textContent=g.snd?'🔊':'🔇';if(g.snd)gSfx('buy');toast(g.snd?'효과음 켰어 🔊':'효과음 껐어 🔇');},
   buff:function(){gBuffModal();},
+  btk:function(){var g=gGet();if(g.rubies<10)return;g.rubies-=10;g.tickets++;gSfx('buy');gSave();gRefresh();},
+  bsh:function(){var g=gGet();if(g.stk.sh||g.rubies<100)return;if(!arm('gsh')){if($('gbm'))gBuffModal();return;}g.rubies-=100;g.stk.sh=1;gSfx('coin');gSave();gRefresh();toast('🛡️ 방지권을 샀어! 하루 빠져도 연속이 이어져');if($('gbm'))gBuffModal();},
   hero:function(){gSfx('tap');gBubble('tap');var h=$('g-hero');gHearts($('g-arena'),5);if(h){h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop');}}
 };
 /* ===== SSR 연출 ===== */
@@ -2746,6 +2749,8 @@ var acts={
   gbuff:function(){G_A.buff();},
   gbx:function(){G_A.buffx();},
   gsnd:function(){G_A.snd();},
+  gbtk:function(){G_A.btk();},
+  gbsh:function(){G_A.bsh();},
   gdxeq:function(b){G_A.dxeq(b);},
   gdxup:function(b){G_A.dxup(b);},
   gach:function(b){G_A.ach(b);},
