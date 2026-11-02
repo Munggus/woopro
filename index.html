@@ -676,6 +676,39 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 
 @keyframes gcl{0%,52%,100%{transform:translateX(0) scale(1,1)}62%{transform:translateX(calc(-6px*var(--k))) scale(1.04,.94)}74%{transform:translateX(calc(46px*var(--k))) scale(.96,1.04)}86%{transform:translateX(calc(8px*var(--k)))}}
 @keyframes gcs{0%,100%{transform:translate(0,0) rotate(-3deg)}30%{transform:translate(0,calc(-8px*var(--k))) rotate(3deg)}55%{transform:translate(calc(-4px*var(--k)),calc(-4px*var(--k))) rotate(-6deg)}70%{transform:translate(calc(52px*var(--k)),calc(10px*var(--k))) rotate(14deg)}85%{transform:translate(calc(10px*var(--k)),0) rotate(0)}}
+/* ===== 농장 ===== */
+.gfw{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
+.gfw .chip{background:#e8f6ff;color:#1d5f8a;padding:4px 10px;border-radius:99px;font-size:13px}
+.gpls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gpl{border:2px solid #b98c5a;background:linear-gradient(#a9764a,#8a5a35);border-radius:14px;padding:10px 6px;color:#fff;display:flex;flex-direction:column;align-items:center;gap:3px;min-height:112px;font-family:inherit}
+.gpl.emp{background:#d9c3a5;border-style:dashed;color:#6d4c2a}
+.gpl.rip{border-color:#ffd54a;box-shadow:0 0 10px #ffd54a;animation:gfrip 1.2s ease-in-out infinite}
+.gpl .gpe{font-size:38px;line-height:1.1}.gpl small{font-size:11px;opacity:.9}
+.gpl .gbar{width:90%}
+@keyframes gfrip{50%{transform:scale(1.04)}}
+.gih{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.gii{background:#fff6e0;border-radius:99px;padding:3px 10px;font-size:14px}
+.gpen{position:relative;height:250px;border-radius:16px;overflow:hidden;background:linear-gradient(#bfe6ff 0 30%,#8fd17a 30% 100%);border:2px solid #6aa85a;touch-action:manipulation}
+.gpen-fence{position:absolute;left:0;right:0;top:24%;height:12%;background:repeating-linear-gradient(90deg,#c8955c 0 6px,transparent 6px 22px);border-top:4px solid #a9764a;border-bottom:4px solid #a9764a;opacity:.9}
+.gfa{position:absolute;width:64px;height:64px;margin:-52px 0 0 -32px;transform:scale(var(--sc,1));transform-origin:50% 100%;cursor:pointer}
+.gfa img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .15s}
+.gfa.fl img{transform:scaleX(-1)}
+.gfa.mv img{animation:gfwalk .42s ease-in-out infinite}
+.gfa.fl.mv img{animation:gfwalkf .42s ease-in-out infinite}
+.gfa.zz::after{content:'💤';position:absolute;top:-14px;right:-6px;font-size:16px}
+.gfa.hop img{animation:gfhop .4s ease-out}
+.gfa:not(.mv):not(.hop) img{animation:gfbr 2.4s ease-in-out infinite}
+@keyframes gfwalk{50%{transform:translateY(-5px)}}
+@keyframes gfwalkf{50%{transform:translateY(-5px) scaleX(-1)}0%,100%{transform:scaleX(-1)}}
+@keyframes gfhop{40%{transform:translateY(-14px)}}
+@keyframes gfbr{50%{transform:scale(1.04,.97)}}
+.gfa.fl:not(.mv):not(.hop) img{animation:none}
+.gfb{position:absolute;top:-10px;left:-4px;background:#fff;border-radius:99px;padding:1px 5px;font-size:13px;box-shadow:0 1px 4px #0003;font-style:normal}
+.gfb i{font-size:10px;font-style:normal;margin-left:2px}
+.gcr{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;width:100%}
+.gcrb{border:2px solid #eadfcb;background:#fffaf0;border-radius:12px;padding:8px 2px;display:flex;flex-direction:column;align-items:center;font-family:inherit}
+.gcrb span{font-size:28px}.gcrb small{font-size:10px;color:#8a7a62}
+.gfm-i{height:90px;object-fit:contain}
+.gdx.gdxs{max-height:50vh;overflow:auto;margin:8px 0}
 
 </style>
 
@@ -1084,7 +1117,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v56';
+var APPV='v57';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1939,6 +1972,197 @@ function gHeroCheck(g){
   var w=$('g-hw');if(!w)return;
   var t=document.createElement('div');t.innerHTML=gHeroHtml(g);w.parentNode.replaceChild(t.firstChild,w);
 }
+/* ===== 텃밭 · 농장 ===== */
+var G_CROP=[
+ {k:'carrot',e:'🥕',n:'당근',t:1200,v:20,f:1},
+ {k:'straw',e:'🍓',n:'딸기',t:3600,v:60,f:2},
+ {k:'corn',e:'🌽',n:'옥수수',t:7200,v:150,f:4},
+ {k:'tomato',e:'🍅',n:'토마토',t:14400,v:400,f:6},
+ {k:'sun',e:'🌻',n:'해바라기',t:28800,v:1000,f:10}
+];
+var G_CRM={};G_CROP.forEach(function(c){G_CRM[c.k]=c;});
+var G_PROD={gnd:{k:'milk',e:'🥛',n:'우유'},sky:{k:'egg',e:'🥚',n:'달걀'},veh:{k:'dust',e:'✨',n:'반짝가루'}};
+var G_PRK=['milk','egg','dust'];
+var G_PRM={milk:G_PROD.gnd,egg:G_PROD.sky,dust:G_PROD.veh};
+var G_FPI=[40,30,22,15];           // 등급별 생산 간격(분)
+var G_PRV=[5,12,30,75];            // 등급별 생산물 가치(수확 가치 배수)
+var G_WSTEP=.15,G_WMAX=3,G_ANCAP=12;
+function gFmDef(){var o={pl:[],water:5,inv:{},an:[],ns:3,np:4};for(var i=0;i<4;i++)o.pl.push({c:'',t:0,w:0});G_CROP.forEach(function(c){o.inv[c.k]=0;});G_PRK.forEach(function(k){o.inv[k]=0;});return o;}
+function gFmLoad(o){
+  var d=gFmDef();if(!o||typeof o!=='object')return d;
+  d.np=Math.min(8,Math.max(4,Math.floor(gNum(o.np,4))));d.ns=Math.min(10,Math.max(3,Math.floor(gNum(o.ns,3))));
+  d.water=Math.min(30,Math.max(0,Math.floor(gNum(o.water,5))));
+  d.pl=[];for(var i=0;i<d.np;i++){var p=(o.pl&&o.pl[i])||{};d.pl.push({c:G_CRM[p.c]?p.c:'',t:G_CRM[p.c]?gNum(p.t,0):0,w:Math.min(G_WMAX,Math.max(0,Math.floor(gNum(p.w,0))))});}
+  Object.keys(d.inv).forEach(function(k){d.inv[k]=Math.min(999999,Math.max(0,Math.floor(gNum(o.inv&&o.inv[k],0))));});
+  d.an=[];if(Array.isArray(o.an))o.an.slice(0,d.ns).forEach(function(a){if(a&&G_CPM[a.id]&&!d.an.some(function(x){return x.id===a.id;}))d.an.push({id:a.id,fu:gNum(a.fu,0),lp:gNum(a.lp,Date.now()),n:Math.min(G_ANCAP,Math.max(0,Math.floor(gNum(a.n,0))))});});
+  return d;
+}
+function gFm(){var g=gGet();if(!g.fm)g.fm=gFmDef();return g.fm;}
+/* ---- 계산 ---- */
+function gPlRemain(p,now){var c=G_CRM[p.c];if(!c)return 0;return Math.max(0,c.t*1000*(1-G_WSTEP*p.w)-(now-p.t));}
+function gAnInt(g,a){var p=G_CPM[a.id];return G_FPI[p.r]*60000/(1+.2*((g.cstar[a.id]||1)-1));}
+function gAnSync(g,a,now){
+  var iv=gAnInt(g,a),upto=Math.min(now,a.fu);
+  if(upto>a.lp){var k=Math.floor((upto-a.lp)/iv);if(k>0){a.n=Math.min(G_ANCAP,a.n+k);a.lp+=k*iv;}}
+  if(a.n>=G_ANCAP||now>a.fu)a.lp=Math.max(a.lp,Math.min(now,a.fu>now?now:a.fu));
+  if(a.fu<=now&&a.lp<a.fu)a.lp=a.fu;
+}
+function gFmSyncAll(g){var f=gFm(),now=Date.now();f.an.forEach(function(a){gAnSync(g,a,now);});}
+function gHM(ms){var s=Math.ceil(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),r=s%60;return h?h+'시간 '+m+'분':m?m+'분 '+(r<10?'0':'')+r+'초':r+'초';}
+function gFmBase(g){return gKill(g,Math.max(1,g.best));}
+function gFmWater(n){var f=gFm();f.water=Math.min(30,f.water+n);}
+/* ---- 화면 ---- */
+var gFmT='f';
+function gInvHtml(g){
+  var f=gFm(),base=gFmBase(g),tot=0,rows='';
+  G_CROP.forEach(function(c){var n=f.inv[c.k]||0;if(n){var h=base*c.v*n;tot+=h;rows+='<span class="gii">'+c.e+' <b>'+n+'</b></span>';}});
+  G_PRK.forEach(function(k){var n=f.inv[k]||0;if(n){var h=base*gPrVal(k)*n;tot+=h;rows+='<span class="gii">'+G_PRM[k].e+' <b>'+n+'</b></span>';}});
+  return '<h3 class="gcph">🧺 창고</h3>'+(rows?'<div class="gih">'+rows+'</div><button class="btn sm gevob" data-act="gf" data-f="sell">💗 모두 팔기 (+'+gFmt(tot)+')</button><p class="hint" style="font-size:12px">작물은 농장 동물의 먹이로도 쓸 수 있어. 먹이로 줄 건 남겨두고 팔아!</p>':'<p class="hint">수확한 작물이랑 농장에서 얻은 물건이 여기에 모여. 💗로 바꿔서 쓸 수 있어!</p>');
+}
+function gPrVal(k){var r=0;if(k==='milk')r=1;if(k==='egg')r=1;if(k==='dust')r=1;return 8;}
+function gFarmCard(g){
+  gFmSyncAll(g);
+  var tabs='<div class="gseg"><button class="gsg'+(gFmT==='f'?' on':'')+'" data-act="gtab" data-t="farm" data-k="f">🌱 텃밭</button><button class="gsg'+(gFmT==='a'?' on':'')+'" data-act="gtab" data-t="farm" data-k="a">🐄 농장</button></div>';
+  return tabs+(gFmT==='a'?gPenCard(g):gPlotCard(g))+gInvHtml(g);
+}
+function gPlotCard(g){
+  var f=gFm(),now=Date.now(),h='<div class="gfw"><span class="chip">💧 물 <b>'+f.water+'</b>/30</span><small>운동을 끝낼 때마다 💧 +3!</small></div>';
+  h+='<div class="gpls">';
+  f.pl.forEach(function(p,i){
+    var c=G_CRM[p.c];
+    if(!c){h+='<button class="gpl emp" data-act="gf" data-f="seed" data-i="'+i+'"><span class="gpe">🟫</span><b>씨앗 심기</b></button>';return;}
+    var rem=gPlRemain(p,now),tot=c.t*1000,ripe=rem<=0,stg=ripe?3:Math.min(2,Math.floor((1-rem/tot)*3));
+    var em=ripe?c.e:(['🌱','🌿','🪴'][stg]);
+    h+='<button class="gpl'+(ripe?' rip':'')+'" data-act="gf" data-f="'+(ripe?'harv':'water')+'" data-i="'+i+'"><span class="gpe">'+em+'</span><b>'+c.n+(ripe?' 다 익었어!':'')+'</b>'+(ripe?'<small>눌러서 수확 ✨</small>':'<small data-pt="'+i+'">'+gHM(rem)+' 남음 · 💧'+p.w+'/'+G_WMAX+'</small>')+(ripe?'':gBar(1-rem/tot,'pk'))+'</button>';
+  });
+  h+='</div>';
+  if(f.np<8){var cost=20*(f.np-3);h+='<button class="mini rb" style="margin-top:8px" data-act="gf" data-f="bpl">'+gRuby(14)+' '+cost+' 밭 한 칸 넓히기 ('+f.np+'→'+(f.np+1)+')</button>';}
+  return h+'<p class="hint" style="font-size:12px">익고 있는 밭을 누르면 💧 물을 줘서 15%씩 빨리 키울 수 있어 (밭마다 3번까지).</p>';
+}
+function gPenCard(g){
+  var f=gFm(),now=Date.now(),h='<div class="gpen" id="g-pen"><div class="gpen-sky"></div><div class="gpen-fence"></div>';
+  f.an.forEach(function(a){
+    var p=G_CPM[a.id],st=gFA[a.id]||(gFA[a.id]={x:14+Math.random()*70,y:44+Math.random()*40,wait:600+Math.random()*2500});
+    var hung=now>a.fu;
+    h+='<div class="gfa" id="gfa-'+a.id+'" data-act="gf" data-f="an" data-id="'+a.id+'" style="left:'+st.x.toFixed(1)+'%;top:'+st.y.toFixed(1)+'%;z-index:'+Math.round(st.y*10)+';--sc:'+(.78+.5*(st.y-40)/46).toFixed(2)+'"><img alt="" src="'+gCpImg(a.id)+'">'+(a.n>0?'<b class="gfb p">'+G_PROD[p.c].e+(a.n>1?'<i>'+a.n+'</i>':'')+'</b>':hung?'<b class="gfb h">🍽️</b>':'')+'</div>';
+  });
+  h+='</div>';
+  if(!f.an.length)h+='<p class="hint" style="text-align:center">아직 마당이 텅 비었어! 내 동료 중에서 친구를 데려와 봐 🐾</p>';
+  h+='<div class="gfw"><span class="chip">🐾 마당 <b>'+f.an.length+'</b>/'+f.ns+'칸</span><button class="mini" data-act="gf" data-f="addm"'+(f.an.length<f.ns?'':' disabled')+'>+ 동물 들이기</button>'+(f.ns<10?'<button class="mini rb" data-act="gf" data-f="bsl">'+gRuby(14)+' '+(30*(f.ns-2))+' 칸 늘리기</button>':'')+'</div>';
+  var cl=f.an.reduce(function(s,a){return s+a.n;},0);
+  if(cl)h+='<button class="btn sm gevob" data-act="gf" data-f="colall">🧺 생산물 모두 모으기 ('+cl+'개)</button>';
+  return h+'<p class="hint" style="font-size:12px">동물을 누르면 먹이(🥕🍓…)를 줄 수 있어. 배부른 동안 우유🥛·달걀🥚·반짝가루✨를 만들어줘! 등급이 높고 ★이 많을수록 더 빨라.</p>';
+}
+/* ---- 배회 ---- */
+var gFA={};
+function gFarmTick(){
+  if(nav.tab!=='game'||gSub!=='farm'||gFmT!=='a'||document.hidden)return;
+  var pen=$('g-pen');if(!pen)return;
+  var f=gFm(),now=Date.now();
+  f.an.forEach(function(a){
+    var el=$('gfa-'+a.id),st=gFA[a.id];if(!el||!st)return;
+    st.wait-=500;if(st.wait>0)return;
+    var tx,ty;
+    if(Math.random()<.18){st.wait=2500+Math.random()*3500;el.classList.add('zz');setTimeout(function(){el.classList.remove('zz');},st.wait);return;}
+    tx=8+Math.random()*80;ty=40+Math.random()*46;
+    var dx=tx-st.x,dy=ty-st.y,dist=Math.sqrt(dx*dx+dy*dy*1.6),dur=Math.max(1.2,dist/9);
+    el.style.transition='left '+dur+'s linear,top '+dur+'s linear';
+    el.classList.toggle('fl',dx<0);el.classList.add('mv');
+    el.style.left=tx.toFixed(1)+'%';el.style.top=ty.toFixed(1)+'%';el.style.zIndex=Math.round(ty*10);el.style.setProperty('--sc',(.78+.5*(ty-40)/46).toFixed(2));
+    st.x=tx;st.y=ty;st.wait=dur*1000+1500+Math.random()*4500;
+    setTimeout(function(){var e2=$('gfa-'+a.id);if(e2)e2.classList.remove('mv');},dur*1000);
+  });
+}
+var gFSig='';
+function gFarmSig(){
+  var g=gGet(),f=gFm(),now=Date.now(),sig='';
+  f.pl.forEach(function(p){sig+=p.c?(gPlRemain(p,now)<=0?'R':'g'):'e';});
+  gFmSyncAll(g);f.an.forEach(function(a){sig+=(now>a.fu?'H':'F')+a.n;});
+  return sig;
+}
+function gFarmWatch(){
+  if(nav.tab!=='game'||gSub!=='farm'||document.hidden)return;
+  var sig=gFarmSig(),f=gFm(),now=Date.now();
+  if(gFSig&&sig!==gFSig){gFSig=sig;if(!$('gdm'))gRefresh();return;}
+  gFSig=sig;
+  f.pl.forEach(function(p,i){var e=document.querySelector('[data-pt="'+i+'"]');if(e&&p.c){e.textContent=gHM(gPlRemain(p,now))+' 남음 · 💧'+p.w+'/'+G_WMAX;}});
+}
+function gFarmAfter(){gFSig=(nav.tab==='game'&&gSub==='farm')?gFarmSig():'';}
+setInterval(gFarmTick,500);setInterval(gFarmWatch,1000);
+/* ---- 동작 ---- */
+function gFModal(html){
+  gDexModalClose();var el=document.createElement('div');el.className='gdm';el.id='gdm';
+  el.innerHTML='<div class="gdmc" style="--rc:#7bc96f">'+html+'</div>';
+  el.addEventListener('click',function(e){if(e.target===el)gDexModalClose();});document.body.appendChild(el);
+}
+var G_F={
+ seed:function(b){
+  var f=gFm(),i=+b.dataset.i,g=gGet(),base=gFmBase(g);
+  gFModal('<div class="gdmn">🌱 무엇을 심을까?</div><div class="gcr">'+G_CROP.map(function(c){return '<button class="gcrb" data-act="gf" data-f="plant" data-i="'+i+'" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+'</b><small>'+gHM(c.t*1000)+'</small><small>💗 '+gFmt(base*c.v)+'</small></button>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
+ },
+ plant:function(b){var f=gFm(),p=f.pl[+b.dataset.i];if(!p||p.c)return;p.c=b.dataset.k;p.t=Date.now();p.w=0;gSfx('buy');gSave();gDexModalClose();gRefresh();},
+ water:function(b){
+  var f=gFm(),p=f.pl[+b.dataset.i];if(!p||!p.c)return;
+  if(gPlRemain(p,Date.now())<=0){return G_F.harv(b);}
+  if(p.w>=G_WMAX){toast('이 밭은 물을 충분히 줬어 💦');return;}
+  if(f.water<=0){toast('물이 없어 💧 운동을 끝내면 받을 수 있어!');return;}
+  f.water--;p.w++;gSfx('bub');gSave();gRefresh();toast('쑥쑥 자라는 중! 💧 (15% 단축)');
+ },
+ harv:function(b){
+  var f=gFm(),p=f.pl[+b.dataset.i];if(!p||!p.c||gPlRemain(p,Date.now())>0)return;
+  var c=G_CRM[p.c],n=1+(Math.random()<.3?1:0);f.inv[c.k]=(f.inv[c.k]||0)+n;p.c='';p.t=0;p.w=0;gSfx('coin');gSave();gRefresh();toast(c.e+' '+c.n+' '+n+'개 수확! 🎉');
+ },
+ bpl:function(b){var g=gGet(),f=gFm();if(f.np>=8)return;var cost=20*(f.np-3);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.np++;f.pl.push({c:'',t:0,w:0});gSfx('buy');gSave();gRefresh();toast('밭이 넓어졌어! 🌾');},
+ bsl:function(b){var g=gGet(),f=gFm();if(f.ns>=10)return;var cost=30*(f.ns-2);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.ns++;gSfx('buy');gSave();gRefresh();toast('마당이 넓어졌어! 🐾');},
+ sell:function(b){
+  var g=gGet(),f=gFm(),base=gFmBase(g),tot=0;
+  G_CROP.forEach(function(c){tot+=base*c.v*(f.inv[c.k]||0);f.inv[c.k]=0;});
+  G_PRK.forEach(function(k){tot+=base*gPrVal(k)*(f.inv[k]||0);f.inv[k]=0;});
+  if(!tot)return;g.hearts+=tot;gSfx('coin');gSave();gRefresh();toast('💗 +'+gFmt(tot)+' 받았어!');
+ },
+ addm:function(b){
+  var g=gGet(),f=gFm(),have=G_CPL.filter(function(p){return g.cdex[p.id]&&!f.an.some(function(a){return a.id===p.id;});}).sort(function(a,b){return b.r-a.r;});
+  if(!have.length){toast('데려올 동료가 없어! 뽑기에서 동료를 뽑아봐 🎟️');return;}
+  gFModal('<div class="gdmn">🐾 누구를 들일까?</div><div class="gdx gdxs">'+have.map(function(p){return '<div class="gdxi" style="--rc:'+G_RC[p.r]+'" data-act="gf" data-f="addp" data-id="'+p.id+'"><img alt="" src="'+gCpImg(p.id)+'"><i>'+G_RN[p.r]+'</i><small>'+p.n+'</small></div>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
+ },
+ addp:function(b){
+  var g=gGet(),f=gFm(),id=b.dataset.id;if(f.an.length>=f.ns||!g.cdex[id]||f.an.some(function(a){return a.id===id;}))return;
+  f.an.push({id:id,fu:0,lp:Date.now(),n:0});gSfx('pull');gSave();gDexModalClose();gRefresh();toast(G_CPM[id].n+'가 농장에 놀러 왔어! 💗');
+ },
+ an:function(b){
+  var g=gGet(),f=gFm(),id=b.dataset.id,a=null;f.an.forEach(function(x){if(x.id===id)a=x;});if(!a)return;
+  var el=$('gfa-'+id);if(el){el.classList.remove('hop');void el.offsetWidth;el.classList.add('hop');}
+  gSfx('tap');gHearts($('g-pen'),2);
+  var now=Date.now();gAnSync(g,a,now);
+  if(a.n>0&&now<=a.fu){/* 바로 모으기 */ }
+  var p=G_CPM[id],fed=now<a.fu;
+  var foods=G_CROP.filter(function(c){return (f.inv[c.k]||0)>0;});
+  gFModal('<img class="gfm-i" alt="" src="'+gCpImg(id)+'"><div class="gdmn">'+p.n+' <span class="gdmr">'+G_RN[p.r]+'</span></div><div class="gdmi">'+(fed?'😋 배부른 중 · '+gHM(a.fu-now)+' 남음':'🍽️ 배가 고파 보여')+'<br>'+G_PROD[p.c].e+' '+G_PROD[p.c].n+' 모아둔 것: <b>'+a.n+'</b>개 · '+Math.round(gAnInt(g,a)/60000)+'분마다 1개</div>'+
+   (foods.length?'<div class="gcr">'+foods.map(function(c){return '<button class="gcrb" data-act="gf" data-f="feed" data-id="'+id+'" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+' ×'+f.inv[c.k]+'</b><small>'+c.f+'시간 배부름</small></button>';}).join('')+'</div>':'<p class="hint">먹이로 줄 작물이 없어. 텃밭에서 수확해봐 🌱</p>')+
+   '<div class="gdmbt">'+(a.n>0?'<button class="btn sm gevob" data-act="gf" data-f="col" data-id="'+id+'">'+G_PROD[p.c].e+' 모으기 ('+a.n+')</button>':'')+'<button class="mini" data-act="gf" data-f="out" data-id="'+id+'">농장에서 내보내기</button><button class="mini" data-act="gdxx">닫기</button></div>');
+ },
+ feed:function(b){
+  var g=gGet(),f=gFm(),id=b.dataset.id,c=G_CRM[b.dataset.k],a=null;f.an.forEach(function(x){if(x.id===id)a=x;});
+  if(!a||!c||(f.inv[c.k]||0)<=0)return;
+  var now=Date.now();gAnSync(g,a,now);if(a.fu<now){a.fu=now;a.lp=now;}
+  if(a.fu-now>12*3600000){toast('이미 배불러서 더 못 먹어 😋');return;}
+  f.inv[c.k]--;a.fu+=c.f*3600000;gSfx('coin');gSave();gDexModalClose();gRefresh();toast(G_CPM[id].n+'가 '+c.n+'을(를) 냠냠! 😋');
+ },
+ col:function(b){
+  var g=gGet(),f=gFm(),id=b.dataset.id,a=null;f.an.forEach(function(x){if(x.id===id)a=x;});if(!a||a.n<=0)return;
+  var p=G_CPM[id],k=G_PROD[p.c].k;f.inv[k]=(f.inv[k]||0)+a.n;var n=a.n;a.n=0;gSfx('coin');gSave();gDexModalClose();gRefresh();toast(G_PROD[p.c].e+' '+n+'개 모았어!');
+ },
+ colall:function(b){
+  var g=gGet(),f=gFm(),tot=0;f.an.forEach(function(a){if(a.n>0){var k=G_PROD[G_CPM[a.id].c].k;f.inv[k]=(f.inv[k]||0)+a.n;tot+=a.n;a.n=0;}});
+  if(!tot)return;gSfx('coin');gSave();gRefresh();toast('🧺 생산물 '+tot+'개를 모았어!');
+ },
+ out:function(b){
+  var f=gFm(),id=b.dataset.id,a=null;f.an.forEach(function(x){if(x.id===id)a=x;});if(!a)return;
+  if(a.n>0){var k=G_PROD[G_CPM[id].c].k;f.inv[k]=(f.inv[k]||0)+a.n;}
+  f.an=f.an.filter(function(x){return x.id!==id;});delete gFA[id];gSave();gDexModalClose();gRefresh();toast('농장에서 쉬러 갔어');
+ }
+};
+function gfDo(b){var fn=G_F[b.dataset.f];if(fn)fn(b);}
 /* ===== 사랑이 키우기 v2 UI ===== */
 var GKEY='wt.game2',G_CAP=28800;
 var G_NAMES=['아기','꼬물','호기심','짜잔','씽씽','병아리 요정','멋쟁이','브이 스타','파티 퀸','마법사','전설의 사랑이'];
@@ -1956,7 +2180,7 @@ var gSub='',gChT=0,gS=null,gIv=0,gOff=null,gSaveT=0,gSm=false,gTipK=0,gLastShown
 function gNum(v,d){v=+v;return isFinite(v)?v:d;}
 function gDayKey(ts){var d=new Date(ts);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function gMidnight(){var d=new Date();d.setHours(0,0,0,0);return d.getTime();}
-function gDef(){var t=Date.now();return {ver:2,start:gMidnight(),last:t,hearts:0,rubies:0,tickets:1,stage:1,hp:0,kills:0,best:1,farm:false,hold:false,sk:0,dlyLeft:0,bt:0,fails:0,evo:0,credit:0,day:{d:'',t:0,w:0,c:0},lv:{atk:0,inc:0,spd:0},rl:{atk:0,heart:0},rp:{atk:0,inc:0,spd:0,sk:0,mv:0,bt:0,tk:0,rub:0,rpg:0},rpt:0,rebirths:0,gift1:1,st:{kg:0,sec:0,n:0,rub:0,tsec:0,days:0},done:{},tk:[],tkMade:{},dex:{},star:{},dup:{},stk:{n:0,ld:0,sh:0},snd:1,pity:0,pity2:0,pulls:0,hero:'',cdex:{},cstar:{},cdup:{},ceq:{gnd:'',sky:'',veh:''},cpity:0,cpity2:0,gd:'',rc:{fl:0,kg:0,hr:0,rb:0,wk:0},mxe:0,form:-1,bossLock:false,rbEvo:0,ach:{}};}
+function gDef(){var t=Date.now();return {ver:2,start:gMidnight(),last:t,hearts:0,rubies:0,tickets:1,stage:1,hp:0,kills:0,best:1,farm:false,hold:false,sk:0,dlyLeft:0,bt:0,fails:0,evo:0,credit:0,day:{d:'',t:0,w:0,c:0},lv:{atk:0,inc:0,spd:0},rl:{atk:0,heart:0},rp:{atk:0,inc:0,spd:0,sk:0,mv:0,bt:0,tk:0,rub:0,rpg:0},rpt:0,rebirths:0,gift1:1,st:{kg:0,sec:0,n:0,rub:0,tsec:0,days:0},done:{},tk:[],tkMade:{},dex:{},star:{},dup:{},stk:{n:0,ld:0,sh:0},snd:1,pity:0,pity2:0,pulls:0,hero:'',cdex:{},cstar:{},cdup:{},ceq:{gnd:'',sky:'',veh:''},cpity:0,cpity2:0,gd:'',rc:{fl:0,kg:0,hr:0,rb:0,wk:0},mxe:0,form:-1,bossLock:false,rbEvo:0,ach:{},fm:null};}
 function gLoad(){
   var d=gDef(),o=null;try{o=JSON.parse(localStorage.getItem(GKEY)||'null');}catch(e){}
   if(!o||typeof o!=='object')return d;
@@ -1985,6 +2209,7 @@ function gLoad(){
   ['fl','kg','hr','rb','wk'].forEach(function(k){d.rc[k]=Math.min(99999,Math.max(0,Math.floor(gNum(o.rc&&o.rc[k],0))));});
   d.mxe=Math.min(10,Math.max(0,Math.floor(gNum(o.mxe,0))));d.form=Math.min(10,Math.max(-1,Math.floor(gNum(o.form,-1))));
   d.rbEvo=Math.min(10,Math.max(0,Math.floor(gNum(o.rbEvo,0))));
+  d.fm=gFmLoad(o.fm);
   if(o.ach&&typeof o.ach==='object')Object.keys(o.ach).forEach(function(k){if(/^[a-z]+\d+$/.test(k))d.ach[k]=1;});
   ['pity','pity2','pulls'].forEach(function(k){d[k]=Math.max(0,Math.floor(gNum(o[k],0)));});
   if(Array.isArray(o.tk))d.tk=o.tk.slice(0,12).map(function(t){return t&&G_TKAMT[t.lvl]?{lvl:+t.lvl,amt:G_TKAMT[t.lvl],ts:gNum(t.ts,0),used:gNum(t.used,0),no:String(t.no||'').slice(0,20)}:null;}).filter(Boolean);
@@ -2036,8 +2261,9 @@ function gReward(entry,prN){
   var newTk=[],ready=gEvoReady(g);
   g.st.kg+=kg;g.st.sec+=sec;g.st.n+=1;g.st.rub+=rub;g.st.tsec+=entry.seconds||0;
   g.rubies+=rub;g.tickets+=tk;
+  var fm=gFm(),wb=Math.min(3,30-fm.water);fm.water+=wb;
   gSave();
-  return {stk:stk,rub:rub,tk:tk,lvUp:null,ready:ready,newTk:newTk,score:nc};
+  return {water:wb,stk:stk,rub:rub,tk:tk,lvUp:null,ready:ready,newTk:newTk,score:nc};
 }
 /* ---- 화면 조각 ---- */
 function gShown(g){return g.farm?Math.max(1,g.stage-1):g.stage;}
@@ -2124,7 +2350,7 @@ function gStatCard(g){
   var c=[[fmtLong(st.tsec),'총 운동 시간'],[fmtLong(st.sec),'시간 운동 합계'],[Math.floor(st.kg).toLocaleString('en-US')+'kg','누적 중량'],[Math.floor(st.n)+'회','운동 횟수'],[Math.floor(st.days)+'일','운동한 날'],[gFmt(st.rub),'받은 루비'],[g.rebirths+'회','환생'],[g.best+'층','최고 기록']];
   return '<h2>통계 <small style="font-weight:400;font-size:12px;color:var(--ink2)">'+(d.getMonth()+1)+'월 '+d.getDate()+'일부터</small></h2><div class="gstat">'+c.map(function(x){return '<div><b>'+x[0]+'</b><small>'+x[1]+'</small></div>';}).join('')+'</div>';
 }
-var G_MENU=[['grow','🌱','성장'],['up','💪','강화'],['tk','🎁','보상'],['gac','🎟️','뽑기'],['dex','📖','도감'],['stat','📊','통계']];
+var G_MENU=[['grow','🌱','성장'],['up','💪','강화'],['tk','🎁','보상'],['gac','🎟️','뽑기'],['dex','📖','도감'],['farm','🌾','농장'],['stat','📊','통계']];
 function gMenuHtml(){var rd=gAchReady(gGet())>0;return '<nav class="gmenu">'+G_MENU.map(function(m){return '<button class="gm'+(gSub===m[0]?' on':'')+'" data-act="gmenu" data-k="'+m[0]+'"><span>'+m[1]+'</span>'+m[2]+(m[0]==='tk'&&rd?'<i class="gdot"></i>':'')+'</button>';}).join('')+'</nav>';}
 function gDexBonus(g){return gDexB(g)*100;}
 function gDexN(g){return Object.keys(g.dex).length;}
@@ -2262,6 +2488,7 @@ function gSecHtml(g){
   if(gSub==='tk')return '<section class="card" id="g-tkc">'+gRwCard(g)+'</section>';
   if(gSub==='gac')return '<section class="card" id="g-gac">'+gGacCard(g)+'</section>';
   if(gSub==='dex')return '<section class="card" id="g-dex">'+gDexCard(g)+'</section>';
+  if(gSub==='farm')return '<section class="card" id="g-farm">'+gFarmCard(g)+'</section>';
   if(gSub==='stat')return '<section class="card" id="g-stat">'+gStatCard(g)+'</section>';
   if(gSub==='grow')return '<section class="card" id="g-evo">'+gEvoCard(g)+'</section><section class="card" id="g-today">'+gTodayCard(g)+'</section><section class="card" id="g-rebirth">'+gRebirthCard(g)+'</section>';
   return '';
@@ -2282,6 +2509,7 @@ function gRefresh(){
   gSetH('g-rub',gRuby(15)+' '+gFmt(g.rubies));
   gHeroCheck(g);
   gDot();
+  if(typeof gFarmAfter==='function')gFarmAfter();
 }
 /* ---- 틱 ---- */
 function gSet(id,t){var e=$(id);if(e&&e.textContent!==t)e.textContent=t;}
@@ -2479,7 +2707,7 @@ function gCelebrate(r){
   r.newTk.forEach(function(L){ban+='<div class="gcb t">🎁 '+G_TKAMT[L]+'만원 보상권 도착!</div>';});
   if(r.stk){ban+='<div class="gcb" style="background:linear-gradient(135deg,#ff9a3c,#ff5e62)">🔥 연속 '+r.stk.n+'일째! 공격력·하트 수입 +'+gPct(r.stk.n*5)+'</div>';if(r.stk.used)ban+='<div class="gcb t">🛡️ 방지권으로 연속 기록을 지켰어!</div>';if(r.stk.got)ban+='<div class="gcb t">🛡️ 한 달 연속! 방지권 1장 획득</div>';}
   gSfx('coin');
-  el.innerHTML='<div class="gcfall">'+fall+'</div><div class="gcin"><div class="gcray"></div><div class="gcsp">'+sp+'</div><div class="gcbig">'+gRuby(150)+'</div><div class="gcn" id="gcn">+0</div><div class="gcs">루비를 받았어!  ·  🎟️ 뽑기권 +'+r.tk+'</div>'+ban+'</div>';
+  el.innerHTML='<div class="gcfall">'+fall+'</div><div class="gcin"><div class="gcray"></div><div class="gcsp">'+sp+'</div><div class="gcbig">'+gRuby(150)+'</div><div class="gcn" id="gcn">+0</div><div class="gcs">루비를 받았어!  ·  🎟️ 뽑기권 +'+r.tk+(r.water?'  ·  💧 물 +'+r.water:'')+'</div>'+ban+'</div>';
   document.body.appendChild(el);
   try{navigator.vibrate&&navigator.vibrate([60,40,60,40,160]);}catch(e){}
   var n=r.rub,t0=Date.now();
@@ -2689,7 +2917,7 @@ var G_A={
     if(g.star[k]>=5)gSsrShow(k,G_DX[k][0],function(){gRefresh();},{t:'★ 5',sub:'최고 강화 달성!'});
     else gStarFx(k,g.star[k],function(){gRefresh();});
   },
-  tab:function(b){if(b.dataset.t==='gac')gGacT=b.dataset.k;else gDxT=b.dataset.k;gDexModalClose();gRefresh();},
+  tab:function(b){if(b.dataset.t==='gac')gGacT=b.dataset.k;else if(b.dataset.t==='farm')gFmT=b.dataset.k;else gDxT=b.dataset.k;gDexModalClose();gRefresh();},
   pdi:function(b){var k=b.dataset.k,g=gGet();if(!G_CPM[k])return;if(!g.cdex[k]){toast('아직 못 만난 동료야 ❓');return;}gPetModal(k);},
   peq:function(b){
     var k=b.dataset.k,g=gGet(),p=G_CPM[k];if(!p||!g.cdex[k])return;
@@ -3029,6 +3257,7 @@ var acts={
   gdexi:function(b){G_A.dexi(b);},
   grw:function(b){G_A.rw(b);},
   gdxx:function(){G_A.dxx();},
+  gf:function(b){gfDo(b);},
   gbuff:function(){G_A.buff();},
   gbx:function(){G_A.buffx();},
   gsnd:function(){G_A.snd();},
