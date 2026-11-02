@@ -623,18 +623,18 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .ghw{position:relative;width:calc(200px*var(--k));height:calc(156px*var(--k));flex:none;transition:width .4s cubic-bezier(.4,0,.2,1),height .4s cubic-bezier(.4,0,.2,1)}
 .ghero{position:absolute;left:0;bottom:0;z-index:3;width:100%;height:100%;cursor:pointer;-webkit-tap-highlight-color:transparent;background-repeat:no-repeat;background-size:600% 100%;background-position:0 0;image-rendering:pixelated;animation:gatk var(--ad,1s) infinite;animation-timing-function:steps(1,end);transition:bottom .3s}
 .ghero.pop{filter:brightness(1.15)}
-.ghw.rd .ghero{bottom:calc(54px*var(--k))}
+.ghw.rd .ghero{bottom:calc(44px*var(--k))}
 @keyframes gatk{0%{background-position:0 0}46%{background-position:20% 0}54%{background-position:40% 0}62%{background-position:60% 0}70%{background-position:80% 0}78%{background-position:100% 0}88%{background-position:0 0}100%{background-position:0 0}}
 .gcp{position:absolute;pointer-events:none;image-rendering:auto}
-.gcp.gnd{left:calc(-46px*var(--k));bottom:0;width:calc(84px*var(--k));height:calc(84px*var(--k));z-index:1;animation:gcpb 1.1s ease-in-out infinite}
-.gcp.sky{left:26%;bottom:calc(146px*var(--k));width:calc(64px*var(--k));height:calc(64px*var(--k));z-index:4;animation:gcpf 2.2s ease-in-out infinite}
-.ghw.rd .gcp.sky{bottom:calc(196px*var(--k))}
-.gcp.veh{left:50%;margin-left:calc(-52px*var(--k));bottom:calc(-4px*var(--k));width:calc(104px*var(--k));height:calc(104px*var(--k));z-index:4;animation:gcpv .5s ease-in-out infinite}
+.gcp.gnd{left:calc(-46px*var(--k));bottom:0;width:calc(84px*var(--k));height:calc(84px*var(--k));z-index:1;animation:gcl var(--ad,1s) ease-in-out infinite}
+.gcp.sky{left:26%;bottom:calc(146px*var(--k));width:calc(64px*var(--k));height:calc(64px*var(--k));z-index:4;animation:gcs calc(var(--ad,1s)*1.5) ease-in-out infinite}
+.ghw.rd .gcp.sky{bottom:calc(190px*var(--k))}
+.gcp.veh{left:50%;margin-left:calc(-62px*var(--k));bottom:calc(-8px*var(--k));width:calc(128px*var(--k));height:calc(128px*var(--k));z-index:4;animation:gcpv .5s ease-in-out infinite}
 @keyframes gcpb{0%,100%{transform:translateY(0)}50%{transform:translateY(calc(-5px*var(--k)))}}
 @keyframes gcpf{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(calc(-9px*var(--k))) rotate(4deg)}}
 @keyframes gcpv{0%,100%{transform:translateY(0)}50%{transform:translateY(calc(-2px*var(--k)))}}
 .gaura{position:absolute;inset:0;z-index:2;pointer-events:none}
-.ghw.rd .gaura{transform:translateY(calc(-54px*var(--k)))}
+.ghw.rd .gaura{transform:translateY(calc(-44px*var(--k)))}
 .gaura i{position:absolute;left:50%;top:50%;border-radius:50%;pointer-events:none;display:block}
 .gag{width:calc(170px*var(--k));height:calc(170px*var(--k));margin:calc(-85px*var(--k)) 0 0 calc(-85px*var(--k));background:radial-gradient(circle,var(--rc),transparent 68%);opacity:.28;animation:gpulse 2.6s ease-in-out infinite}
 .r1 .gag{opacity:.38}.r2 .gag{opacity:.52}.r3 .gag{opacity:.7;width:calc(210px*var(--k));height:calc(210px*var(--k));margin:calc(-105px*var(--k)) 0 0 calc(-105px*var(--k))}
@@ -673,6 +673,9 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 
 .gdmc .gfvc img.gfr{height:auto;width:100%}
 .gcp{object-fit:contain;object-position:center bottom}
+
+@keyframes gcl{0%,52%,100%{transform:translateX(0) scale(1,1)}62%{transform:translateX(calc(-6px*var(--k))) scale(1.04,.94)}74%{transform:translateX(calc(46px*var(--k))) scale(.96,1.04)}86%{transform:translateX(calc(8px*var(--k)))}}
+@keyframes gcs{0%,100%{transform:translate(0,0) rotate(-3deg)}30%{transform:translate(0,calc(-8px*var(--k))) rotate(3deg)}55%{transform:translate(calc(-4px*var(--k)),calc(-4px*var(--k))) rotate(-6deg)}70%{transform:translate(calc(52px*var(--k)),calc(10px*var(--k))) rotate(14deg)}85%{transform:translate(calc(10px*var(--k)),0) rotate(0)}}
 
 </style>
 
@@ -1081,7 +1084,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v55';
+var APPV='v56';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
