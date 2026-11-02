@@ -1135,7 +1135,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v61';
+var APPV='v62';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1993,8 +1993,8 @@ function gHeroCheck(g){
 }
 /* ===== 텃밭 · 농장 ===== */
 var G_CROP=[
- {k:'carrot',e:'🥕',n:'당근',t:1200,v:20,f:1,rv:1},
- {k:'straw',e:'🍓',n:'딸기',t:3600,v:60,f:2,rv:2},
+ {k:'carrot',e:'🥕',n:'당근',t:2400,v:20,f:1,rv:1},
+ {k:'straw',e:'🍓',n:'딸기',t:57600,v:60,f:2,rv:2},
  {k:'corn',e:'🌽',n:'옥수수',t:7200,v:150,f:4,rv:3},
  {k:'tomato',e:'🍅',n:'토마토',t:14400,v:400,f:6,rv:4},
  {k:'sun',e:'🌻',n:'해바라기',t:28800,v:1000,f:10,rv:5}
@@ -2003,7 +2003,7 @@ var G_CRM={};G_CROP.forEach(function(c){G_CRM[c.k]=c;});
 var G_PROD={gnd:{k:'milk',e:'🥛',n:'우유'},sky:{k:'egg',e:'🥚',n:'달걀'},veh:{k:'dust',e:'✨',n:'반짝가루'}};
 var G_PRK=['milk','egg','dust'];
 var G_PRM={milk:G_PROD.gnd,egg:G_PROD.sky,dust:G_PROD.veh};
-var G_FPI=[40,30,22,15];           // 등급별 생산 간격(분)
+var G_FPI=[120,90,66,45];           // 등급별 생산 간격(분)
 var G_PRV=[5,12,30,75];            // 등급별 생산물 가치(수확 가치 배수)
 var G_WSTEP=.15,G_WMAX=3,G_ANCAP=12;
 function gFmDef(){var o={pl:[],water:5,inv:{},an:[],ns:3,np:4};for(var i=0;i<4;i++)o.pl.push({c:'',t:0,w:0});G_CROP.forEach(function(c){o.inv[c.k]=0;});G_PRK.forEach(function(k){o.inv[k]=0;});return o;}
