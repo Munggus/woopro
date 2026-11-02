@@ -654,14 +654,14 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 
 .gmon{display:flex;align-items:flex-end;justify-content:center}
 .gmon{flex:none}
-.gmon.king{width:calc(152px*var(--k));height:calc(152px*var(--k));margin-right:calc(-6px*var(--k))}
+.gmon.king{width:calc(152px*var(--k));height:calc(152px*var(--k));;}
 .ghw{z-index:4}
 .gmon .gmi{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;object-position:center bottom;display:block;image-rendering:auto}
 .gmon .gsh{position:absolute;left:14%;right:14%;bottom:-3px;height:9%;border-radius:50%;background:rgba(0,0,0,.18)}
 .garena.boss .gmon .gmi{filter:drop-shadow(0 0 7px rgba(255,70,90,.85))}
 .garena.boss .gmon.king .gmi{filter:drop-shadow(0 0 10px rgba(255,200,60,.95))}
 
-.garena:not(.sm) .ghw{transform:scale(.5);transform-origin:left bottom;margin-right:calc(-100px*var(--k))}
+.garena:not(.sm) .ghw{transform:scale(.5);transform-origin:50% 100%}
 
 .gseg.g4{grid-template-columns:repeat(4,1fr)}.gseg.g4 .gsg{padding-left:2px;padding-right:2px;font-size:13px}
 .gfvw{display:flex;gap:6px;width:100%;justify-content:center;align-items:flex-end}
@@ -727,6 +727,16 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 @keyframes gwk{0%,100%{transform:translateY(calc(-14px*var(--k))) rotate(12deg)}50%{transform:translateY(calc(-22px*var(--k))) rotate(15deg)}}
 .gfield.gwk .gcp.gnd,.gfield.gwk .gcp.veh{animation:gcpb .42s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.gfield.gwk .gmon,.gfield.gwk .ghero,.gfield::before{animation:none!important}}
+
+/* ===== 대칭 배치: 왼쪽 절반=사랑이 무리, 오른쪽 절반=몬스터 ===== */
+.gfield{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end;justify-items:center;padding:0;overflow:visible}
+.gfield>.ghw{grid-column:1;grid-row:1}
+.gfield>.gmon{grid-column:2;grid-row:1}
+
+.gfield>.gmon{max-width:94%;height:auto!important;aspect-ratio:1/1}
+@media (max-width:410px){.garena:not(.sm) .ghw{transform:scale(.47)}}
+@media (max-width:380px){.garena:not(.sm) .ghw{transform:scale(.42)}}
+@media (max-width:340px){.garena:not(.sm) .ghw{transform:scale(.37)}}
 
 </style>
 
@@ -1135,7 +1145,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v66';
+var APPV='v67';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2200,7 +2210,7 @@ var gSub='',gChT=0,gS=null,gIv=0,gOff=null,gSaveT=0,gSm=false,gTipK=0,gLastShown
 function gNum(v,d){v=+v;return isFinite(v)?v:d;}
 function gDayKey(ts){var d=new Date(ts);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function gMidnight(){var d=new Date();d.setHours(0,0,0,0);return d.getTime();}
-function gDef(){var t=Date.now();return {ver:2,start:gMidnight(),last:t,hearts:0,rubies:0,tickets:1,stage:1,hp:0,kills:0,best:1,farm:false,hold:false,sk:0,dlyLeft:0,bt:0,fails:0,evo:0,credit:0,day:{d:'',t:0,w:0,c:0},lv:{atk:0,inc:0,spd:0},rl:{atk:0,heart:0,mv:0},rp:{atk:0,inc:0,spd:0,sk:0,mv:0,bt:0,tk:0,rub:0,rpg:0},rpt:0,rebirths:0,gift1:1,st:{kg:0,sec:0,n:0,rub:0,tsec:0,days:0},done:{},tk:[],tkMade:{},dex:{},star:{},dup:{},stk:{n:0,ld:0,sh:0},snd:1,pity:0,pity2:0,pulls:0,hero:'',cdex:{},cstar:{},cdup:{},ceq:{gnd:'',sky:'',veh:''},cpity:0,cpity2:0,gd:'',rc:{fl:0,kg:0,hr:0,rb:0,wk:0},mxe:0,form:-1,bossLock:false,rbEvo:0,ach:{},fm:null};}
+function gDef(){var t=Date.now();return {ver:2,start:gMidnight(),last:t,hearts:0,rubies:0,tickets:1,stage:1,hp:0,kills:0,best:1,farm:false,hold:false,sk:0,dlyLeft:0,bt:0,fails:0,evo:0,credit:0,day:{d:'',t:0,w:0,c:0},lv:{atk:0,inc:0,spd:0},rl:{atk:0,heart:0,mv:0},rp:{atk:0,inc:0,spd:0,sk:0,mv:0,bt:0,tk:0,rub:0,rpg:0},rpt:0,rebirths:0,gift1:1,st:{kg:0,sec:0,n:0,rub:0,tsec:0,days:0},done:{},tk:[],tkMade:{},dex:{},star:{},dup:{},stk:{n:0,ld:0,sh:0},snd:1,pity:0,pity2:0,pulls:0,hero:'',cdex:{},cstar:{},cdup:{},ceq:{gnd:'',sky:'',veh:''},cpity:0,cpity2:0,gd:'',rc:{fl:0,kg:0,hr:0,rb:0,wk:0},mxe:0,form:-1,bossLock:false,rbEvo:0,ach:{},fm:null,md:{}};}
 function gLoad(){
   var d=gDef(),o=null;try{o=JSON.parse(localStorage.getItem(GKEY)||'null');}catch(e){}
   if(!o||typeof o!=='object')return d;
@@ -2230,6 +2240,8 @@ function gLoad(){
   d.mxe=Math.min(10,Math.max(0,Math.floor(gNum(o.mxe,0))));d.form=Math.min(10,Math.max(-1,Math.floor(gNum(o.form,-1))));
   d.rbEvo=Math.min(10,Math.max(0,Math.floor(gNum(o.rbEvo,0))));
   d.fm=gFmLoad(o.fm);
+  d.md={};if(o.md&&typeof o.md==='object')Object.keys(o.md).forEach(function(k){if(/^[0-9]_[0-9]$/.test(k))d.md[k]=Math.min(5,Math.max(1,Math.floor(gNum(o.md[k],1))));});
+  gMdBackfill(d);
   if(o.ach&&typeof o.ach==='object')Object.keys(o.ach).forEach(function(k){if(/^[a-z]+\d+$/.test(k))d.ach[k]=1;});
   ['pity','pity2','pulls'].forEach(function(k){d[k]=Math.max(0,Math.floor(gNum(o[k],0)));});
   if(Array.isArray(o.tk))d.tk=o.tk.slice(0,12).map(function(t){return t&&G_TKAMT[t.lvl]?{lvl:+t.lvl,amt:G_TKAMT[t.lvl],ts:gNum(t.ts,0),used:gNum(t.used,0),no:String(t.no||'').slice(0,20)}:null;}).filter(Boolean);
@@ -2304,7 +2316,7 @@ function gFrac(g,now){
 function gChips(g){return '<div class="gres"><span class="chip" id="g-hearts" data-act="gchip" data-k="h">💗 '+gFmt(g.hearts)+'</span><span class="chip" id="g-pps" data-act="gchip" data-k="d">⚔️ '+gFmt(gDps(g))+'/초</span><span class="chip rb" id="g-rub" data-act="gchip" data-k="r">'+gRuby(15)+' '+gFmt(g.rubies)+'</span><span class="chip" id="g-tk" data-act="gchip" data-k="t">🎟️ '+g.tickets+'</span></div><div class="gchtip" id="g-chtip" hidden></div>';}
 function gArena(g){
   var n=g.stage,sh=gShown(g),boss=sh%10===0&&!g.farm,r=G_REG[gRegIdx(sh)];
-  gLastShown=sh;gNoteKey='';gHK=gHeroKey(g);setTimeout(function(){gPreNext(g);},400);
+  gMdSee(g,sh);gLastShown=sh;gNoteKey='';gHK=gHeroKey(g);setTimeout(function(){gPreNext(g);},400);
   return '<div class="garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'')+'" id="g-arena" style="'+gArenaStyle(sh)+'">'+gChips(g)+
    '<div class="glv" id="g-lv">Lv.'+g.evo+' '+G_NAMES[g.evo]+' 사랑이</div><div class="gst" id="g-st">'+gStText(g)+'</div>'+
    '<div class="gfield" id="g-field">'+gRainHtml(g.evo>=10)+'<div id="g-evw">'+gEvoBtnHtml(g)+'</div><div id="g-buffw">'+gBuffHtml(g)+'</div><button class="gsnd" id="g-snd" data-act="gsnd" aria-label="효과음">'+(g.snd?'🔊':'🔇')+'</button><div class="gbub" id="g-bub" hidden></div>'+gHeroHtml(g)+'<div class="gmon'+gMonCls(sh,boss)+'" id="g-mon">'+gMonSvg(sh)+'</div></div>'+
@@ -2397,8 +2409,42 @@ function gDexCard(g){
   var tabs='<div class="gseg g4"><button class="gsg'+(gDxT==='f'?' on':'')+'" data-act="gtab" data-t="dex" data-k="f">🎀 모습</button><button class="gsg'+(gDxT==='a'?' on':'')+'" data-act="gtab" data-t="dex" data-k="a">✨ 오라</button><button class="gsg'+(gDxT==='p'?' on':'')+'" data-act="gtab" data-t="dex" data-k="p">🐾 동료</button><button class="gsg'+(gDxT==='m'?' on':'')+'" data-act="gtab" data-t="dex" data-k="m">👾 몬스터</button></div>';
   if(gDxT==='f')return tabs+gFormDexCard(g);
   if(gDxT==='p')return tabs+gPetDexCard(g);
-  if(gDxT==='m')return tabs+'<div class="gsoon"><div class="gsoon-i">👾</div><b>업데이트 예정</b><p>도트 몬스터 친구들이 곧 찾아올 거야!<br>조금만 기다려줘 💗</p></div>';
+  if(gDxT==='m')return tabs+gMonDexCard(g);
   return tabs+gDexAuraCard(g);
+}
+/* ---- 몬스터 도감 ---- */
+var G_LPB=['','✨','🌟','🌈','👑'];
+function gMdSee(g,n){
+  if(!gMonHasImg(n))return false;if(!g.md)g.md={};
+  var k=gRegIdx(n)+'_'+gMonImgIdx(n),v=gLoopN(n)+1;
+  if((g.md[k]||0)<v){g.md[k]=v;return true;}return false;
+}
+function gMdBackfill(g){
+  if(!g.md)g.md={};var b=g.best||1;
+  for(var t=0;t<10;t++)for(var i=0;i<10;i++){
+    var st=i<9?t*100+i*10+1:t*100+100;
+    if(b>=st){var v=Math.min(5,1+Math.floor((b-st)/1000));if((g.md[t+'_'+i]||0)<v)g.md[t+'_'+i]=v;}
+  }
+}
+function gMonDexCard(g){
+  var tot=0,h='',md=g.md||{};
+  for(var t=0;t<10;t++){
+    var its=[];for(var i=0;i<10;i++)if(md[t+'_'+i])its.push(i);
+    if(!its.length)continue;tot+=its.length;
+    h+='<h3 class="gcph">'+G_REG[t].n+' <small>'+its.length+'/10</small></h3><div class="gdx">'+its.map(function(i){
+      var lv=md[t+'_'+i];
+      return '<div class="gdxi" style="--rc:'+(i===9?'#ffb300':'#ff8fb8')+'" data-act="gmdi" data-k="'+t+'_'+i+'">'+(lv>1?'<b>'+G_LPB[lv-1]+'</b>':'')+'<img alt="" src="'+MON_I[t][i]+'"><i>'+(i===9?'왕':'')+'</i><small>'+MON_N[t][i]+'</small></div>';
+    }).join('')+'</div>';
+  }
+  return '<p class="hint"><b>만난 몬스터 '+tot+'/100</b><br>만난 몬스터만 도감에 남아. 더 높은 층으로 올라가면 새 친구들을 만날 수 있어! (누르면 자세히 볼 수 있어)</p>'+(h||'<div class="gsoon"><div class="gsoon-i">👾</div><b>아직 만난 몬스터가 없어</b></div>');
+}
+function gMonModal(k){
+  var p=k.split('_'),t=+p[0],i=+p[1],g=gGet(),lv=(g.md||{})[k];if(!lv||!MON_I[t])return;
+  gDexModalClose();
+  var fl=i<9?(t*100+i*10+1)+'~'+(t*100+i*10+10)+'층 (보스: '+(t*100+i*10+10)+'층)':(t*100+91)+'~'+(t*100+99)+'층에 가끔 · '+(t*100+100)+'층 대왕';
+  var el=document.createElement('div');el.className='gdm';el.id='gdm';
+  el.innerHTML='<div class="gdmc" style="--rc:'+(i===9?'#ffb300':'#ff8fb8')+'"><img style="height:150px" alt="" src="'+MON_I[t][i]+'"><div class="gdmn">'+MON_N[t][i]+'</div><div class="gdmi">'+G_REG[t].n+'<br>'+fl+'<br>만난 최고 모습: '+(lv>1?G_LPB[lv-1]+' '+G_LOOP[lv-1].trim():'기본')+'</div><div class="gdmbt"><button class="mini" data-act="gdxx">닫기</button></div></div>';
+  el.addEventListener('click',function(e){if(e.target===el)gDexModalClose();});document.body.appendChild(el);
 }
 function gFormDexCard(g){
   var mx=gMaxEvo(g),cur=gFormLv(g),n=mx+1;
@@ -2536,7 +2582,7 @@ function gSet(id,t){var e=$(id);if(e&&e.textContent!==t)e.textContent=t;}
 function gSetH(id,t){var e=$(id);if(e&&e.innerHTML!==t)e.innerHTML=t;}
 function gPaintStage(g,pop){
   var sh=gShown(g),boss=sh%10===0&&!g.farm,ar=$('g-arena'),mon=$('g-mon');if(!ar||!mon)return;
-  var r=G_REG[gRegIdx(sh)];
+  gMdSee(g,sh);var r=G_REG[gRegIdx(sh)];
   ar.className='garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'');ar.style.cssText=gArenaStyle(sh);
   mon.className='gmon'+(pop?' pop':'')+gMonCls(sh,boss);mon.innerHTML=gMonSvg(sh);
   gSet('g-mn',gMonName(sh));gLastShown=sh;gPreNext(g);
@@ -2934,6 +2980,7 @@ var G_A={
     gDexModal(k);
   },
   dxx:function(){gDexModalClose();},
+  mdi:function(b){gMonModal(b.dataset.k);},
   dxeq:function(b){
     var k=b.dataset.k,g=gGet();if(!g.dex[k])return;
     if(g.hero===k){g.hero='';toast('오라를 벗었어');}else{g.hero=k;toast('「'+G_DX[k][0]+'」 오라를 장착했어! ✨');}
@@ -3286,6 +3333,7 @@ var acts={
   gdexi:function(b){G_A.dexi(b);},
   grw:function(b){G_A.rw(b);},
   gdxx:function(){G_A.dxx();},
+  gmdi:function(b){G_A.mdi(b);},
   gf:function(b){gfDo(b);},
   gbuff:function(){G_A.buff();},
   gbx:function(){G_A.buffx();},
@@ -3592,4 +3640,5 @@ applyTheme();
 render();
 })();
 </script>
+
 <script>if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){(function(){var had=!!navigator.serviceWorker.controller,pend=false;function rl(){if(window.__rl)return;window.__rl=1;location.reload();}navigator.serviceWorker.addEventListener("controllerchange",function(){if(!had){had=true;return;}if(document.getElementById("splash")||document.hidden)rl();else pend=true;});document.addEventListener("visibilitychange",function(){if(document.hidden&&pend)rl();});window.addEventListener("load",function(){try{navigator.serviceWorker.register("sw.js").then(function(r){try{r.update();}catch(e){}}).catch(function(){});}catch(e){}});})();}</script></body></html>
