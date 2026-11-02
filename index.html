@@ -709,6 +709,9 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gcrb span{font-size:28px}.gcrb small{font-size:10px;color:#8a7a62}
 .gfm-i{height:90px;object-fit:contain}
 .gdx.gdxs{max-height:50vh;overflow:auto;margin:8px 0}
+.gdmc .gdx img{height:auto;width:100%}
+.gdmc .gdx{width:100%;grid-template-columns:repeat(3,1fr)}
+.gdmc .gdx.gdxs{max-height:46vh}
 
 </style>
 
@@ -1117,7 +1120,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v57';
+var APPV='v58';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1974,11 +1977,11 @@ function gHeroCheck(g){
 }
 /* ===== 텃밭 · 농장 ===== */
 var G_CROP=[
- {k:'carrot',e:'🥕',n:'당근',t:1200,v:20,f:1},
- {k:'straw',e:'🍓',n:'딸기',t:3600,v:60,f:2},
- {k:'corn',e:'🌽',n:'옥수수',t:7200,v:150,f:4},
- {k:'tomato',e:'🍅',n:'토마토',t:14400,v:400,f:6},
- {k:'sun',e:'🌻',n:'해바라기',t:28800,v:1000,f:10}
+ {k:'carrot',e:'🥕',n:'당근',t:1200,v:20,f:1,rv:1},
+ {k:'straw',e:'🍓',n:'딸기',t:3600,v:60,f:2,rv:2},
+ {k:'corn',e:'🌽',n:'옥수수',t:7200,v:150,f:4,rv:3},
+ {k:'tomato',e:'🍅',n:'토마토',t:14400,v:400,f:6,rv:4},
+ {k:'sun',e:'🌻',n:'해바라기',t:28800,v:1000,f:10,rv:5}
 ];
 var G_CRM={};G_CROP.forEach(function(c){G_CRM[c.k]=c;});
 var G_PROD={gnd:{k:'milk',e:'🥛',n:'우유'},sky:{k:'egg',e:'🥚',n:'달걀'},veh:{k:'dust',e:'✨',n:'반짝가루'}};
@@ -1999,7 +2002,8 @@ function gFmLoad(o){
 }
 function gFm(){var g=gGet();if(!g.fm)g.fm=gFmDef();return g.fm;}
 /* ---- 계산 ---- */
-function gPlRemain(p,now){var c=G_CRM[p.c];if(!c)return 0;return Math.max(0,c.t*1000*(1-G_WSTEP*p.w)-(now-p.t));}
+function gWCut(c){return Math.max(G_WSTEP*c.t*1000,3600000);}
+function gPlRemain(p,now){var c=G_CRM[p.c];if(!c)return 0;return Math.max(0,c.t*1000-p.w*gWCut(c)-(now-p.t));}
 function gAnInt(g,a){var p=G_CPM[a.id];return G_FPI[p.r]*60000/(1+.2*((g.cstar[a.id]||1)-1));}
 function gAnSync(g,a,now){
   var iv=gAnInt(g,a),upto=Math.min(now,a.fu);
@@ -2015,11 +2019,11 @@ function gFmWater(n){var f=gFm();f.water=Math.min(30,f.water+n);}
 var gFmT='f';
 function gInvHtml(g){
   var f=gFm(),base=gFmBase(g),tot=0,rows='';
-  G_CROP.forEach(function(c){var n=f.inv[c.k]||0;if(n){var h=base*c.v*n;tot+=h;rows+='<span class="gii">'+c.e+' <b>'+n+'</b></span>';}});
-  G_PRK.forEach(function(k){var n=f.inv[k]||0;if(n){var h=base*gPrVal(k)*n;tot+=h;rows+='<span class="gii">'+G_PRM[k].e+' <b>'+n+'</b></span>';}});
-  return '<h3 class="gcph">🧺 창고</h3>'+(rows?'<div class="gih">'+rows+'</div><button class="btn sm gevob" data-act="gf" data-f="sell">💗 모두 팔기 (+'+gFmt(tot)+')</button><p class="hint" style="font-size:12px">작물은 농장 동물의 먹이로도 쓸 수 있어. 먹이로 줄 건 남겨두고 팔아!</p>':'<p class="hint">수확한 작물이랑 농장에서 얻은 물건이 여기에 모여. 💗로 바꿔서 쓸 수 있어!</p>');
+  G_CROP.forEach(function(c){var n=f.inv[c.k]||0;if(n){var h=c.rv*n;tot+=h;rows+='<span class="gii">'+c.e+' <b>'+n+'</b></span>';}});
+  G_PRK.forEach(function(k){var n=f.inv[k]||0;if(n){var h=gPrVal(k)*n;tot+=h;rows+='<span class="gii">'+G_PRM[k].e+' <b>'+n+'</b></span>';}});
+  return '<h3 class="gcph">🧺 창고</h3>'+(rows?'<div class="gih">'+rows+'</div><button class="btn sm gevob" data-act="gf" data-f="sell">'+gRuby(14)+' 모두 팔기 (+'+gFmt(tot)+')</button><p class="hint" style="font-size:12px">작물은 농장 동물의 먹이로도 쓸 수 있어. 먹이로 줄 건 남겨두고 팔아!</p>':'<p class="hint">수확한 작물이랑 농장에서 얻은 물건이 여기에 모여. 루비로 바꿀 수 있어!</p>');
 }
-function gPrVal(k){var r=0;if(k==='milk')r=1;if(k==='egg')r=1;if(k==='dust')r=1;return 8;}
+function gPrVal(k){return {milk:3,egg:5,dust:8}[k]||3;}
 function gFarmCard(g){
   gFmSyncAll(g);
   var tabs='<div class="gseg"><button class="gsg'+(gFmT==='f'?' on':'')+'" data-act="gtab" data-t="farm" data-k="f">🌱 텃밭</button><button class="gsg'+(gFmT==='a'?' on':'')+'" data-act="gtab" data-t="farm" data-k="a">🐄 농장</button></div>';
@@ -2037,7 +2041,7 @@ function gPlotCard(g){
   });
   h+='</div>';
   if(f.np<8){var cost=20*(f.np-3);h+='<button class="mini rb" style="margin-top:8px" data-act="gf" data-f="bpl">'+gRuby(14)+' '+cost+' 밭 한 칸 넓히기 ('+f.np+'→'+(f.np+1)+')</button>';}
-  return h+'<p class="hint" style="font-size:12px">익고 있는 밭을 누르면 💧 물을 줘서 15%씩 빨리 키울 수 있어 (밭마다 3번까지).</p>';
+  return h+'<p class="hint" style="font-size:12px">익고 있는 밭을 누르면 💧 물을 줘서 15%(최소 1시간)만큼 빨리 키울 수 있어 (밭마다 3번까지).</p>';
 }
 function gPenCard(g){
   var f=gFm(),now=Date.now(),h='<div class="gpen" id="g-pen"><div class="gpen-sky"></div><div class="gpen-fence"></div>';
@@ -2098,7 +2102,7 @@ function gFModal(html){
 var G_F={
  seed:function(b){
   var f=gFm(),i=+b.dataset.i,g=gGet(),base=gFmBase(g);
-  gFModal('<div class="gdmn">🌱 무엇을 심을까?</div><div class="gcr">'+G_CROP.map(function(c){return '<button class="gcrb" data-act="gf" data-f="plant" data-i="'+i+'" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+'</b><small>'+gHM(c.t*1000)+'</small><small>💗 '+gFmt(base*c.v)+'</small></button>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
+  gFModal('<div class="gdmn">🌱 무엇을 심을까?</div><div class="gcr">'+G_CROP.map(function(c){return '<button class="gcrb" data-act="gf" data-f="plant" data-i="'+i+'" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+'</b><small>'+gHM(c.t*1000)+'</small><small>'+gRuby(11)+' '+c.rv+'</small></button>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
  },
  plant:function(b){var f=gFm(),p=f.pl[+b.dataset.i];if(!p||p.c)return;p.c=b.dataset.k;p.t=Date.now();p.w=0;gSfx('buy');gSave();gDexModalClose();gRefresh();},
  water:function(b){
@@ -2106,7 +2110,7 @@ var G_F={
   if(gPlRemain(p,Date.now())<=0){return G_F.harv(b);}
   if(p.w>=G_WMAX){toast('이 밭은 물을 충분히 줬어 💦');return;}
   if(f.water<=0){toast('물이 없어 💧 운동을 끝내면 받을 수 있어!');return;}
-  f.water--;p.w++;gSfx('bub');gSave();gRefresh();toast('쑥쑥 자라는 중! 💧 (15% 단축)');
+  f.water--;p.w++;gSfx('bub');gSave();gRefresh();toast('쑥쑥 자라는 중! 💧 (1시간 또는 15% 단축)');
  },
  harv:function(b){
   var f=gFm(),p=f.pl[+b.dataset.i];if(!p||!p.c||gPlRemain(p,Date.now())>0)return;
@@ -2116,9 +2120,9 @@ var G_F={
  bsl:function(b){var g=gGet(),f=gFm();if(f.ns>=10)return;var cost=30*(f.ns-2);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.ns++;gSfx('buy');gSave();gRefresh();toast('마당이 넓어졌어! 🐾');},
  sell:function(b){
   var g=gGet(),f=gFm(),base=gFmBase(g),tot=0;
-  G_CROP.forEach(function(c){tot+=base*c.v*(f.inv[c.k]||0);f.inv[c.k]=0;});
-  G_PRK.forEach(function(k){tot+=base*gPrVal(k)*(f.inv[k]||0);f.inv[k]=0;});
-  if(!tot)return;g.hearts+=tot;gSfx('coin');gSave();gRefresh();toast('💗 +'+gFmt(tot)+' 받았어!');
+  G_CROP.forEach(function(c){tot+=c.rv*(f.inv[c.k]||0);f.inv[c.k]=0;});
+  G_PRK.forEach(function(k){tot+=gPrVal(k)*(f.inv[k]||0);f.inv[k]=0;});
+  if(!tot)return;g.rubies+=tot;g.st.rub+=tot;gSfx('coin');gSave();gRefresh();toast('💎 루비 +'+gFmt(tot)+' 받았어!');
  },
  addm:function(b){
   var g=gGet(),f=gFm(),have=G_CPL.filter(function(p){return g.cdex[p.id]&&!f.an.some(function(a){return a.id===p.id;});}).sort(function(a,b){return b.r-a.r;});
