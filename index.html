@@ -629,7 +629,7 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gcp.gnd{left:calc(-46px*var(--k));bottom:0;width:calc(84px*var(--k));height:calc(84px*var(--k));z-index:1;animation:gcl var(--ad,1s) ease-in-out infinite}
 .gcp.sky{left:26%;bottom:calc(146px*var(--k));width:calc(64px*var(--k));height:calc(64px*var(--k));z-index:4;animation:gcs calc(var(--ad,1s)*1.5) ease-in-out infinite}
 .ghw.rd .gcp.sky{bottom:calc(190px*var(--k))}
-.gcp.veh{left:50%;margin-left:calc(-62px*var(--k));bottom:calc(-8px*var(--k));width:calc(128px*var(--k));height:calc(128px*var(--k));z-index:4;animation:gcpv .5s ease-in-out infinite}
+.gcp.veh{left:50%;margin-left:calc(-24px*var(--k));bottom:calc(-4px*var(--k));width:calc(84px*var(--k));height:calc(84px*var(--k));z-index:6;animation:gcpv .5s ease-in-out infinite}
 @keyframes gcpb{0%,100%{transform:translateY(0)}50%{transform:translateY(calc(-5px*var(--k)))}}
 @keyframes gcpf{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(calc(-9px*var(--k))) rotate(4deg)}}
 @keyframes gcpv{0%,100%{transform:translateY(0)}50%{transform:translateY(calc(-2px*var(--k)))}}
@@ -712,6 +712,11 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gdmc .gdx img{height:auto;width:100%}
 .gdmc .gdx{width:100%;grid-template-columns:repeat(3,1fr)}
 .gdmc .gdx.gdxs{max-height:46vh}
+
+.gpls{grid-template-columns:repeat(4,1fr);gap:5px}
+.gpl{min-height:84px;padding:6px 1px;border-radius:10px;border-width:1.5px;gap:1px}
+.gpl .gpe{font-size:26px}.gpl b{font-size:10px;white-space:nowrap}.gpl small{font-size:9px;line-height:1.15;text-align:center}
+.gpen{isolation:isolate;z-index:0;transform:translateZ(0)}
 
 </style>
 
@@ -1120,7 +1125,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v58';
+var APPV='v59';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1967,7 +1972,7 @@ function gHeroSrc(g){return SPR_F[gFormLv(g)]||'';}
 function gFront(L){return SPR_F[Math.max(0,Math.min(10,L|0))]||'';}
 function gHeroHtml(g){
   var e=g.ceq||{},ride=e.veh&&g.cdex[e.veh]&&G_CPM[e.veh];
-  return '<div class="ghw'+(ride?' rd':'')+'" id="g-hw">'+gAuraHtml(g)+gCrewHtml(g)+'<div class="ghero gsp" id="g-hero" data-act="ghero" style="background-image:url('+(SPR_S[gFormLv(g)]||'')+')"></div></div>';
+  return '<div class="ghw" id="g-hw">'+gAuraHtml(g)+gCrewHtml(g)+'<div class="ghero gsp" id="g-hero" data-act="ghero" style="background-image:url('+(SPR_S[gFormLv(g)]||'')+')"></div></div>';
 }
 var gHK='';
 function gHeroCheck(g){
@@ -1993,7 +1998,7 @@ var G_WSTEP=.15,G_WMAX=3,G_ANCAP=12;
 function gFmDef(){var o={pl:[],water:5,inv:{},an:[],ns:3,np:4};for(var i=0;i<4;i++)o.pl.push({c:'',t:0,w:0});G_CROP.forEach(function(c){o.inv[c.k]=0;});G_PRK.forEach(function(k){o.inv[k]=0;});return o;}
 function gFmLoad(o){
   var d=gFmDef();if(!o||typeof o!=='object')return d;
-  d.np=Math.min(8,Math.max(4,Math.floor(gNum(o.np,4))));d.ns=Math.min(10,Math.max(3,Math.floor(gNum(o.ns,3))));
+  d.np=Math.min(16,Math.max(4,Math.floor(gNum(o.np,4))));d.ns=Math.min(10,Math.max(3,Math.floor(gNum(o.ns,3))));
   d.water=Math.min(30,Math.max(0,Math.floor(gNum(o.water,5))));
   d.pl=[];for(var i=0;i<d.np;i++){var p=(o.pl&&o.pl[i])||{};d.pl.push({c:G_CRM[p.c]?p.c:'',t:G_CRM[p.c]?gNum(p.t,0):0,w:Math.min(G_WMAX,Math.max(0,Math.floor(gNum(p.w,0))))});}
   Object.keys(d.inv).forEach(function(k){d.inv[k]=Math.min(999999,Math.max(0,Math.floor(gNum(o.inv&&o.inv[k],0))));});
@@ -2040,7 +2045,7 @@ function gPlotCard(g){
     h+='<button class="gpl'+(ripe?' rip':'')+'" data-act="gf" data-f="'+(ripe?'harv':'water')+'" data-i="'+i+'"><span class="gpe">'+em+'</span><b>'+c.n+(ripe?' 다 익었어!':'')+'</b>'+(ripe?'<small>눌러서 수확 ✨</small>':'<small data-pt="'+i+'">'+gHM(rem)+' 남음 · 💧'+p.w+'/'+G_WMAX+'</small>')+(ripe?'':gBar(1-rem/tot,'pk'))+'</button>';
   });
   h+='</div>';
-  if(f.np<8){var cost=20*(f.np-3);h+='<button class="mini rb" style="margin-top:8px" data-act="gf" data-f="bpl">'+gRuby(14)+' '+cost+' 밭 한 칸 넓히기 ('+f.np+'→'+(f.np+1)+')</button>';}
+  if(f.np<16){var cost=10*(f.np-3);h+='<button class="mini rb" style="margin-top:8px" data-act="gf" data-f="bpl">'+gRuby(14)+' '+cost+' 밭 한 칸 넓히기 ('+f.np+'→'+(f.np+1)+')</button>';}
   return h+'<p class="hint" style="font-size:12px">익고 있는 밭을 누르면 💧 물을 줘서 15%(최소 1시간)만큼 빨리 키울 수 있어 (밭마다 3번까지).</p>';
 }
 function gPenCard(g){
@@ -2116,7 +2121,7 @@ var G_F={
   var f=gFm(),p=f.pl[+b.dataset.i];if(!p||!p.c||gPlRemain(p,Date.now())>0)return;
   var c=G_CRM[p.c],n=1+(Math.random()<.3?1:0);f.inv[c.k]=(f.inv[c.k]||0)+n;p.c='';p.t=0;p.w=0;gSfx('coin');gSave();gRefresh();toast(c.e+' '+c.n+' '+n+'개 수확! 🎉');
  },
- bpl:function(b){var g=gGet(),f=gFm();if(f.np>=8)return;var cost=20*(f.np-3);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.np++;f.pl.push({c:'',t:0,w:0});gSfx('buy');gSave();gRefresh();toast('밭이 넓어졌어! 🌾');},
+ bpl:function(b){var g=gGet(),f=gFm();if(f.np>=16)return;var cost=10*(f.np-3);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.np++;f.pl.push({c:'',t:0,w:0});gSfx('buy');gSave();gRefresh();toast('밭이 넓어졌어! 🌾');},
  bsl:function(b){var g=gGet(),f=gFm();if(f.ns>=10)return;var cost=30*(f.ns-2);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.ns++;gSfx('buy');gSave();gRefresh();toast('마당이 넓어졌어! 🐾');},
  sell:function(b){
   var g=gGet(),f=gFm(),base=gFmBase(g),tot=0;
