@@ -1003,6 +1003,21 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .garena.boss .gmon.king .gmi{filter:var(--hue,) drop-shadow(calc(1.9px*var(--k)) 0 0 #000) drop-shadow(-calc(1.9px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.9px*var(--k)) 0 #000) drop-shadow(0 -calc(1.9px*var(--k)) 0 #000) drop-shadow(calc(1.9px*var(--k)) calc(1.9px*var(--k)) 0 #000) drop-shadow(-calc(1.9px*var(--k)) calc(1.9px*var(--k)) 0 #000) drop-shadow(calc(1.9px*var(--k)) -calc(1.9px*var(--k)) 0 #000) drop-shadow(-calc(1.9px*var(--k)) -calc(1.9px*var(--k)) 0 #000) drop-shadow(0 0 10px rgba(255,200,60,.95))}
 .gmon svg{filter:drop-shadow(calc(1.9px*var(--k)) 0 0 #000) drop-shadow(-calc(1.9px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.9px*var(--k)) 0 #000) drop-shadow(0 -calc(1.9px*var(--k)) 0 #000)}
 
+/* ===== v85: 전투력 통계 ===== */
+.gspc{background:var(--surface2);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.gspc summary{list-style:none;display:flex;align-items:center;gap:8px;padding:12px;cursor:pointer;font-weight:700;-webkit-tap-highlight-color:transparent}
+.gspc summary::-webkit-details-marker{display:none}
+.gsi{font-size:20px;width:26px;text-align:center}.gsn{flex:1}
+.gspc summary b{font-size:15px;font-variant-numeric:tabular-nums;color:#d6336c}
+.gspc summary i{width:8px;height:8px;border-right:2.5px solid var(--ink2);border-bottom:2.5px solid var(--ink2);transform:rotate(45deg);margin:0 4px 3px 2px;transition:transform .2s}
+.gspc[open] summary i{transform:rotate(-135deg);margin-bottom:-3px}
+.gsb{padding:0 12px 10px}
+.gst{width:100%;border-collapse:collapse;font-size:13px}
+.gst td{padding:6px 2px;border-top:1px solid rgba(0,0,0,.07)}
+.gst td:last-child{text-align:right;color:#2a9d5c}
+.gst tr:first-child td:last-child{color:inherit}
+.gst td:first-child{text-align:left}
+
 </style>
 
 <div id="app">
@@ -1410,7 +1425,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v84';
+var APPV='v85';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2687,10 +2702,54 @@ function gTkCard(g){
   });
   return h+'</ul>';
 }
+var gStT='w';
+function gSpP(x){x=Math.round(x*1000)/10;return (x>=0?'+':'')+x+'%';}
+function gSpN(v){v=+v||0;return v<100?(Math.round(v*100)/100)+'':gFmt(v);}
+function gPetSrc(g,k){
+  var out=[];if(!g.ceq||!g.cdex)return out;
+  G_CPO.forEach(function(c){var id=g.ceq[c],p=id&&G_CPM[id];if(!p||!g.cdex[id])return;var v=0;
+    if(p.a===k){v=gCpVal(g,id);v=(k==='bt')?v:v/100;}
+    var m=G_CSM[(g.cstar&&g.cstar[id])||1]||1;
+    (G_CPX[p.r]||[]).forEach(function(x){if(x[0]===k){var w=k==='cbn'?x[1]:x[1]*m;v+=(k==='cbt'||k==='cbn')?w:w/100;}});
+    if(v)out.push([G_CPC[c][0]+' 동료 ('+p.n+')',v]);});
+  return out;
+}
+function gSpecs(g){
+  var rl=g.rl||{},rp=g.rp||{},L=g.lv,stk=gStkB(g),dex=gDexB(g),pets=function(k,f){return gPetSrc(g,k).map(function(x){return [x[0],f(x[1])];});},pp=function(x){return gSpP(x);};
+  var S=[];
+  var mulRows=function(base,rows,pk){return [['기본',base]].concat(rows.filter(function(r){return r[1]!==0;}).map(function(r){return [r[0],gSpP(r[1])];})).concat(pets(pk,pp));};
+  S.push({ic:'⚔️',n:'공격력',v:gSpN(gAtk(g)),rows:mulRows(gSpN(GP.A0),[
+    ['💗 하트 강화 (Lv.'+L.atk+')',Math.pow(GP.AM,L.atk)-1],['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],
+    ['💎 루비 강화',GP.RAT*(rl.atk||0)],['🔁 환생 강화',GP.RU*gRu(g,'atk')],['🌸 성장 강화',GP.SG*(rp.atk||0)]],'atk'),note:'모두 곱해져요'});
+  S.push({ic:'⚡',n:'공격 속도',v:gSpN(gSpd(g))+'/초',rows:mulRows('1',[
+    ['💗 하트 강화 (Lv.'+L.spd+')',Math.min(GP.SCAP,1+GP.SS*L.spd)-1],['💎 루비 강화',0],['🔁 환생 강화',0.03*gRu(g,'spd')],['🌸 성장 강화',0.05*(rp.spd||0)]],'spd'),note:'하트 강화로는 최대 ×'+GP.SCAP+'까지, 나머지는 곱해져요'});
+  S.push({ic:'🗡️',n:'초당 공격력',v:gFmt(gDps(g)),rows:[['공격력',gSpN(gAtk(g))],['× 공격 속도',gSpN(gSpd(g))+'/초']],note:'공격력 × 공격 속도'});
+  S.push({ic:'💗',n:'하트 수입',v:'×'+gSpN(gInc(g)),rows:mulRows('×1',[
+    ['💗 하트 강화 (Lv.'+L.inc+')',GP.IM*L.inc],['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],
+    ['💎 루비 강화',GP.RHT*(rl.heart||0)],['🔁 환생 강화',GP.RU*gRu(g,'inc')],['🌸 성장 강화',GP.SG*(rp.inc||0)]],'inc'),note:'모두 곱해져요'});
+  S.push({ic:'🪜',n:'층 건너뛰기',v:gSpP(gSkipP(g)),rows:[['기본','+0%'],['💎 루비 강화',gSpP(0.015*(rl.sk||0))],['🔁 환생 강화',gSpP(0.02*gRu(g,'sk'))],['🌸 성장 강화',gSpP(0.03*(rp.sk||0))]].concat(pets('skip',pp)),note:'더해지고 최대 80%'});
+  S.push({ic:'🚀',n:'시작 층',v:gStartStage(g)+'층',rows:[['기본','1층'],['🔁 환생 강화','+'+4*gRu(g,'st')+'층'],['🌸 성장 강화','+'+10*(rp.st||0)+'층']],note:'환생·진화 뒤 이 층에서 시작해요'});
+  S.push({ic:'⏱️',n:'보스 제한시간',v:gBossT(g)+'초',rows:[['기본',GP.BOSS_T+'초'],['🌸 성장 강화','+'+Math.min(20,rp.bt||0)+'초']].concat(pets('bt',function(v){return '+'+v+'초';})),note:''});
+  S.push({ic:'🏃',n:'이동 대기시간',v:(Math.round(gDly(g)*100)/100)+'초',rows:[['기본',GP.DLY+'초'],['🌸 성장 강화 (이동 속도)','×'+Math.pow(0.93,rp.mv||0).toFixed(2)],['💎 루비 강화','×'+Math.pow(0.97,rl.mv||0).toFixed(2)]].concat(pets('mv',function(v){return '÷'+(1+v).toFixed(2);})),note:'짧을수록 좋아요'});
+  S.push({ic:'💎',n:'운동 루비 보상',v:'×'+gSpN((1+0.1*(rp.rub||0))*(1+0.1*g.evo)*(1+gPb(g,'rub'))),rows:[['기본','×1'],['🌸 성장 강화 (루비 획득량)',gSpP(0.1*(rp.rub||0))],['🌱 성장 단계 (Lv.'+g.evo+')',gSpP(0.1*g.evo)]].concat(pets('rub',pp)),note:'모두 곱해져요'});
+  S.push({ic:'🔥',n:'콤보 파워',v:'콤보당 '+gSpP(gCbPer(g)),rows:[['기본','+3%'],['🌸 성장 강화 (콤보 파워)',gSpP(0.001*(rp.cbd||0))]].concat(pets('cbd',pp)),note:'콤보 1개당 추가 데미지 (100콤보면 ×100)'});
+  S.push({ic:'⏳',n:'콤보 유지시간',v:(Math.round(gCbKeep(g)*10)/10)+'초',rows:[['기본','3초'],['💎 루비 강화','+'+(Math.round(0.1*(rl.cbt||0)*10)/10)+'초']].concat(pets('cbt',function(v){return '+'+(Math.round(v*10)/10)+'초';})),note:'마지막 공격 뒤 이 시간이 지나면 콤보가 끊겨요'});
+  S.push({ic:'🎯',n:'필살기 필요 타수',v:gCbT(g)+'타',rows:[['기본','10타'],['💎 루비 강화','−'+Math.floor((rl.cbn||0)/3)+'타']].concat(pets('cbn',function(v){return '−'+Math.floor(v+1e-9)+'타';})),note:'하트빔 기준 · 별똥별 ×2 · 무지개 ×3 (최소 6타)'});
+  S.push({ic:'💥',n:'필살기 위력',v:'×'+gSpN(gUlt(g)),rows:[['기본','×1'],['🔁 환생 강화',gSpP(0.08*gRu(g,'ult'))]].concat(pets('ult',pp)),note:'곱해져요'});
+  return S;
+}
+function gSpecHtml(g){
+  var S=gSpecs(g);
+  return '<p class="hint" style="margin:2px 0 8px">스펙을 누르면 무엇으로 얼마나 올랐는지 볼 수 있어요. 동료는 장착한 친구만 계산돼요.</p>'+S.map(function(s){
+    return '<details class="gspc"><summary><span class="gsi">'+s.ic+'</span><span class="gsn">'+s.n+'</span><b>'+s.v+'</b><i></i></summary><div class="gsb"><table class="gst">'+s.rows.map(function(r){return '<tr><td>'+r[0]+'</td><td><b>'+r[1]+'</b></td></tr>';}).join('')+'</table>'+(s.note?'<div class="gdtn" style="text-align:left">'+s.note+'</div>':'')+'</div></details>';
+  }).join('');
+}
 function gStatCard(g){
+  var seg=gSeg('stat',gStT,[['w','🏋️ 운동'],['c','⚔️ 전투력']]);
+  if(gStT==='c')return '<h2>통계</h2>'+seg+gSpecHtml(g);
   var st=g.st,d=new Date(g.start);
   var c=[[fmtLong(st.tsec),'총 운동 시간'],[fmtLong(st.sec),'시간 운동 합계'],[Math.floor(st.kg).toLocaleString('en-US')+'kg','누적 중량'],[Math.floor(st.n)+'회','운동 횟수'],[Math.floor(st.days)+'일','운동한 날'],[gFmt(st.rub),'받은 루비'],[g.rebirths+'회','진화'],[g.rbn+'회','환생'],[g.best+'층','최고 기록']];
-  return '<h2>통계 <small style="font-weight:400;font-size:12px;color:var(--ink2)">'+(d.getMonth()+1)+'월 '+d.getDate()+'일부터</small></h2><div class="gstat">'+c.map(function(x){return '<div><b>'+x[0]+'</b><small>'+x[1]+'</small></div>';}).join('')+'</div>';
+  return '<h2>통계 <small style="font-weight:400;font-size:12px;color:var(--ink2)">'+(d.getMonth()+1)+'월 '+d.getDate()+'일부터</small></h2>'+seg+'<div class="gstat">'+c.map(function(x){return '<div><b>'+x[0]+'</b><small>'+x[1]+'</small></div>';}).join('')+'</div>';
 }
 var gUpT='h',gGrT='s';
 function gRdy(g){return {e:g.evo>=3&&g.best>=1000,b:g.stage>=1000};}
@@ -3323,7 +3382,7 @@ var G_A={
     if(g.star[k]>=5)gSsrShow(k,G_DX[k][0],function(){gRefresh();},{t:'★ 5',sub:'최고 강화 달성!'});
     else gStarFx(k,g.star[k],function(){gRefresh();});
   },
-  tab:function(b){if(b.dataset.t==='up')gUpT=b.dataset.k;else if(b.dataset.t==='grow')gGrT=b.dataset.k;else if(b.dataset.t==='gac')gGacT=b.dataset.k;else if(b.dataset.t==='farm')gFmT=b.dataset.k;else gDxT=b.dataset.k;gDexModalClose();gRefresh();},
+  tab:function(b){if(b.dataset.t==='up')gUpT=b.dataset.k;else if(b.dataset.t==='grow')gGrT=b.dataset.k;else if(b.dataset.t==='gac')gGacT=b.dataset.k;else if(b.dataset.t==='stat')gStT=b.dataset.k;else if(b.dataset.t==='farm')gFmT=b.dataset.k;else gDxT=b.dataset.k;gDexModalClose();gRefresh();},
   pdi:function(b){var k=b.dataset.k,g=gGet();if(!G_CPM[k])return;if(!g.cdex[k]){toast('아직 못 만난 동료야 ❓');return;}gPetModal(k);},
   peq:function(b){
     var k=b.dataset.k,g=gGet(),p=G_CPM[k];if(!p||!g.cdex[k])return;
