@@ -997,6 +997,12 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .garena.sm .gzoom .zin{display:block}.garena.sm .gzoom .zout{display:none}
 .garena.sm .gcmb,.garena.sm .gults,.garena.sm .gtaph{display:none!important}
 
+/* ===== v83: 몬스터 검은 테두리 ===== */
+.gmon .gmi{filter:var(--hue,) drop-shadow(calc(1.3px*var(--k)) 0 0 #000) drop-shadow(-calc(1.3px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.3px*var(--k)) 0 #000) drop-shadow(0 -calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000)}
+.garena.boss .gmon .gmi{filter:var(--hue,) drop-shadow(calc(1.3px*var(--k)) 0 0 #000) drop-shadow(-calc(1.3px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.3px*var(--k)) 0 #000) drop-shadow(0 -calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000) drop-shadow(0 0 7px rgba(255,70,90,.85))}
+.garena.boss .gmon.king .gmi{filter:var(--hue,) drop-shadow(calc(1.3px*var(--k)) 0 0 #000) drop-shadow(-calc(1.3px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.3px*var(--k)) 0 #000) drop-shadow(0 -calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000) drop-shadow(0 0 10px rgba(255,200,60,.95))}
+.gmon svg{filter:drop-shadow(calc(1.3px*var(--k)) 0 0 #000) drop-shadow(-calc(1.3px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.3px*var(--k)) 0 #000) drop-shadow(0 -calc(1.3px*var(--k)) 0 #000)}
+
 </style>
 
 <div id="app">
@@ -1404,7 +1410,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v82';
+var APPV='v83';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2167,7 +2173,7 @@ function gPreNext(g){
 }
 function gMonCls(n,boss){return boss?(' big'+(n%100===0?' king':'')):'';}
 function gMonSvg(n){
-  var lp=gLoopN(n),hue=lp?' style="filter:hue-rotate('+[0,40,90,200,300][lp]+'deg) saturate('+(1+lp*.15)+')"':'';
+  var lp=gLoopN(n),hue=lp?' style="--hue:hue-rotate('+[0,40,90,200,300][lp]+'deg) saturate('+(1+lp*.15)+')"':'';
   if(gMonHasImg(n)){return '<div class="gsh"></div><img class="gmi" alt="" src="'+MON_I[gRegIdx(n)][gMonImgIdx(n)]+'"'+hue+'>';}
   var L=G_MON.length,m=G_MON[gRegIdx(n)%L][gMonIdx(n)],boss=n%10===0;
   var crown=boss?'<path d="M30 12L36 -4L46 8L50 -6L54 8L64 -4L70 12Z" transform="translate(0,6)" fill="#ffd166" stroke="#d9a400" stroke-width="2.5" stroke-linejoin="round"/>':'';
