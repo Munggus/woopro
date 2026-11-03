@@ -784,20 +784,64 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .garena{position:relative}
 .gufx{position:absolute;left:0;right:0;top:0;bottom:0;z-index:30;pointer-events:none;overflow:hidden;border-radius:inherit}
 .gufx .uv{position:absolute;inset:0;background:rgba(15,0,40,.58);animation:guv var(--t,1.25s) ease-out forwards}
-.gufx.l1{--t:1.25s}.gufx.l2{--t:1.55s}.gufx.l3{--t:1.95s}
+.gufx.l1{--t:1.9s}.gufx.l2{--t:2.15s}.gufx.l3{--t:2.5s}
 @keyframes guv{0%{opacity:0}12%{opacity:1}78%{opacity:1}100%{opacity:0}}
 .gufx .uray{position:absolute;left:-60%;top:-60%;width:220%;height:220%;background:repeating-conic-gradient(rgba(255,255,255,0) 0 5deg,rgba(255,255,255,.3) 5deg 7deg);animation:gur var(--t) linear forwards}
 @keyframes gur{0%{opacity:0;transform:rotate(0)}15%{opacity:1}80%{opacity:1}100%{opacity:0;transform:rotate(40deg)}}
-.gufx .unm{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);font-size:30px;font-weight:900;white-space:nowrap;color:#fff;-webkit-text-stroke:4px #d63a69;paint-order:stroke fill;text-shadow:0 4px 0 rgba(0,0,0,.25);animation:gunm var(--t) cubic-bezier(.2,1.5,.4,1) forwards}
+.gufx .unm{position:absolute;left:50%;top:24%;transform:translate(-50%,-50%);font-size:30px;font-weight:900;white-space:nowrap;color:#fff;-webkit-text-stroke:4px #d63a69;paint-order:stroke fill;text-shadow:0 4px 0 rgba(0,0,0,.25);animation:gunm var(--t) cubic-bezier(.2,1.5,.4,1) forwards}
 .gufx.l2 .unm{-webkit-text-stroke-color:#e0701a}.gufx.l3 .unm{-webkit-text-stroke-color:#8a3dd6;font-size:34px}
 @keyframes gunm{0%{opacity:0;transform:translate(-160%,-50%) scale(.6) skewX(-14deg)}14%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}22%{transform:translate(-50%,-50%) scale(1)}82%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.1)}}
-.gufx .uln{position:absolute;left:50%;top:48%;transform:translateX(-50%);font-style:normal;font-size:15px;font-weight:900;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.6);white-space:nowrap;animation:guln var(--t) ease-out forwards}
+.gufx .uln{position:absolute;left:50%;top:31%;transform:translateX(-50%);font-style:normal;font-size:15px;font-weight:900;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.6);white-space:nowrap;animation:guln var(--t) ease-out forwards}
 @keyframes guln{0%,10%{opacity:0}22%{opacity:1}80%{opacity:1}100%{opacity:0}}
 .gufx .ufl{position:absolute;inset:0;background:#fff;opacity:0;animation:gufl .35s ease-out var(--d) forwards}
 .gufx.l3 .ufl{background:radial-gradient(circle,#fff,#ffd6f2)}
 @keyframes gufl{0%{opacity:.95}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.gufx .uray,.gufx .unm,.gufx .uln,.gufx .uv,.gufx .ufl,.garena.gshk,.garena.gshk2,.gult,.gtaph,.gm.rdy,.gsg.rdy{animation:none!important}.gufx .unm{opacity:1}.gufx .ufl{display:none}}
 .garena.sm .gbuff{right:30px;top:2px}
+
+/* v72: 펀치 · 주먹 오오라 · 불꽃 · 화면 불타기 */
+.ghero.gpn{animation:gpf .24s steps(1,end) 1}
+@keyframes gpf{0%{background-position:0 0}12%{background-position:20% 0}26%{background-position:40% 0}40%{background-position:60% 0}56%{background-position:80% 0}72%{background-position:100% 0}100%{background-position:0 0}}
+.ghw.gpn{animation:gpt .24s ease-out 1}
+@keyframes gpt{0%{translate:0 0}30%{translate:calc(24px*var(--k)) 0}100%{translate:0 0}}
+.gfist{position:absolute;left:78%;top:50%;z-index:6;width:calc((30px + var(--cb,0)*2px)*var(--k));height:calc((30px + var(--cb,0)*2px)*var(--k));translate:-50% -50%;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .15s,width .12s,height .12s;border:calc(5px*var(--k)) solid #fff;background:radial-gradient(circle,rgba(255,255,255,.85) 0,rgba(255,236,170,.5) 42%,rgba(255,255,255,0) 72%);box-shadow:0 0 calc(12px*var(--k)) calc(6px*var(--k)) rgba(255,255,255,.95),0 0 calc(30px*var(--k)) calc(14px*var(--k)) rgba(255,215,110,.65),inset 0 0 calc(14px*var(--k)) rgba(255,255,255,.9)}
+.ghw.gcmo .gfist{opacity:.92}
+.gfist.gpl{animation:gfpl .22s ease-out}
+@keyframes gfpl{0%{scale:1.7;filter:brightness(1.8)}100%{scale:1;filter:none}}
+.ghw.gfi .gfist{border-color:#fff3b0;box-shadow:0 0 calc(14px*var(--k)) calc(8px*var(--k)) #fff,0 0 calc(34px*var(--k)) calc(18px*var(--k)) rgba(255,140,40,.85),inset 0 0 calc(16px*var(--k)) #fff}
+.gfire{position:absolute;left:-10%;right:-10%;top:-10%;bottom:-4%;z-index:2;pointer-events:none;opacity:0;transition:opacity .25s}
+.ghw.gfi .gfire{opacity:1}
+.gfire::before{content:'';position:absolute;inset:6% 6% 0;border-radius:50%;background:radial-gradient(ellipse at 50% 60%,rgba(255,210,80,.7) 0,rgba(255,110,20,.55) 45%,rgba(255,40,0,0) 72%);animation:gfg .3s ease-in-out infinite alternate}
+@keyframes gfg{to{transform:scale(1.08);opacity:.8}}
+.gfire span{position:absolute;bottom:0;width:30%;height:78%;border-radius:50% 50% 50% 50%/72% 72% 28% 28%;background:linear-gradient(to top,rgba(255,240,150,.95) 0,rgba(255,150,30,.85) 38%,rgba(255,50,0,0) 100%);filter:blur(2px);mix-blend-mode:screen;transform-origin:50% 100%;animation:gfl .55s ease-in-out infinite alternate}
+.gfire span:nth-child(1){left:-4%;height:60%;animation-delay:-.1s}.gfire span:nth-child(2){left:14%;height:92%;animation-delay:-.3s}.gfire span:nth-child(3){left:33%;height:108%;animation-delay:-.2s;animation-duration:.45s}.gfire span:nth-child(4){left:50%;height:100%;animation-delay:-.4s}.gfire span:nth-child(5){left:68%;height:86%;animation-delay:-.05s;animation-duration:.6s}.gfire span:nth-child(6){left:84%;height:58%;animation-delay:-.25s}
+@keyframes gfl{0%{transform:scaleY(.78) scaleX(.92) skewX(-5deg)}100%{transform:scaleY(1.2) scaleX(1.06) skewX(6deg)}}
+.ghw.gmx .gfire{filter:hue-rotate(195deg) saturate(1.5) brightness(1.15)}
+.gburn{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:9;opacity:0;transition:opacity .3s;box-shadow:inset 0 0 26px 6px rgba(255,90,20,.85),inset 0 0 60px 14px rgba(255,170,30,.45);animation:gbr .35s ease-in-out infinite alternate;overflow:hidden}
+.garena.gblz .gburn{opacity:1}
+@keyframes gbr{to{box-shadow:inset 0 0 36px 10px rgba(255,70,10,.95),inset 0 0 80px 22px rgba(255,200,40,.55)}}
+.gburn span{position:absolute;animation:gfe .42s ease-in-out infinite alternate;filter:blur(1px)}
+.gburn .fb{left:0;right:0;bottom:0;height:58px;transform-origin:50% 100%;background:radial-gradient(ellipse 24px 56px at 50% 100%,rgba(255,225,90,.95) 0,rgba(255,120,20,.8) 45%,rgba(255,60,0,0) 75%) 0 100%/48px 100% repeat-x}
+.gburn .ft{left:0;right:0;top:0;height:46px;transform-origin:50% 0;background:radial-gradient(ellipse 22px 44px at 50% 0,rgba(255,225,90,.9) 0,rgba(255,120,20,.7) 45%,rgba(255,60,0,0) 75%) 0 0/44px 100% repeat-x;animation-delay:-.2s}
+.gburn .fl{left:0;top:0;bottom:0;width:42px;transform-origin:0 50%;background:radial-gradient(ellipse 40px 22px at 0 50%,rgba(255,225,90,.9) 0,rgba(255,120,20,.7) 45%,rgba(255,60,0,0) 75%) 0 0/100% 44px repeat-y;animation-delay:-.1s}
+.gburn .fr{right:0;top:0;bottom:0;width:42px;transform-origin:100% 50%;background:radial-gradient(ellipse 40px 22px at 100% 50%,rgba(255,225,90,.9) 0,rgba(255,120,20,.7) 45%,rgba(255,60,0,0) 75%) 0 0/100% 44px repeat-y;animation-delay:-.3s}
+@keyframes gfe{0%{opacity:.7;transform:scale(.82)}100%{opacity:1;transform:scale(1.12)}}
+.gburn .fb,.gburn .ft{animation-name:gfe}
+.garena.gmx .gburn{filter:hue-rotate(195deg) saturate(1.5)}
+/* 필살기 얼굴 컷인 · 환영 */
+.gufx .uface{position:absolute;left:0;right:0;top:37%;height:33%;overflow:hidden;background:linear-gradient(100deg,#ff5a9a,#ffb347);border-top:4px solid #fff;border-bottom:4px solid #fff;box-shadow:0 0 24px rgba(255,255,255,.8);animation:gufc var(--fs,.8s) ease-out forwards}
+.gufx.l2 .uface{background:linear-gradient(100deg,#ffd24d,#ff7a2f)}
+.gufx.l3 .uface{background:linear-gradient(100deg,#ff5a7a,#ffd24d,#5ee0a0,#6aa8ff,#c77dff)}
+.gufx .uface b{position:absolute;left:6%;top:50%;transform:translateY(-50%);font-size:44px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
+.gufx .ufi{position:absolute;right:16%;top:-2%;height:142%;width:auto;image-rendering:pixelated;transform-origin:50% 45%;animation:gufz var(--fs,.8s) ease-out forwards;filter:drop-shadow(0 0 6px rgba(255,255,255,.8))}
+@keyframes gufc{0%{transform:translateX(-105%)}14%{transform:translateX(0)}76%{transform:translateX(0);opacity:1}100%{transform:translateX(35%);opacity:0}}
+@keyframes gufz{0%{transform:scale(.88)}100%{transform:scale(1.18)}}
+.gufx .ugh{position:absolute;left:0;bottom:6%;height:74%;opacity:0;pointer-events:none;animation:gugh var(--gdur,.4s) cubic-bezier(.55,0,.85,.55) var(--gst,.5s) forwards}
+.gufx .ugh img{height:100%;width:auto;image-rendering:pixelated;filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 22px rgba(255,120,200,.95)) brightness(1.5) saturate(.85);opacity:.82}
+.gufx .ugh.g2{animation-delay:calc(var(--gst) + 70ms)}.gufx .ugh.g2 img{opacity:.5}
+.gufx .ugh.g3{animation-delay:calc(var(--gst) + 140ms)}.gufx .ugh.g3 img{opacity:.28}
+@keyframes gugh{0%{opacity:0;transform:translateX(calc(var(--aw,300px)*.02)) scale(.5)}18%{opacity:1;transform:translateX(calc(var(--aw,300px)*.1)) scale(.9)}100%{opacity:0;transform:translateX(calc(var(--aw,300px)*.72)) scale(1.6)}}
+@media (prefers-reduced-motion:reduce){.ghero.gpn,.ghw.gpn,.gfist.gpl,.gfire span,.gfire::before,.gburn,.gburn span,.gufx .uface,.gufx .ufi,.gufx .ugh{animation:none!important}.gufx .ugh{display:none}}
 
 </style>
 
@@ -1206,7 +1250,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v71';
+var APPV='v72';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -3140,7 +3184,16 @@ function gCbTier(n){return n>=100?4:n>=50?3:n>=25?2:n>=10?1:0;}
 function gVib(p){try{if(gS&&gS.snd&&navigator.vibrate)navigator.vibrate(p);}catch(e){}}
 function gRM(){try{return window.matchMedia('(prefers-reduced-motion:reduce)').matches;}catch(e){return false;}}
 function gCbHtml(){return '<div class="gcmb" id="g-cb" hidden><small>COMBO</small><b id="g-cbn">0</b><span class="gcbx" id="g-cbx"></span><div class="gcbg"><i id="g-cbg"></i><u></u><u></u><u></u></div></div><button class="gult" id="g-ult" data-act="gult" hidden></button><div class="gtaph" id="g-taph">화면을 톡톡 눌러봐! 👆</div>';}
+function gFxEnsure(){
+  var hw=$('g-hw'),a=$('g-arena');
+  if(hw&&!hw.querySelector('.gfist'))hw.insertAdjacentHTML('beforeend','<div class="gfist"></div><div class="gfire"><span></span><span></span><span></span><span></span><span></span><span></span></div>');
+  if(a&&!$('g-burn'))a.insertAdjacentHTML('beforeend','<div class="gburn" id="g-burn"><span class="fb"></span><span class="ft"></span><span class="fl"></span><span class="fr"></span></div>');
+}
 function gCbUi(g){
+  gFxEnsure();
+  var hw0=$('g-hw'),ar0=$('g-arena'),n0=gCb.n;
+  if(hw0){hw0.classList.toggle('gcmo',n0>0);hw0.style.setProperty('--cb',Math.min(n0,50));hw0.classList.toggle('gfi',n0>=50);hw0.classList.toggle('gmx',n0>=100);}
+  if(ar0){ar0.classList.toggle('gblz',n0>=50);ar0.classList.toggle('gmx',n0>=100);}
   var cb=$('g-cb');if(!cb)return;
   var n=gCb.n,T=gCbT(g),lv=gCbLvl(g);
   cb.hidden=n<=0;
@@ -3203,6 +3256,14 @@ function gTap(){
   gHitFx(g,dmg);
   gCbUi(g);
   var b=$('g-cbn');if(b){b.classList.remove('pp');void b.offsetWidth;b.classList.add('pp');}
+  gPunch();
+}
+var gPnT=0;
+function gPunch(){
+  var hr=$('g-hero'),hw=$('g-hw');if(!hr||!hw)return;
+  hr.classList.remove('gpn');hw.classList.remove('gpn');void hr.offsetWidth;hr.classList.add('gpn');hw.classList.add('gpn');
+  var fi=hw.querySelector('.gfist');if(fi){fi.classList.remove('gpl');void fi.offsetWidth;fi.classList.add('gpl');}
+  clearTimeout(gPnT);gPnT=setTimeout(function(){var h=$('g-hero'),w=$('g-hw');if(h)h.classList.remove('gpn');if(w)w.classList.remove('gpn');},260);
 }
 var G_ULTL=[['하트 빔~! 💗','사랑을 담아서!','두근두근 빔!'],['별똥별이다! ☄️','소원을 빌어봐!','반짝반짝 소나기!'],['사랑이 최고~!! 🌈','모두 힘내라 얍!!','우리 모두 반짝반짝!']];
 var gUltBusy=0;
@@ -3211,11 +3272,11 @@ function gUltFire(){
   var lv=gCbLvl(g);if(lv<1)return;
   var d=G_ULT[lv-1],n=gCb.n,dmg=gDps(g)*d[0]*(1+gCbPer(g)*n)*gUlt(g);
   gCb.n=0;gCb.t=Date.now();gUltBusy=1;
-  var delay=[450,650,850][lv-1],life=[1250,1550,1950][lv-1];
+  var delay=[900,1100,1300][lv-1],life=[1900,2150,2500][lv-1],gst=[550,650,750][lv-1],fdur=[800,900,1000][lv-1];
   var a=$('g-arena');
-  if(a){var el=document.createElement('div');el.className='gufx l'+lv;el.style.setProperty('--d',delay+'ms');
+  if(a){var el=document.createElement('div');el.className='gufx l'+lv;el.style.setProperty('--d',delay+'ms');el.style.setProperty('--gst',gst+'ms');el.style.setProperty('--gdur',(delay-gst)+'ms');el.style.setProperty('--fs',fdur+'ms');el.style.setProperty('--aw',a.offsetWidth+'px');var fr=gFront(g.evo);
     var ln=G_ULTL[lv-1][Math.floor(Math.random()*3)];
-    el.innerHTML='<i class="uv"></i><i class="uray"></i><b class="unm">'+d[1]+' '+d[2]+'!</b><em class="uln">'+ln+'</em><i class="ufl"></i>';
+    el.innerHTML='<i class="uv"></i><i class="uray"></i><div class="uface"><img class="ufi" alt="" src="'+fr+'"><b>'+d[1]+'</b></div><div class="ugh"><img alt="" src="'+fr+'"></div><div class="ugh g2"><img alt="" src="'+fr+'"></div><div class="ugh g3"><img alt="" src="'+fr+'"></div><b class="unm">'+d[1]+' '+d[2]+'!</b><em class="uln">'+ln+'</em><i class="ufl"></i>';
     a.appendChild(el);gRmLater(el,life);}
   gSfx('u'+lv);gVib([30,20,60,30,90]);
   setTimeout(function(){
