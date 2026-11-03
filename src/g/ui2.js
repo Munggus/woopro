@@ -46,7 +46,7 @@ function gLoad(){
   ['fl','kg','hr','rb','wk'].forEach(function(k){d.rc[k]=Math.min(99999,Math.max(0,Math.floor(gNum(o.rc&&o.rc[k],0))));});
   d.mxe=Math.min(10,Math.max(0,Math.floor(gNum(o.mxe,0))));d.form=Math.min(10,Math.max(-1,Math.floor(gNum(o.form,-1))));
   d.rbEvo=Math.min(10,Math.max(0,Math.floor(gNum(o.rbEvo,0))));
-  d.fm=gFmLoad(o.fm);
+  d.fm=gFmLoad(o.fm);d.vl=gVlLoad(o.vl);
   d.md={};if(o.md&&typeof o.md==='object')Object.keys(o.md).forEach(function(k){if(/^[0-9]_[0-9]$/.test(k))d.md[k]=Math.min(5,Math.max(1,Math.floor(gNum(o.md[k],1))));});
   gMdBackfill(d);
   if(o.ach&&typeof o.ach==='object')Object.keys(o.ach).forEach(function(k){if(/^[a-z]+\d+$/.test(k))d.ach[k]=1;});
@@ -256,8 +256,9 @@ var gUpT='h',gGrT='s';
 function gRdy(g){return {e:g.evo>=3&&g.best>=1000,b:g.stage>=1000};}
 function gGlow(g){var r=gRdy(g);[['.gm[data-k=grow]',r.e],['.gm[data-k=up]',r.b],['.gsg[data-t=grow][data-k=e]',r.e],['.gsg[data-t=up][data-k=b]',r.b]].forEach(function(x){var el=document.querySelector(x[0]);if(el)el.classList.toggle('rdy',!!x[1]);});}
 function gSeg(t,cur,arr){return '<div class="gseg g'+arr.length+'">'+arr.map(function(a){return '<button class="gsg'+(cur===a[0]?' on':'')+(a[2]?' rdy':'')+'" data-act="gtab" data-t="'+t+'" data-k="'+a[0]+'">'+a[1]+'</button>';}).join('')+'</div>';}
-var G_MENU=[['grow','🌱','성장'],['up','💪','강화'],['tk','🎁','보상'],['gac','🎟️','뽑기'],['dex','📖','도감'],['farm','🌾','농장'],['stat','📊','통계']];
-function gMenuHtml(){var gg=gGet(),rd=gAchReady(gg)>0,rr=gRdy(gg);return '<nav class="gmenu">'+G_MENU.map(function(m){return '<button class="gm'+(gSub===m[0]?' on':'')+((m[0]==='grow'&&rr.e)||(m[0]==='up'&&rr.b)?' rdy':'')+'" data-act="gmenu" data-k="'+m[0]+'"><span>'+m[1]+'</span>'+m[2]+(m[0]==='tk'&&rd?'<i class="gdot"></i>':'')+'</button>';}).join('')+'</nav>';}
+var G_MENU=[['grow','🌱','성장'],['up','💪','강화'],['tk','🎁','보상'],['gac','🎟️','뽑기'],['dex','📖','도감'],['vil','🏡','마을'],['stat','📊','통계']];
+function gMenuOn(k){return gSub===k||(k==='vil'&&gSub==='farm');}
+function gMenuHtml(){var gg=gGet(),rd=gAchReady(gg)>0,rr=gRdy(gg);return '<nav class="gmenu">'+G_MENU.map(function(m){return '<button class="gm'+(gMenuOn(m[0])?' on':'')+((m[0]==='grow'&&rr.e)||(m[0]==='up'&&rr.b)?' rdy':'')+'" data-act="gmenu" data-k="'+m[0]+'"><span>'+m[1]+'</span>'+m[2]+(m[0]==='tk'&&rd?'<i class="gdot"></i>':'')+'</button>';}).join('')+'</nav>';}
 function gDexBonus(g){return gDexB(g)*100;}
 function gDexN(g){return Object.keys(g.dex).length;}
 function gGacCard(g){
@@ -432,6 +433,7 @@ function gSecHtml(g){
   if(gSub==='gac')return '<section class="card" id="g-gac">'+gGacCard(g)+'</section>';
   if(gSub==='dex')return '<section class="card" id="g-dex">'+gDexCard(g)+'</section>';
   if(gSub==='farm')return '<section class="card" id="g-farm">'+gFarmCard(g)+'</section>';
+  if(gSub==='vil')return '<section class="card" id="g-vil">'+gVlCard(g)+'</section>';
   if(gSub==='stat')return '<section class="card" id="g-stat">'+gStatCard(g)+'</section>';
   if(gSub==='grow'){var r2=gRdy(g),sg2=gSeg('grow',gGrT,[['s','🌱 현재 상태'],['e','🌸 진화',r2.e]]);
     if(gGrT==='e')return '<section class="card" id="g-rebirth">'+sg2+gRebirthCard(g)+'</section>';
@@ -449,7 +451,7 @@ function gRefresh(){
   var g=gGet(),s=$('g-sec');
   if(!s||nav.tab!=='game'){render();return;}
   s.innerHTML=gSecHtml(g);
-  var ms=document.querySelectorAll('.gm');for(var i=0;i<ms.length;i++)ms[i].classList.toggle('on',ms[i].dataset.k===gSub);
+  var ms=document.querySelectorAll('.gm');for(var i=0;i<ms.length;i++)ms[i].classList.toggle('on',gMenuOn(ms[i].dataset.k));
   gSet('g-hearts','💗 '+gFmt(g.hearts));gSet('g-pps','⚔️ '+gFmt(gDps(g))+'/초');gSet('g-tk','🎟️ '+g.tickets);
   gSetH('g-rub',gRuby(15)+' '+gFmt(g.rubies));
   gHeroCheck(g);
@@ -845,7 +847,7 @@ var G_A={
   boss:function(){var g=gGet();if(g.stage%10!==0||!g.farm)return;g.farm=false;g.hp=gHp(g.stage);g.bt=0;g.dlyLeft=0;g.last=Date.now();gSave();gPaintStage(g,true);gNoteKey='';gSetH('g-note',gNoteHtml(g));gSet('g-st',gStText(g));},
   menu:function(b){
     var k=b.dataset.k,m=$('main'),sec=$('g-sec');
-    if(gSub===k){
+    if(gMenuOn(k)){
       if(sec)sec.classList.add('out');
       setTimeout(function(){gSub='';gApplyMode(true);gRefresh();if(sec)sec.classList.remove('out');if(m)m.scrollTo({top:0,behavior:'smooth'});},130);
       return;

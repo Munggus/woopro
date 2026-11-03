@@ -50,7 +50,7 @@ function gPrVal(k){return {milk:3,egg:5,dust:8}[k]||3;}
 function gFarmCard(g){
   gFmSyncAll(g);
   var tabs='<div class="gseg"><button class="gsg'+(gFmT==='f'?' on':'')+'" data-act="gtab" data-t="farm" data-k="f">🌱 텃밭</button><button class="gsg'+(gFmT==='a'?' on':'')+'" data-act="gtab" data-t="farm" data-k="a">🐄 농장</button></div>';
-  return tabs+(gFmT==='a'?gPenCard(g):gPlotCard(g))+gInvHtml(g);
+  return '<button class="mini gvbk" data-act="gvil" data-f="map">🏡 마을로</button>'+tabs+(gFmT==='a'?gPenCard(g):gPlotCard(g))+gInvHtml(g);
 }
 function gPlotCard(g){
   var f=gFm(),now=Date.now(),h='<div class="gfw"><span class="chip">💧 물 <b>'+f.water+'</b>/30</span><small>운동을 끝낼 때마다 💧 +3!</small></div>';

@@ -706,3 +706,17 @@
 .gst td:last-child{text-align:right;color:#2a9d5c}
 .gst tr:first-child td:last-child{color:inherit}
 .gst td:first-child{text-align:left}
+/* ===== v89 마을 ===== */
+.gvm{container-type:inline-size;margin:8px 0}
+.gvmi{position:relative;aspect-ratio:1/1;border-radius:16px;overflow:hidden;border:2px solid #7fb069;background:conic-gradient(#c3e8ab 25%,#b3de9a 0 50%,#c3e8ab 0 75%,#b3de9a 0) 0 0/16.6667% 16.6667%}
+.gvd{position:absolute;width:8.3333%;height:8.3333%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:5.2cqw;line-height:1;pointer-events:none}
+.gvb{position:absolute;width:16.6667%;height:16.6667%;box-sizing:border-box;border:2px solid #fff;border-radius:14%;background:rgba(255,255,255,.62);box-shadow:0 2px 0 rgba(0,0,0,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:0;color:#3b2f2f;font-family:inherit;-webkit-tap-highlight-color:transparent}
+.gvb:active{transform:scale(.94)}
+.gve{font-size:8cqw;line-height:1}
+.gvb b{font-size:2.8cqw;line-height:1.1;font-weight:800}
+.gvb small{font-size:2.3cqw;line-height:1.1;font-weight:700;color:#c2185b}
+.gvc{display:flex;align-items:center;gap:10px;padding:10px;margin-top:8px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.gvc>div{flex:1;min-width:0}.gvc b{display:block;font-size:14px}.gvc small{display:block;font-size:12px;opacity:.75}
+.gvce{font-size:28px}
+.gvbk{margin-bottom:8px}
+.gvub{display:flex!important;flex-direction:row!important;align-items:center;justify-content:center;gap:6px;width:100%}
