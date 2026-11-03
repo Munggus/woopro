@@ -805,9 +805,8 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .ghw.gpn{animation:gpt .24s ease-out 1}
 @keyframes gpt{0%{translate:0 0}30%{translate:calc(24px*var(--k)) 0}100%{translate:0 0}}
 .gfist{position:absolute;left:78%;top:50%;z-index:6;width:calc((30px + var(--cb,0)*2px)*var(--k));height:calc((30px + var(--cb,0)*2px)*var(--k));translate:-50% -50%;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .15s,width .12s,height .12s;border:calc(5px*var(--k)) solid #fff;background:radial-gradient(circle,rgba(255,255,255,.85) 0,rgba(255,236,170,.5) 42%,rgba(255,255,255,0) 72%);box-shadow:0 0 calc(12px*var(--k)) calc(6px*var(--k)) rgba(255,255,255,.95),0 0 calc(30px*var(--k)) calc(14px*var(--k)) rgba(255,215,110,.65),inset 0 0 calc(14px*var(--k)) rgba(255,255,255,.9)}
-.ghw.gcmo .gfist{opacity:.92}
-.gfist.gpl{animation:gfpl .22s ease-out}
-@keyframes gfpl{0%{scale:1.7;filter:brightness(1.8)}100%{scale:1;filter:none}}
+.gfist.gpl{animation:gfpl .28s ease-out}
+@keyframes gfpl{0%{scale:1.7;opacity:1;filter:brightness(1.8)}60%{opacity:.9}100%{scale:1;opacity:0;filter:none}}
 .ghw.gfi .gfist{border-color:#fff3b0;box-shadow:0 0 calc(14px*var(--k)) calc(8px*var(--k)) #fff,0 0 calc(34px*var(--k)) calc(18px*var(--k)) rgba(255,140,40,.85),inset 0 0 calc(16px*var(--k)) #fff}
 .gfire{position:absolute;left:-10%;right:-10%;top:-10%;bottom:-4%;z-index:2;pointer-events:none;opacity:0;transition:opacity .25s}
 .ghw.gfi .gfire{opacity:1}
@@ -865,6 +864,9 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 @keyframes gurd{to{stroke-dashoffset:0}}
 @keyframes gurp{0%{transform:scale(1);opacity:1}35%{transform:scale(1.18);opacity:1}100%{transform:scale(1.7);opacity:0}}
 @media (prefers-reduced-motion:reduce){.ghw.gbow,.ghero.gbow,.gufx .ubeam i,.gufx .uhrt,.gufx .ust,.gufx .usb,.gufx .urb path{animation:none!important}.gufx .ust,.gufx .usb,.gufx .uhrt,.gufx .ubeam{display:none}.gufx .urb path{stroke-dashoffset:0}}
+
+.gcbt{width:112px;height:6px;margin:4px auto 0;border-radius:99px;background:rgba(0,0,0,.28);border:2px solid #fff;overflow:hidden;box-sizing:content-box}
+.gcbt i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#7be0ff,#9bffb0)}
 
 </style>
 
@@ -1273,7 +1275,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v75';
+var APPV='v76';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -3208,7 +3210,7 @@ function gCbLvl(g){var T=gCbT(g),n=gCb.n;return n>=3*T?3:n>=2*T?2:n>=T?1:0;}
 function gCbTier(n){return n>=100?4:n>=50?3:n>=25?2:n>=10?1:0;}
 function gVib(p){try{if(gS&&gS.snd&&navigator.vibrate)navigator.vibrate(p);}catch(e){}}
 function gRM(){try{return window.matchMedia('(prefers-reduced-motion:reduce)').matches;}catch(e){return false;}}
-function gCbHtml(){return '<div class="gcmb" id="g-cb" hidden><small>COMBO</small><b id="g-cbn">0</b><span class="gcbx" id="g-cbx"></span><div class="gcbg"><i id="g-cbg"></i><u></u><u></u><u></u></div></div><button class="gult" id="g-ult" data-act="gult" hidden></button><div class="gtaph" id="g-taph">화면을 톡톡 눌러봐! 👆</div>';}
+function gCbHtml(){return '<div class="gcmb" id="g-cb" hidden><small>COMBO</small><b id="g-cbn">0</b><span class="gcbx" id="g-cbx"></span><div class="gcbt"><i id="g-cbt"></i></div><div class="gcbg"><i id="g-cbg"></i><u></u><u></u><u></u></div></div><button class="gult" id="g-ult" data-act="gult" hidden></button><div class="gtaph" id="g-taph">화면을 톡톡 눌러봐! 👆</div>';}
 function gFxEnsure(){
   var hw=$('g-hw'),a=$('g-arena');
   if(hw&&!hw.querySelector('.gfist'))hw.insertAdjacentHTML('beforeend','<div class="gfist"></div><div class="gfire"><span></span><span></span><span></span><span></span><span></span><span></span></div>');
@@ -3223,6 +3225,11 @@ function gCbUi(g){
   var n=gCb.n,T=gCbT(g),lv=gCbLvl(g);
   cb.hidden=n<=0;
   if(n>0){var b=$('g-cbn');if(b.textContent!==String(n))b.textContent=n;cb.dataset.t=gCbTier(n);cb.dataset.l=lv;$('g-cbx').textContent='공격 +'+Math.round(gCbPer(g)*n*100)+'%';$('g-cbg').style.width=Math.min(100,n/(3*T)*100)+'%';}
+  var bt=$('g-cbt');
+  if(bt&&n>0){var keep=gCbKeep(g)*1000;
+    if(gWalking(g)){if(bt.dataset.k!=='w'){bt.dataset.k='w';bt.style.transition='none';bt.style.width='100%';}}
+    else{var kk=gCb.t+'|'+keep;if(bt.dataset.k!==kk){bt.dataset.k=kk;var rem=Math.max(0,keep-(Date.now()-gCb.t));bt.style.transition='none';bt.style.width=Math.min(100,rem/keep*100)+'%';void bt.offsetWidth;bt.style.transition='width '+rem+'ms linear';bt.style.width='0%';}}
+  }else if(bt)bt.dataset.k='';
   var u=$('g-ult');
   if(u){var show=lv>=1&&!gWalking(g);u.hidden=!show;if(lv>=1){var d=G_ULT[lv-1],h='<span>'+d[1]+'</span><b>'+d[2]+'</b>';if(u.dataset.h!==h){u.innerHTML=h;u.dataset.h=h;}u.dataset.l=lv;}}
   var th=$('g-taph');if(th)th.hidden=gCb.cnt>=6||n>0;
