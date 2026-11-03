@@ -215,7 +215,7 @@ G_SFX.u3=function(){[523,659,784,1047,1319,1568].forEach(function(f,i){gTn(f,i*.
 
 /* ===== v78: 황금 몬스터 ===== */
 var gGold=null;
-var G_GOLD={P:0.03,HP:3,T:10000,HR:10};
+var G_GOLD=G_DATA.gold;
 function gGoldPre(g,dt,now){
   var G=gGold;if(!G)return false;
   if(g.farm||g.stage!==G.n||g.stage%10===0){gGold=null;gGoldClear();return false;}

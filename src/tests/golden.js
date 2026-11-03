@@ -3,7 +3,7 @@
 //       node tests/golden.js        (저장된 기준과 비교)
 var fs=require('fs'),path=require('path');
 var SRC=fs.readFileSync(path.join(__dirname,'../g/data.js'),'utf8')+fs.readFileSync(path.join(__dirname,'../g/core2.js'),'utf8');
-var C=new Function(SRC+';return {gHp:gHp,gKill:gKill,gAtk:gAtk,gInc:gInc,gSpd:gSpd,gDps:gDps,gDly:gDly,gBossT:gBossT,gSkipP:gSkipP,gCost:gCost,gRCost:gRCost,gRBCost:gRBCost,gRPCost:gRPCost,gRBGain:gRBGain,gRPGain:gRPGain,gStartStage:gStartStage,gCbPer:gCbPer,gCbKeep:gCbKeep,gCbT:gCbT,gUlt:gUlt,gXm:gXm,G_RBU:G_RBU,G_RPU:G_RPU,GP:GP};')();
+var C=new Function(SRC+';return {G_DATA:G_DATA,gHp:gHp,gKill:gKill,gAtk:gAtk,gInc:gInc,gSpd:gSpd,gDps:gDps,gDly:gDly,gBossT:gBossT,gSkipP:gSkipP,gCost:gCost,gRCost:gRCost,gRBCost:gRBCost,gRPCost:gRPCost,gRBGain:gRBGain,gRPGain:gRPGain,gStartStage:gStartStage,gCbPer:gCbPer,gCbKeep:gCbKeep,gCbT:gCbT,gUlt:gUlt,gXm:gXm,G_RBU:G_RBU,G_RPU:G_RPU,GP:GP};')();
 function mk(o){return Object.assign({hearts:1e9,ch:1e9,stage:10,hp:0,evo:0,lv:{atk:0,inc:0,spd:0},rl:{atk:0,heart:0,sk:0,mv:0,cbt:0,cbn:0},rp:{},ru:{},dex:{},stk:null},o||{});}
 function snap(){
   var out={},stages=[1,2,5,10,50,99,100,101,500,999,1000,1001,1500,2000,2500,3000,4000,5000,7000,10000];
@@ -22,9 +22,13 @@ function snap(){
   C.G_RPU.forEach(function(u){[0,5,10,20].forEach(function(l){out['rpcost.'+u[0]+'@'+l]=C.gRPCost(u,l);});});
   return out;
 }
-var f=path.join(__dirname,'golden.json'),cur=snap();
-if(process.argv[2]==='save'){fs.writeFileSync(f,JSON.stringify(cur,null,1));console.log('기준 저장:',Object.keys(cur).length,'개 값');}
+function flat(o,pre,out){out=out||{};if(o&&typeof o==='object')Object.keys(o).forEach(function(k){flat(o[k],pre?pre+'.'+k:k,out);});else out[pre]=o;return out;}
+var f=path.join(__dirname,'golden.json'),cur=snap(),tf=path.join(__dirname,'table.json'),tcur=flat(C.G_DATA);
+if(process.argv[2]==='save'){fs.writeFileSync(tf,JSON.stringify(tcur,null,0));fs.writeFileSync(f,JSON.stringify(cur,null,1));console.log('기준 저장:',Object.keys(cur).length,'개 값');}
 else{
+  var tref=fs.existsSync(tf)?JSON.parse(fs.readFileSync(tf,'utf8')):null,tb=[];
+  if(tref){Object.keys(tcur).forEach(function(k){if(tref[k]!==tcur[k])tb.push(k+': '+tref[k]+' → '+tcur[k]);});}
+  if(tb.length){console.log('ℹ️ 숫자표(g/data.js)에서 바뀐 칸 '+tb.length+'개:');tb.slice(0,15).forEach(function(x){console.log('  ',x);});}
   var ref=JSON.parse(fs.readFileSync(f,'utf8')),bad=[];
   Object.keys(ref).forEach(function(k){var a=ref[k],b=cur[k];if(!(Math.abs(a-b)<=Math.abs(a)*1e-12+1e-300))bad.push(k+': 기준 '+a+' → 현재 '+b);});
   Object.keys(cur).forEach(function(k){if(!(k in ref))bad.push(k+': 기준에 없는 새 값');});

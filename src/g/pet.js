@@ -3,9 +3,9 @@ var G_CPO=['gnd','sky','veh'];
 var G_CPC={gnd:['지상','🐾'],sky:['하늘','🕊️'],veh:['탈것','🚗']};
 var G_CPM={};G_CPL.forEach(function(p){G_CPM[p.id]=p;});
 var G_CPA={atk:['공격력','%'],inc:['하트 수입','%'],spd:['공격 속도','%'],rub:['운동 루비','%'],bt:['보스 제한시간','초'],skip:['층 건너뛰기 확률','%'],mv:['이동 속도','%']};
-var G_CPV={atk:[2,4,8,15],inc:[2,4,8,15],spd:[2,4,8,15],rub:[3,6,12,20],bt:[1,2,3,5],skip:[1,2,3,5],mv:[3,6,10,15]};
-var G_CSM=[0,1,1.5,2,3,5];
-var G_CPX=[[['cbt',0.3]],[['cbt',0.3],['ult',5]],[['cbt',0.3],['ult',5],['cbd',0.1]],[['cbt',0.3],['ult',5],['cbd',0.1],['cbn',1]]];
+var G_CPV=G_DATA.pet.CPV;
+var G_CSM=G_DATA.pet.CSM;
+var G_CPX=G_DATA.pet.CPX;
 var G_CPXN={cbt:'콤보 유지시간',ult:'필살기 위력',cbd:'콤보당 데미지',cbn:'필살기 필요 타수'};
 function gCpXTxt(p,st){var m=G_CSM[st]||1,r=function(v){v=Math.round(v*10)/10;return v%1?v.toFixed(1):v;};return (G_CPX[p.r]||[]).map(function(x){var k=x[0],v=k==='cbn'?x[1]:x[1]*m;return G_CPXN[k]+' '+(k==='cbn'?'−'+r(v)+'타':k==='cbt'?'+'+r(v)+'초':k==='cbd'?'+'+r(v)+'%p':'+'+r(v)+'%');}).join(' · ');}
 function gCpXv(k,v){v=Math.round(v*10)/10;var t=v%1?v.toFixed(1):v;return k==='cbn'?'−'+t+'타':k==='cbt'?'+'+t+'초':k==='cbd'?'+'+t+'%p':'+'+t+'%';}
@@ -24,19 +24,19 @@ function gPetB(g){
 function gCpImg(id){return (typeof CP_IMG!=='undefined'&&CP_IMG[id])||'';}
 /* ---- 뽑기 ---- */
 function gRollPet(g){
-  var r=Math.random()*100,rar=r<2?3:r<12?2:r<45?1:0;
+  var Q=G_DATA.pet.gacha,r=Math.random()*100,rar=r<Q.ssr?3:r<Q.sr?2:r<Q.r?1:0;
   g.cpity=(g.cpity||0)+1;g.cpity2=(g.cpity2||0)+1;
-  if(g.cpity2>=50)rar=3;else if(g.cpity>=10&&rar<2)rar=2;
+  if(g.cpity2>=Q.pity2)rar=3;else if(g.cpity>=Q.pity1&&rar<2)rar=2;
   if(rar>=2)g.cpity=0;if(rar>=3)g.cpity2=0;
   var ks=G_CPL.filter(function(p){return p.r===rar;}),p=ks[Math.floor(Math.random()*ks.length)],k=p.id,isNew=!g.cdex[k],hh=0;
   g.cdex[k]=(g.cdex[k]||0)+1;
   if(isNew){g.cstar[k]=1;g.cdup[k]=0;}
   else if((g.cstar[k]||1)<5){g.cdup[k]=(g.cdup[k]||0)+1;}
-  else{hh=gKill(g,Math.max(1,g.best))*[20,40,80,200][rar];g.hearts+=hh;}
+  else{hh=gKill(g,Math.max(1,g.best))*G_DATA.pet.dupH[rar];g.hearts+=hh;}
   return {k:k,rar:rar,nw:isNew,h:hh,kind:'p',name:p.n,img:gCpImg(k)};
 }
 function gGacPetCard(g){
-  var pr=Math.max(1,10-(g.cpity||0)),ps=Math.max(1,50-(g.cpity2||0));
+  var pr=Math.max(1,G_DATA.pet.gacha.pity1-(g.cpity||0)),ps=Math.max(1,G_DATA.pet.gacha.pity2-(g.cpity2||0));
   return '<p class="hint">사랑이랑 같이 싸우는 <b>동료 친구들</b>을 뽑아! 지상·하늘·탈것에서 한 마리씩 데려갈 수 있고, 모두 각자 특별한 능력이 있어.</p>'+
    '<div class="gneed" style="grid-template-columns:1fr auto"><span>내 뽑기권</span><b style="font-size:16px">🎟️ '+g.tickets+'장</b></div>'+
    '<p class="hint" style="font-size:12px">확률: N 55% · R 33% · SR 10% · SSR 2%<br>SR 이상 확정까지 '+pr+'번 · SSR 확정까지 '+ps+'번<br>같은 친구가 또 나오면 도감에서 ⭐ 별 강화에 쓸 수 있어!</p>'+
