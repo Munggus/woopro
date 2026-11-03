@@ -2,7 +2,7 @@
 // 사용: node tests/golden.js save   (현재 공식 결과를 기준으로 저장)
 //       node tests/golden.js        (저장된 기준과 비교)
 var fs=require('fs'),path=require('path');
-var SRC=fs.readFileSync(path.join(__dirname,'../g/core2.js'),'utf8');
+var SRC=fs.readFileSync(path.join(__dirname,'../g/data.js'),'utf8')+fs.readFileSync(path.join(__dirname,'../g/core2.js'),'utf8');
 var C=new Function(SRC+';return {gHp:gHp,gKill:gKill,gAtk:gAtk,gInc:gInc,gSpd:gSpd,gDps:gDps,gDly:gDly,gBossT:gBossT,gSkipP:gSkipP,gCost:gCost,gRCost:gRCost,gRBCost:gRBCost,gRPCost:gRPCost,gRBGain:gRBGain,gRPGain:gRPGain,gStartStage:gStartStage,gCbPer:gCbPer,gCbKeep:gCbKeep,gCbT:gCbT,gUlt:gUlt,gXm:gXm,G_RBU:G_RBU,G_RPU:G_RPU,GP:GP};')();
 function mk(o){return Object.assign({hearts:1e9,ch:1e9,stage:10,hp:0,evo:0,lv:{atk:0,inc:0,spd:0},rl:{atk:0,heart:0,sk:0,mv:0,cbt:0,cbn:0},rp:{},ru:{},dex:{},stk:null},o||{});}
 function snap(){

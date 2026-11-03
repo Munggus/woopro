@@ -1,7 +1,7 @@
-var fs=require('fs');var SRC=fs.readFileSync('g/core2.js','utf8');
+var fs=require('fs');var SRC=fs.readFileSync('g/data.js','utf8')+fs.readFileSync('g/core2.js','utf8');
 // R: array of ln-multiplier per 1000-floor block starting at floor 1000 (continuous exp)
 function load(){
-  var s=SRC.replace("G_XR=[1.11,-0.3,2.0,1.0,0.7,0.35]","G_XR=XR.slice()");
+  var s=SRC.replace("G_XR=G_DATA.curve.XR","G_XR=XR.slice()");
   s=s.replace("function gDps(g){return gAtk(g)*gSpd(g);}","function gDps(g){return GXV*gAtk(g)*gSpd(g);}");
   return new Function('XR','GXV_ref',"var GXV=1;"+s+";return {gAdvance:gAdvance,gCost:gCost,gRCost:gRCost,gDps:gDps,gHp:gHp,gBossT:gBossT,gRBGain:gRBGain,gRPGain:gRPGain,gStartStage:gStartStage,gRuZero:gRuZero,G_RBU:G_RBU,G_RPU:G_RPU,gRBCost:gRBCost,gRPCost:gRPCost,setX:function(v){GXV=v;}};");
 }

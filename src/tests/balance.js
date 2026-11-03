@@ -1,7 +1,7 @@
 // 밸런스(성장곡선) 시뮬레이션. 실행할 때마다 "무슨 가정으로 계산했는지" 표를 먼저 출력한다.
 // 사용: node tests/balance.js            (기준 시나리오 + 변형 시나리오)
 var S=require('../g/sim6.js'),fs=require('fs'),path=require('path');
-var SRC=fs.readFileSync(path.join(__dirname,'../g/core2.js'),'utf8');
+var SRC=fs.readFileSync(path.join(__dirname,'../g/data.js'),'utf8')+fs.readFileSync(path.join(__dirname,'../g/core2.js'),'utf8');
 var K=new Function(SRC+';return {XR:G_XR,GP:GP,CAP:0};')();
 var BASE={act:3.5,rbPerEvo:5};
 function assumptions(o){

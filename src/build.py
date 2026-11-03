@@ -2,7 +2,7 @@ import re,subprocess
 src=open('page.src.html',encoding='utf8').read()
 poses=open('poses.js',encoding='utf8').read()
 mas=open('mascot.js',encoding='utf8').read()
-game=open('g/core2.js',encoding='utf8').read()+open('g/mon.js',encoding='utf8').read()+open('g/mon2.js',encoding='utf8').read()+open('g/spr.js',encoding='utf8').read()+open('g/cpdata.js',encoding='utf8').read()+open('g/pet.js',encoding='utf8').read()+open('g/farm.js',encoding='utf8').read()+open('g/ui2.js',encoding='utf8').read()+open('g/combo.js',encoding='utf8').read()+open('g/ssr.js',encoding='utf8').read()
+game=open('g/data.js',encoding='utf8').read()+open('g/core2.js',encoding='utf8').read()+open('g/mon.js',encoding='utf8').read()+open('g/mon2.js',encoding='utf8').read()+open('g/spr.js',encoding='utf8').read()+open('g/cpdata.js',encoding='utf8').read()+open('g/pet.js',encoding='utf8').read()+open('g/farm.js',encoding='utf8').read()+open('g/ui2.js',encoding='utf8').read()+open('g/combo.js',encoding='utf8').read()+open('g/ssr.js',encoding='utf8').read()
 page=src.replace('/*GAME_CSS*/',open('g/game.css',encoding='utf8').read()).replace('/*GAME_JS*/',game).replace('/*POSES_JS*/',poses).replace('/*MAS_JS*/',mas)
 open('page.html','w',encoding='utf8').write(page)
 js=re.search(r'<script>(.*)</script>',page,re.S).group(1)
