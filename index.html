@@ -963,6 +963,9 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gdt td b{font-weight:900}
 .gdtn{font-size:11px;line-height:1.4;opacity:.65;margin:3px 0 4px;text-align:center}
 
+/* v79 */
+.gfield.gwk .ghero{animation:none!important;transform:none!important;background-position:0 0}
+
 </style>
 
 <div id="app">
@@ -1370,7 +1373,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v79';
+var APPV='v80';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2751,7 +2754,7 @@ function gDexModal(k){
   var el=document.createElement('div');el.className='gdm';el.id='gdm';
   el.innerHTML='<div class="gdmc" style="--rc:'+G_RC[r]+'"><div class="gdmst">'+gStarStr(st)+'</div><img alt="" src="'+MAS[k]+'"><div class="gdmn">'+G_DX[k][0]+' <span class="gdmr">'+G_RN[r]+'</span></div>'+
    '<div class="gdmi">보유 '+g.dex[k]+'장 · 강화 재료 '+dp+'장</div>'+
-   '<div class="gdmb">현재 보너스 <b>공격력·하트 수입 +'+gPct(cur)+'</b>'+(mx?'<br>🌟 최고 강화 달성!':'<br>다음 별 <b>+'+gPct(nxt)+'</b>'+(st===4?' (×10!)':' (×2)'))+'</div>'+
+   '<table class="gdt"><thead><tr><th>효과</th><th>지금</th><th>다음 별</th></tr></thead><tbody>'+[['⚔️ 공격력'],['💗 하트 수입']].map(function(r,i){return '<tr class="mn"><td>'+r[0]+'</td><td><b>+'+gPct(cur)+'</b></td><td class="nx">'+(mx?'MAX':'+'+gPct(nxt)+(st===4?' (×10!)':' (×2)'))+'</td></tr>';}).join('')+'</tbody></table><div class="gdtn">'+(mx?'🌟 최고 강화 달성! ':'')+'오라는 하나만 장착할 수 있어요.</div>'+
    (mx?'':'<div class="gneed" style="grid-template-columns:1fr auto;width:100%">'+gBar(dp/need,'pk')+'<b>'+Math.min(dp,need)+' / '+need+'</b></div>')+
    '<div class="gdmbt">'+(mx?'':'<button class="btn sm gevob" data-act="gdxup" data-k="'+k+'"'+(ready?'':' disabled')+'>'+(ready?'⭐ 별 '+(st+1)+'개로 강화할래?':'재료가 모자라 ('+Math.min(dp,need)+'/'+need+')')+'</button>')+
    '<button class="mini" data-act="gdxeq" data-k="'+k+'">'+(eq?'장착 해제':'오라로 장착')+'</button><button class="mini" data-act="gdxx">닫기</button></div></div>';
