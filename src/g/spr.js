@@ -1,0 +1,2 @@
+var SPR_S=["img/hs0.34e66829.png","img/hs1.0e475c33.png","img/hs2.d6e9b2a7.png","img/hs3.d5cd080a.png","img/hs4.bcac3bb2.png","img/hs5.5e69e6b3.png","img/hs6.ce99181e.png","img/hs7.c8486624.png","img/hs8.4c9fe917.png","img/hs9.3ecf7cb8.png","img/hs10.c19b1c66.png"];
+var SPR_F=["img/hf0.40adcf0f.png","img/hf1.7c0bcec6.png","img/hf2.34f5f089.png","img/hf3.f7e32e4c.png","img/hf4.8d02c0ba.png","img/hf5.10b701b2.png","img/hf6.774ad451.png","img/hf7.4383278f.png","img/hf8.b9360a7e.png","img/hf9.84d7497d.png","img/hf10.121d49bb.png"];
