@@ -45,14 +45,14 @@ function gAdvance(g,dt){
     var n=g.stage,boss=n%10===0,T=gBossT(g);
     if(g.farm){
       var full=gHp(Math.max(1,n-1))/dps+dly,kills=dt/full;
-      g.hearts+=gKill(g,Math.max(1,n-1))*kills;g.kills+=Math.floor(kills);dt=0;break;
+      g.hearts+=gKill(g,Math.max(1,n-1))*kills;g.kills+=Math.floor(kills);if(typeof gDropK==='function')gDropK(g,Math.max(1,n-1),kills);dt=0;break;
     }
     if(g.dlyLeft>0){var d0=Math.min(dt,g.dlyLeft);g.dlyLeft-=d0;dt-=d0;if(dt<=1e-9)break;}
     if(boss){
       var rem=T-(g.bt||0);
       if(dps*rem>=g.hp-1e-9){
         var need=g.hp/dps;
-        if(need<=dt){dt-=need;g.hearts+=gKill(g,n);g.kills++;g.stage++;g.best=Math.max(g.best,g.stage);g.hp=gHp(g.stage);g.bt=0;g.dlyLeft=dly;g.bossLock=false;}
+        if(need<=dt){dt-=need;g.hearts+=gKill(g,n);g.kills++;if(typeof gDrop1==='function')gDrop1(g,n,true);g.stage++;g.best=Math.max(g.best,g.stage);g.hp=gHp(g.stage);g.bt=0;g.dlyLeft=dly;g.bossLock=false;}
         else{g.hp-=dps*dt;g.bt=(g.bt||0)+dt;dt=0;}
       }else{
         var use=Math.min(dt,rem);g.hp-=dps*use;g.bt=(g.bt||0)+use;dt-=use;
@@ -62,7 +62,7 @@ function gAdvance(g,dt){
     }
     if(g.dlyLeft>0){var d0=Math.min(dt,g.dlyLeft);g.dlyLeft-=d0;dt-=d0;if(dt<=1e-9)break;}
     var need2=g.hp/dps;
-    if(need2<=dt){dt-=need2;g.hearts+=gKill(g,n);g.kills++;
+    if(need2<=dt){dt-=need2;g.hearts+=gKill(g,n);g.kills++;if(typeof gDrop1==='function')gDrop1(g,n,false);
       g.stage++;g.sk=(g.sk||0)+gSkipP(g);
       if(g.sk>=1&&g.stage%10!==0){g.sk-=1;g.stage++;}
       g.best=Math.max(g.best,g.stage);g.hp=gHp(g.stage);g.dlyLeft=dly;}

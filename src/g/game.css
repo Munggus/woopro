@@ -720,3 +720,20 @@
 .gvce{font-size:28px}
 .gvbk{margin-bottom:8px}
 .gvub{display:flex!important;flex-direction:row!important;align-items:center;justify-content:center;gap:6px;width:100%}
+/* ===== v90 재료·층 이동·배치 ===== */
+.gvh{display:flex;align-items:center;justify-content:space-between;gap:8px}.gvh h2{margin:0}
+.mini.on{background:var(--brand,#D92F5E);color:#fff}
+.gvmi.ed{outline:2px dashed #ffb300;outline-offset:-2px}
+.gvcell{position:absolute;width:8.3333%;height:8.3333%;box-sizing:border-box;padding:0;border:1px solid rgba(255,255,255,.8);background:rgba(255,255,255,.38);border-radius:4px;z-index:1;-webkit-tap-highlight-color:transparent}
+.gvb{z-index:2}.gvb.sel{pointer-events:none;outline:3px solid #ffb300;box-shadow:0 0 0 4px rgba(255,179,0,.35)}
+.gvt{color:#8a5a00!important}
+.gmr{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.gme{font-size:26px;line-height:1.1}.gmq{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.gmc{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:12px}
+.gs{color:#f5a623;letter-spacing:-1px}.gsx{color:#b06cff;font-size:1.35em;line-height:1}
+.gmo{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px}
+.gdrp{position:fixed;z-index:9999;pointer-events:none;font-size:13px;font-weight:800;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.92);color:#3b2f2f;box-shadow:0 2px 6px rgba(0,0,0,.25);animation:gdrp 1.4s ease-out forwards;white-space:nowrap}
+@keyframes gdrp{0%{opacity:0;transform:translateY(8px) scale(.8)}15%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-34px) scale(1)}}
+.gflv{text-align:center;margin:6px 0}.gflv b{display:block;font-size:30px}.gflv small{font-size:12px}
+.gflb{display:flex;gap:6px;justify-content:center;margin:6px 0}
+#g-st[data-act]{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
