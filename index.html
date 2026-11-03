@@ -952,6 +952,17 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 @keyframes gbsl{0%{transform:scale(1.07);filter:brightness(1.25) contrast(1.1)}30%{transform:scale(1.04)}100%{transform:none;filter:none}}
 @media (prefers-reduced-motion:reduce){.gbw *,.gbc *,.gbn,.gmon.gold::after,.gmon.gold::before,.garena.gbslow .gfield{animation:none!important}.gbw,.gbc{display:none}}
 
+/* ===== v79: 동료 효과 표 ===== */
+.gdt{width:100%;border-collapse:separate;border-spacing:0;margin:6px 0 2px;font-size:13px;border:1.5px solid var(--rc,#ddd);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.55)}
+.gdt th{background:var(--rc,#ccc);color:#fff;font-size:11.5px;font-weight:900;padding:5px 6px;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.gdt th:first-child{text-align:left}
+.gdt td{padding:6px;text-align:center;border-top:1px solid rgba(0,0,0,.07)}
+.gdt td:first-child{text-align:left;font-weight:700}
+.gdt tr.mn td{background:rgba(255,200,80,.18)}
+.gdt td.nx{color:#2a9d5c;font-weight:800}
+.gdt td b{font-weight:900}
+.gdtn{font-size:11px;line-height:1.4;opacity:.65;margin:3px 0 4px;text-align:center}
+
 </style>
 
 <div id="app">
@@ -1359,7 +1370,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v78';
+var APPV='v79';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2144,6 +2155,12 @@ var G_CSM=[0,1,1.5,2,3,5];
 var G_CPX=[[['cbt',0.3]],[['cbt',0.3],['ult',5]],[['cbt',0.3],['ult',5],['cbd',0.1]],[['cbt',0.3],['ult',5],['cbd',0.1],['cbn',1]]];
 var G_CPXN={cbt:'콤보 유지시간',ult:'필살기 위력',cbd:'콤보당 데미지',cbn:'필살기 필요 타수'};
 function gCpXTxt(p,st){var m=G_CSM[st]||1,r=function(v){v=Math.round(v*10)/10;return v%1?v.toFixed(1):v;};return (G_CPX[p.r]||[]).map(function(x){var k=x[0],v=k==='cbn'?x[1]:x[1]*m;return G_CPXN[k]+' '+(k==='cbn'?'−'+r(v)+'타':k==='cbt'?'+'+r(v)+'초':k==='cbd'?'+'+r(v)+'%p':'+'+r(v)+'%');}).join(' · ');}
+function gCpXv(k,v){v=Math.round(v*10)/10;var t=v%1?v.toFixed(1):v;return k==='cbn'?'−'+t+'타':k==='cbt'?'+'+t+'초':k==='cbd'?'+'+t+'%p':'+'+t+'%';}
+function gCpTable(p,st,mx){
+  var rows=[['⭐ '+G_CPA[p.a][0],gCpFmt(p.a,gCpVal(null,p.id,st)),mx?'MAX':gCpFmt(p.a,gCpVal(null,p.id,st+1))]],m1=G_CSM[st]||1,m2=G_CSM[st+1]||m1;
+  (G_CPX[p.r]||[]).forEach(function(x){var k=x[0];rows.push([G_CPXN[k],gCpXv(k,k==='cbn'?x[1]:x[1]*m1),mx?'MAX':gCpXv(k,k==='cbn'?x[1]:x[1]*m2)]);});
+  return '<table class="gdt"><thead><tr><th>효과</th><th>지금</th><th>다음 별</th></tr></thead><tbody>'+rows.map(function(r,i){return '<tr'+(i?'':' class="mn"')+'><td>'+r[0]+'</td><td><b>'+r[1]+'</b></td><td class="nx">'+r[2]+'</td></tr>';}).join('')+'</tbody></table><div class="gdtn">등급이 높을수록 효과가 쌓여요: N 유지시간 → R +필살기 위력 → SR +콤보 데미지 → SSR +필요 타수</div>';
+}
 function gCpVal(g,id,st){var p=G_CPM[id];if(!p)return 0;st=st||(g.cstar&&g.cstar[id])||1;return G_CPV[p.a][p.r]*(G_CSM[st]||1);}
 function gCpFmt(a,v){v=Math.round(v*10)/10;return '+'+(v%1?v.toFixed(1):v)+(G_CPA[a][1]==='초'?'초':'%');}
 function gPetB(g){
@@ -2195,8 +2212,7 @@ function gPetModal(id){
   var el=document.createElement('div');el.className='gdm';el.id='gdm';
   el.innerHTML='<div class="gdmc" style="--rc:'+G_RC[p.r]+'"><div class="gdmst">'+gStarStr(st)+'</div><img alt="" src="'+gCpImg(id)+'"><div class="gdmn">'+p.n+' <span class="gdmr">'+G_RN[p.r]+'</span></div>'+
    '<div class="gdmi">'+G_CPC[p.c][1]+' '+G_CPC[p.c][0]+' 동료 · 보유 '+g.cdex[id]+'장 · 강화 재료 '+dp+'장</div>'+
-   '<div class="gdmb">장착하면 <b>'+G_CPA[p.a][0]+' '+gCpFmt(p.a,cur)+'</b>'+(mx?'<br>🌟 최고 강화 달성!':'<br>다음 별 <b>'+gCpFmt(p.a,nxt)+'</b>')+'</div><div class="gdmb" style="margin-top:2px">⚔️ 콤보·필살기: <b>'+gCpXTxt(p,st)+'</b></div>'+
-   (mx?'':'<div class="gneed" style="grid-template-columns:1fr auto;width:100%">'+gBar(dp/need,'pk')+'<b>'+Math.min(dp,need)+' / '+need+'</b></div>')+
+   gCpTable(p,st,mx)+'<div class="gdtn" style="margin-top:0">능력은 장착해야 적용돼!'+(mx?' 🌟 최고 강화 달성!':'')+'</div>'+(mx?'':'<div class="gneed" style="grid-template-columns:1fr auto;width:100%">'+gBar(dp/need,'pk')+'<b>'+Math.min(dp,need)+' / '+need+'</b></div>')+
    '<div class="gdmbt">'+(mx?'':'<button class="btn sm gevob" data-act="gpup" data-k="'+id+'"'+(ready?'':' disabled')+'>'+(ready?'⭐ 별 '+(st+1)+'개로 강화할래?':'재료가 모자라 ('+Math.min(dp,need)+'/'+need+')')+'</button>')+
    '<button class="mini" data-act="gpeq" data-k="'+id+'">'+(eq?'장착 해제':'이 친구 데려가기')+'</button><button class="mini" data-act="gdxx">닫기</button></div></div>';
   el.addEventListener('click',function(e){if(e.target===el)gDexModalClose();});
