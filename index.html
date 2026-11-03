@@ -998,10 +998,10 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .garena.sm .gcmb,.garena.sm .gults,.garena.sm .gtaph{display:none!important}
 
 /* ===== v83: 몬스터 검은 테두리 ===== */
-.gmon .gmi{filter:var(--hue,) drop-shadow(calc(1.3px*var(--k)) 0 0 #000) drop-shadow(-calc(1.3px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.3px*var(--k)) 0 #000) drop-shadow(0 -calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000)}
-.garena.boss .gmon .gmi{filter:var(--hue,) drop-shadow(calc(1.3px*var(--k)) 0 0 #000) drop-shadow(-calc(1.3px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.3px*var(--k)) 0 #000) drop-shadow(0 -calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000) drop-shadow(0 0 7px rgba(255,70,90,.85))}
-.garena.boss .gmon.king .gmi{filter:var(--hue,) drop-shadow(calc(1.3px*var(--k)) 0 0 #000) drop-shadow(-calc(1.3px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.3px*var(--k)) 0 #000) drop-shadow(0 -calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) calc(1.3px*var(--k)) 0 #000) drop-shadow(calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000) drop-shadow(-calc(1.3px*var(--k)) -calc(1.3px*var(--k)) 0 #000) drop-shadow(0 0 10px rgba(255,200,60,.95))}
-.gmon svg{filter:drop-shadow(calc(1.3px*var(--k)) 0 0 #000) drop-shadow(-calc(1.3px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.3px*var(--k)) 0 #000) drop-shadow(0 -calc(1.3px*var(--k)) 0 #000)}
+.gmon .gmi{filter:var(--hue,) drop-shadow(calc(1.9px*var(--k)) 0 0 #000) drop-shadow(-calc(1.9px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.9px*var(--k)) 0 #000) drop-shadow(0 -calc(1.9px*var(--k)) 0 #000) drop-shadow(calc(1.9px*var(--k)) calc(1.9px*var(--k)) 0 #000) drop-shadow(-calc(1.9px*var(--k)) calc(1.9px*var(--k)) 0 #000) drop-shadow(calc(1.9px*var(--k)) -calc(1.9px*var(--k)) 0 #000) drop-shadow(-calc(1.9px*var(--k)) -calc(1.9px*var(--k)) 0 #000)}
+.garena.boss .gmon .gmi{filter:var(--hue,) drop-shadow(calc(1.9px*var(--k)) 0 0 #000) drop-shadow(-calc(1.9px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.9px*var(--k)) 0 #000) drop-shadow(0 -calc(1.9px*var(--k)) 0 #000) drop-shadow(calc(1.9px*var(--k)) calc(1.9px*var(--k)) 0 #000) drop-shadow(-calc(1.9px*var(--k)) calc(1.9px*var(--k)) 0 #000) drop-shadow(calc(1.9px*var(--k)) -calc(1.9px*var(--k)) 0 #000) drop-shadow(-calc(1.9px*var(--k)) -calc(1.9px*var(--k)) 0 #000) drop-shadow(0 0 7px rgba(255,70,90,.85))}
+.garena.boss .gmon.king .gmi{filter:var(--hue,) drop-shadow(calc(1.9px*var(--k)) 0 0 #000) drop-shadow(-calc(1.9px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.9px*var(--k)) 0 #000) drop-shadow(0 -calc(1.9px*var(--k)) 0 #000) drop-shadow(calc(1.9px*var(--k)) calc(1.9px*var(--k)) 0 #000) drop-shadow(-calc(1.9px*var(--k)) calc(1.9px*var(--k)) 0 #000) drop-shadow(calc(1.9px*var(--k)) -calc(1.9px*var(--k)) 0 #000) drop-shadow(-calc(1.9px*var(--k)) -calc(1.9px*var(--k)) 0 #000) drop-shadow(0 0 10px rgba(255,200,60,.95))}
+.gmon svg{filter:drop-shadow(calc(1.9px*var(--k)) 0 0 #000) drop-shadow(-calc(1.9px*var(--k)) 0 0 #000) drop-shadow(0 calc(1.9px*var(--k)) 0 #000) drop-shadow(0 -calc(1.9px*var(--k)) 0 #000)}
 
 </style>
 
@@ -1410,7 +1410,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v83';
+var APPV='v84';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2599,11 +2599,15 @@ function gNoteHtml(g){
   if(g.farm)return '<span>보스한테 졌어… 아래 층에서 힘을 모으는 중이야 💪<br>준비됐다 싶으면 다시 도전해봐!</span><button class="mini bossb" data-act="gboss">⚔️ 보스 도전!</button>';
   return '<span>⚔️ 보스전! 제한시간 안에 쓰러뜨려야 해</span>';
 }
+var gFarmS=0,gFarmN=0;
 function gQuant(f,H,g){var a=gAtk(g),n=H/a;if(!(n>0)||n>300)return f;f=1-Math.floor((1-f)*n+1e-6)/n;return f<0?0:f;}
 function gFrac(g,now){
   var sh=gShown(g),H=gHp(sh),f;
-  if(g.farm){var cyc=Math.max(.3,gHp(sh)/gDps(g)+gDly(g));f=1-((now/1000)%cyc)/cyc;}
-  else f=g.hp/H;
+  if(g.farm){var cyc=Math.max(.3,gHp(sh)/gDps(g)+gDly(g));
+    if(!gFarmS)gFarmS=now;var pr=(now-gFarmS)/1000/cyc;
+    if(pr>=1){gFarmN++;pr=pr%1;gFarmS=now-pr*cyc*1000;}
+    f=1-pr;}
+  else{gFarmS=0;f=g.hp/H;}
   return gQuant(f,H,g);
 }
 function gChips(g){return '<div class="gres"><span class="chip" id="g-hearts" data-act="gchip" data-k="h">💗 '+gFmt(g.hearts)+'</span><span class="chip" id="g-pps" data-act="gchip" data-k="d">⚔️ '+gFmt(gDps(g))+'/초</span><span class="chip rb" id="g-rub" data-act="gchip" data-k="r">'+gRuby(15)+' '+gFmt(g.rubies)+'</span><span class="chip" id="g-tk" data-act="gchip" data-k="t">🎟️ '+g.tickets+'</span></div><div class="gchtip" id="g-chtip" hidden></div>';}
@@ -2918,7 +2922,7 @@ function gTick(){
   gWalk(g);gCbTick(g,now,g.fails!==pfail);
   gSet('g-st',gStText(g));
   var frac=gFrac(g,now);
-  if(g.farm){var cyc2=Math.max(.3,gHp(sh)/gDps(g)+gDly(g)),ci=Math.floor(now/1000/cyc2);if(ci!==gCycle){gCycle=ci;var m=$('g-mon');if(m&&gCycle>0){m.classList.remove('pop');void m.offsetWidth;m.classList.add('pop');}}}
+  if(g.farm){var ci=gFarmN;if(ci!==gCycle){gCycle=ci;var m=$('g-mon');if(m&&gCycle>0){m.classList.remove('pop');void m.offsetWidth;m.classList.add('pop');}}}
   hp.style.width=Math.max(0,Math.min(100,frac*100))+'%';
   if(typeof gGoldUi==='function'&&gGoldUi(g,now))hp.style.width=Math.max(0,Math.min(100,gQuant(gGold.hp/gGold.max,gGold.max,g)*100))+'%';
   var bt=$('g-bt');
@@ -3397,7 +3401,9 @@ function gCbTick(g,now,failed){
 }
 function gApplyDmg(g,dmg){
   if(typeof gGold!=='undefined'&&gGold&&gGold.end){gGoldHit(g,dmg);return;}
-  if(g.farm){var n=Math.max(1,g.stage-1);g.hearts+=gKill(g,n)*Math.min(1,dmg/gHp(n));return;}
+  if(g.farm){var n=Math.max(1,g.stage-1);g.hearts+=gKill(g,n)*Math.min(1,dmg/gHp(n));
+    var sh0=gShown(g);gFarmS=(gFarmS||Date.now())-dmg/gDps(g)*1000;
+    var hp0=$('g-hp');if(hp0)hp0.style.width=Math.max(0,Math.min(100,gFrac(g,Date.now())*100))+'%';return;}
   if(!(g.hp>0))g.hp=gHp(g.stage);
   var e=gDps(g)*1e-6;g.hp=Math.max(e,g.hp-dmg);
   var hp=$('g-hp');if(hp)hp.style.width=Math.max(0,Math.min(100,gFrac(g,Date.now())*100))+'%';
