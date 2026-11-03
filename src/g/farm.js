@@ -4,7 +4,8 @@ var G_CROP=[
  {k:'straw',e:'🍓',n:'딸기',t:7200,v:60,f:2,rv:2},
  {k:'corn',e:'🌽',n:'옥수수',t:14400,v:150,f:4,rv:3},
  {k:'tomato',e:'🍅',n:'토마토',t:28800,v:400,f:6,rv:4},
- {k:'sun',e:'🌻',n:'해바라기',t:57600,v:1000,f:10,rv:5}
+ {k:'sun',e:'🌻',n:'해바라기',t:57600,v:1000,f:10,rv:5},
+ {k:'melon',e:'🍉',n:'수박',t:115200,v:2500,f:14,rv:6}
 ];
 var G_CRM={};G_CROP.forEach(function(c){G_CRM[c.k]=c;});
 var G_PROD={gnd:{k:'milk',e:'🥛',n:'우유'},sky:{k:'egg',e:'🥚',n:'달걀'},veh:{k:'dust',e:'✨',n:'반짝가루'}};
@@ -23,6 +24,8 @@ function gFmLoad(o){
   d.an=[];if(Array.isArray(o.an))o.an.slice(0,d.ns).forEach(function(a){if(a&&G_CPM[a.id]&&!d.an.some(function(x){return x.id===a.id;}))d.an.push({id:a.id,fu:gNum(a.fu,0),lp:gNum(a.lp,Date.now()),n:Math.min(G_ANCAP,Math.max(0,Math.floor(gNum(a.n,0))))});});
   return d;
 }
+/* 예전 저장(품질 없는 우유·달걀·반짝가루)을 ★1 재료로 옮기기 */
+function gPrMigrate(d){G_PRK.forEach(function(k){var n=d.fm.inv[k]||0;if(n>0){d.mt[k][0]=Math.min(999999,d.mt[k][0]+n);d.fm.inv[k]=0;}});}
 function gFm(){var g=gGet();if(!g.fm)g.fm=gFmDef();return g.fm;}
 /* ---- 계산 ---- */
 function gWCut(c){return Math.max(G_WSTEP*c.t*1000,3600000);}
@@ -42,9 +45,9 @@ function gFmWater(n){var f=gFm();f.water=Math.min(30,f.water+n);}
 var gFmT='f';
 function gInvHtml(g){
   var f=gFm(),base=gFmBase(g),tot=0,rows='';
-  G_CROP.forEach(function(c){var n=f.inv[c.k]||0;if(n){var h=c.rv*n;tot+=h;rows+='<span class="gii">'+c.e+' <b>'+n+'</b></span>';}});
-  G_PRK.forEach(function(k){var n=f.inv[k]||0;if(n){var h=gPrVal(k)*n;tot+=h;rows+='<span class="gii">'+G_PRM[k].e+' <b>'+n+'</b></span>';}});
-  return '<h3 class="gcph">🧺 창고</h3>'+(rows?'<div class="gih">'+rows+'</div><button class="btn sm gevob" data-act="gf" data-f="sell">'+gRuby(14)+' 모두 팔기 (+'+gFmt(tot)+')</button><p class="hint" style="font-size:12px">작물은 농장 동물의 먹이로도 쓸 수 있어. 먹이로 줄 건 남겨두고 팔아!</p>':'<p class="hint">수확한 작물이랑 농장에서 얻은 물건이 여기에 모여. 루비로 바꿀 수 있어!</p>');
+  G_CROP.forEach(function(c){var n=f.inv[c.k]||0;if(n){var h=c.rv*n;tot+=h;rows+='<span class="gii">'+c.e+gStars(c.rv)+' <b>'+n+'</b></span>';}});
+  var mm=gMt();G_MT.types.forEach(function(t){if(t.h)return;mm[t.k].forEach(function(n,i){if(n>0){tot+=gPrVal(t.k)*n;rows+='<span class="gii">'+t.e+gStars(i+1)+' <b>'+n+'</b></span>';}});});
+  return '<h3 class="gcph">🧺 창고</h3>'+(rows?'<div class="gih">'+rows+'</div><button class="btn sm gevob" data-act="gf" data-f="sell">'+gRuby(14)+' 모두 팔기 (+'+gFmt(tot)+')</button><p class="hint" style="font-size:12px">작물은 농장 동물의 먹이로도 쓸 수 있어. 먹이로 줄 건 남겨두고 팔아! (품질과 상관없이 같은 값이야. 높은 품질은 나중에 만들기 재료로 쓰는 게 이득이야)</p>':'<p class="hint">수확한 작물이랑 농장에서 얻은 물건이 여기에 모여. 루비로 바꿀 수 있어!</p>');
 }
 function gPrVal(k){return {milk:3,egg:5,dust:8}[k]||3;}
 function gFarmCard(g){
@@ -53,7 +56,7 @@ function gFarmCard(g){
   return '<button class="mini gvbk" data-act="gvil" data-f="map">🏡 마을로</button>'+tabs+(gFmT==='a'?gPenCard(g):gPlotCard(g))+gInvHtml(g);
 }
 function gPlotCard(g){
-  var f=gFm(),now=Date.now(),h='<div class="gfw"><span class="chip">💧 물 <b>'+f.water+'</b>/30</span><small>운동을 끝낼 때마다 💧 +3!</small></div>';
+  var f=gFm(),now=Date.now(),h='<div class="gfw"><span class="chip">💧 물 <b>'+f.water+'</b>/30</span><span class="chip">🌱 텃밭 Lv.'+gVlLv('plot')+'</span><small>운동을 끝낼 때마다 💧 +3!</small></div>';
   h+='<div class="gpls">';
   f.pl.forEach(function(p,i){
     var c=G_CRM[p.c];
@@ -75,7 +78,7 @@ function gPenCard(g){
   });
   h+='</div>';
   if(!f.an.length)h+='<p class="hint" style="text-align:center">아직 마당이 텅 비었어! 내 동료 중에서 친구를 데려와 봐 🐾</p>';
-  h+='<div class="gfw"><span class="chip">🐾 마당 <b>'+f.an.length+'</b>/'+f.ns+'칸</span><button class="mini" data-act="gf" data-f="addm"'+(f.an.length<f.ns?'':' disabled')+'>+ 동물 들이기</button>'+(f.ns<10?'<button class="mini rb" data-act="gf" data-f="bsl">'+gRuby(14)+' '+(30*(f.ns-2))+' 칸 늘리기</button>':'')+'</div>';
+  h+='<div class="gfw"><span class="chip">🐄 농장 Lv.'+gVlLv('farm')+' · 생산 '+gStars(gVlLv('farm'))+'</span></div><div class="gfw"><span class="chip">🐾 마당 <b>'+f.an.length+'</b>/'+f.ns+'칸</span><button class="mini" data-act="gf" data-f="addm"'+(f.an.length<f.ns?'':' disabled')+'>+ 동물 들이기</button>'+(f.ns<10?'<button class="mini rb" data-act="gf" data-f="bsl">'+gRuby(14)+' '+(30*(f.ns-2))+' 칸 늘리기</button>':'')+'</div>';
   var cl=f.an.reduce(function(s,a){return s+a.n;},0);
   if(cl)h+='<button class="btn sm gevob" data-act="gf" data-f="colall">🧺 생산물 모두 모으기 ('+cl+'개)</button>';
   return h+'<p class="hint" style="font-size:12px">동물을 누르면 먹이(🥕🍓…)를 줄 수 있어. 배부른 동안 우유🥛·달걀🥚·반짝가루✨를 만들어줘! 등급이 높고 ★이 많을수록 더 빨라.</p>';
@@ -125,9 +128,9 @@ function gFModal(html){
 var G_F={
  seed:function(b){
   var f=gFm(),i=+b.dataset.i,g=gGet(),base=gFmBase(g);
-  gFModal('<div class="gdmn">🌱 무엇을 심을까?</div><div class="gcr">'+G_CROP.map(function(c){return '<button class="gcrb" data-act="gf" data-f="plant" data-i="'+i+'" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+'</b><small>'+gHM(c.t*1000)+'</small><small>'+gRuby(11)+' '+c.rv+'</small></button>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
+  var pl=gVlLv('plot');gFModal('<div class="gdmn">🌱 무엇을 심을까? <small>텃밭 Lv.'+pl+'</small></div><div class="gcr">'+G_CROP.map(function(c){var lk=c.rv>pl;return '<button class="gcrb'+(lk?' lock':'')+'" data-act="gf" data-f="plant" data-i="'+i+'" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+' '+gStars(c.rv)+'</b>'+(lk?'<small>🔒 텃밭 Lv.'+c.rv+'</small>':'<small>'+gHM(c.t*1000)+'</small><small>'+gRuby(11)+' '+c.rv+'</small>')+'</button>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
  },
- plant:function(b){var f=gFm(),p=f.pl[+b.dataset.i];if(!p||p.c)return;p.c=b.dataset.k;p.t=Date.now();p.w=0;gSfx('buy');gSave();gDexModalClose();gRefresh();},
+ plant:function(b){var f=gFm(),p=f.pl[+b.dataset.i];if(!p||p.c)return;var cc=G_CRM[b.dataset.k];if(!cc)return;if(cc.rv>gVlLv('plot')){toast('🔒 텃밭이 Lv.'+cc.rv+'이 되면 심을 수 있어!');return;}p.c=b.dataset.k;p.t=Date.now();p.w=0;gSfx('buy');gSave();gDexModalClose();gRefresh();},
  water:function(b){
   var f=gFm(),p=f.pl[+b.dataset.i];if(!p||!p.c)return;
   if(gPlRemain(p,Date.now())<=0){return G_F.harv(b);}
@@ -144,7 +147,7 @@ var G_F={
  sell:function(b){
   var g=gGet(),f=gFm(),base=gFmBase(g),tot=0;
   G_CROP.forEach(function(c){tot+=c.rv*(f.inv[c.k]||0);f.inv[c.k]=0;});
-  G_PRK.forEach(function(k){tot+=gPrVal(k)*(f.inv[k]||0);f.inv[k]=0;});
+  var mm=gMt();G_MT.types.forEach(function(t){if(t.h)return;for(var i=0;i<mm[t.k].length;i++){tot+=gPrVal(t.k)*mm[t.k][i];mm[t.k][i]=0;}});
   if(!tot)return;g.rubies+=tot;g.st.rub+=tot;gSfx('coin');gSave();gRefresh();toast('💎 루비 +'+gFmt(tot)+' 받았어!');
  },
  addm:function(b){
@@ -164,7 +167,7 @@ var G_F={
   if(a.n>0&&now<=a.fu){/* 바로 모으기 */ }
   var p=G_CPM[id],fed=now<a.fu;
   var foods=G_CROP.filter(function(c){return (f.inv[c.k]||0)>0;});
-  gFModal('<img class="gfm-i" alt="" src="'+gCpImg(id)+'"><div class="gdmn">'+p.n+' <span class="gdmr">'+G_RN[p.r]+'</span></div><div class="gdmi">'+(fed?'😋 배부른 중 · '+gHM(a.fu-now)+' 남음':'🍽️ 배가 고파 보여')+'<br>'+G_PROD[p.c].e+' '+G_PROD[p.c].n+' 모아둔 것: <b>'+a.n+'</b>개 · '+Math.round(gAnInt(g,a)/60000)+'분마다 1개</div>'+
+  gFModal('<img class="gfm-i" alt="" src="'+gCpImg(id)+'"><div class="gdmn">'+p.n+' <span class="gdmr">'+G_RN[p.r]+'</span></div><div class="gdmi">'+(fed?'😋 배부른 중 · '+gHM(a.fu-now)+' 남음':'🍽️ 배가 고파 보여')+'<br>'+G_PROD[p.c].e+' '+G_PROD[p.c].n+' 모아둔 것: <b>'+a.n+'</b>개 (모으면 '+gStars(gVlLv('farm'))+') · '+Math.round(gAnInt(g,a)/60000)+'분마다 1개</div>'+
    (foods.length?'<div class="gcr">'+foods.map(function(c){return '<button class="gcrb" data-act="gf" data-f="feed" data-id="'+id+'" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+' ×'+f.inv[c.k]+'</b><small>'+c.f+'시간 배부름</small></button>';}).join('')+'</div>':'<p class="hint">먹이로 줄 작물이 없어. 텃밭에서 수확해봐 🌱</p>')+
    '<div class="gdmbt">'+(a.n>0?'<button class="btn sm gevob" data-act="gf" data-f="col" data-id="'+id+'">'+G_PROD[p.c].e+' 모으기 ('+a.n+')</button>':'')+'<button class="mini" data-act="gf" data-f="out" data-id="'+id+'">농장에서 내보내기</button><button class="mini" data-act="gdxx">닫기</button></div>');
  },
@@ -177,15 +180,15 @@ var G_F={
  },
  col:function(b){
   var g=gGet(),f=gFm(),id=b.dataset.id,a=null;f.an.forEach(function(x){if(x.id===id)a=x;});if(!a||a.n<=0)return;
-  var p=G_CPM[id],k=G_PROD[p.c].k;f.inv[k]=(f.inv[k]||0)+a.n;var n=a.n;a.n=0;gSfx('coin');gSave();gDexModalClose();gRefresh();toast(G_PROD[p.c].e+' '+n+'개 모았어!');
+  var p=G_CPM[id],k=G_PROD[p.c].k,ql=gVlLv('farm');gMtGive(k,ql,a.n);var n=a.n;a.n=0;gSfx('coin');gSave();gDexModalClose();gRefresh();toast(G_PROD[p.c].e+' ★'+ql+' '+n+'개 모았어!');
  },
  colall:function(b){
-  var g=gGet(),f=gFm(),tot=0;f.an.forEach(function(a){if(a.n>0){var k=G_PROD[G_CPM[a.id].c].k;f.inv[k]=(f.inv[k]||0)+a.n;tot+=a.n;a.n=0;}});
+  var g=gGet(),f=gFm(),tot=0,ql=gVlLv('farm');f.an.forEach(function(a){if(a.n>0){var k=G_PROD[G_CPM[a.id].c].k;gMtGive(k,ql,a.n);tot+=a.n;a.n=0;}});
   if(!tot)return;gSfx('coin');gSave();gRefresh();toast('🧺 생산물 '+tot+'개를 모았어!');
  },
  out:function(b){
   var f=gFm(),id=b.dataset.id,a=null;f.an.forEach(function(x){if(x.id===id)a=x;});if(!a)return;
-  if(a.n>0){var k=G_PROD[G_CPM[id].c].k;f.inv[k]=(f.inv[k]||0)+a.n;}
+  if(a.n>0){var k=G_PROD[G_CPM[id].c].k;gMtGive(k,gVlLv('farm'),a.n);}
   f.an=f.an.filter(function(x){return x.id!==id;});delete gFA[id];gSave();gDexModalClose();gRefresh();toast('농장에서 쉬러 갔어');
  }
 };

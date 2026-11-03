@@ -1,5 +1,6 @@
 /* ===== 재료 (사냥 드랍 · 품질 ★1~6) · 층 이동/고정 ===== */
 var G_MT=G_DATA.mat,G_MTK=G_MT.types.map(function(t){return t.k;}),G_MTM={};G_MT.types.forEach(function(t){G_MTM[t.k]=t;});
+var G_MTH=G_MT.types.filter(function(t){return t.h;}).map(function(t){return t.k;});
 var gDropQ=[],gMatAcc={},gFlSel=0;
 function gMtZero(){var o={};G_MTK.forEach(function(k){o[k]=[0,0,0,0,0,0];});return o;}
 function gMtLoad(o){var d=gMtZero();if(o&&typeof o==='object')G_MTK.forEach(function(k){if(Array.isArray(o[k]))for(var i=0;i<G_MT.maxQ;i++)d[k][i]=Math.min(999999,Math.max(0,Math.floor(gNum(o[k][i],0))));});return d;}
@@ -14,21 +15,23 @@ function gMtInfo(n){
 function gMtAdd(k,q,c){var m=gMt();m[k][q-1]=Math.min(999999,m[k][q-1]+c);var key=k+'|'+q;gMatAcc[key]=(gMatAcc[key]||0)+c;gDropQ.push([k,q,c]);}
 function gDrop1(g,n,boss){
   var I=gMtInfo(n),c=boss?G_MT.drop.boss:(Math.random()<I.pd?1:0);
-  for(var i=0;i<c;i++){var k=G_MTK[Math.floor(Math.random()*G_MTK.length)],q=I.q;if(I.pu>0&&Math.random()<I.pu)q++;gMtAdd(k,q,1);}
+  for(var i=0;i<c;i++){var k=G_MTH[Math.floor(Math.random()*G_MTH.length)],q=I.q;if(I.pu>0&&Math.random()<I.pu)q++;gMtAdd(k,q,1);}
 }
 function gMtRnd(k,q,v){var f=Math.floor(v),c=f+(Math.random()<v-f?1:0);if(c>0)gMtAdd(k,q,c);}
 /* k마리를 한꺼번에 잡았을 때 (반복사냥·방치). 많으면 기댓값으로 계산 */
 function gDropK(g,n,k){
   var boss=n%10===0,w=Math.floor(k),a=w+(Math.random()<k-w?1:0);if(a<=0)return;
-  if(a>2000){var I=gMtInfo(n),tot=boss?a*G_MT.drop.boss:a*I.pd,per=tot/G_MTK.length;G_MTK.forEach(function(kk){gMtRnd(kk,I.q,per*(1-I.pu));if(I.pu>0)gMtRnd(kk,I.q+1,per*I.pu);});return;}
+  if(a>2000){var I=gMtInfo(n),tot=boss?a*G_MT.drop.boss:a*I.pd,per=tot/G_MTH.length;G_MTH.forEach(function(kk){gMtRnd(kk,I.q,per*(1-I.pu));if(I.pu>0)gMtRnd(kk,I.q+1,per*I.pu);});return;}
   for(var i=0;i<a;i++)gDrop1(g,n,boss);
 }
 function gStars(q){return q>=6?'<span class="gsx">★</span>':'<span class="gs">'+new Array(q+1).join('★')+'</span>';}
-function gMtChips(arr){var h='';for(var i=0;i<arr.length;i++)if(arr[i]>0)h+='<span class="gmc">'+gStars(i+1)+' <b>'+arr[i]+'</b></span>';return h;}
+function gMtChips(arr,em){var h='';for(var i=0;i<arr.length;i++)if(arr[i]>0)h+='<span class="gmc">'+(em||'')+gStars(i+1)+' <b>'+arr[i]+'</b></span>';return h;}
+/* 농장 생산물을 창고에 넣기 (드랍 표시 없이) */
+function gMtGive(k,q,c){var m=gMt();q=Math.min(G_MT.maxQ,Math.max(1,q));m[k][q-1]=Math.min(999999,m[k][q-1]+c);}
 function gMatOffHtml(dr){
   if(!dr)return '';var ks=Object.keys(dr);if(!ks.length)return '';var by={};
   ks.forEach(function(key){var p=key.split('|');by[p[0]]=by[p[0]]||[0,0,0,0,0,0];by[p[0]][+p[1]-1]+=dr[key];});
-  var h='';G_MTK.forEach(function(k){if(by[k])h+='<div class="gmo"><span>'+G_MTM[k].e+'</span>'+gMtChips(by[k])+'</div>';});
+  var h='';G_MTH.forEach(function(k){if(by[k])h+='<div class="gmo"><span>'+G_MTM[k].e+'</span>'+gMtChips(by[k])+'</div>';});
   return '<div class="goffs" style="margin-top:8px"><b>🎒 모은 재료</b></div>'+h;
 }
 /* 몬스터를 잡을 때 떠오르는 재료 표시 */
@@ -43,9 +46,9 @@ function gDropFlush(){
 }
 function gMatPanel(g){
   var m=gMt(),f=gFm(),h='<h3 class="gcph">🎒 재료 창고</h3>',any=false,I=gMtInfo(Math.max(1,g.best));
-  G_MT.types.forEach(function(t){var c=gMtChips(m[t.k]);if(c)any=true;h+='<div class="gmr"><span class="gme">'+t.e+'</span><div><b>'+t.n+'</b> <small>'+t.u+' 재료</small><div class="gmq">'+(c||'<small>아직 없어</small>')+'</div></div></div>';});
+  G_MT.types.forEach(function(t){if(!t.h)return;var c=gMtChips(m[t.k]);if(c)any=true;h+='<div class="gmr"><span class="gme">'+t.e+'</span><div><b>'+t.n+'</b> <small>'+t.u+' 재료</small><div class="gmq">'+(c||'<small>아직 없어</small>')+'</div></div></div>';});
   var fc='';G_CROP.forEach(function(c){var n=f.inv[c.k]||0;if(n)fc+='<span class="gmc">'+c.e+gStars(G_MT.farmQ[c.k]||1)+' <b>'+n+'</b></span>';});
-  G_PRK.forEach(function(k){var n=f.inv[k]||0;if(n)fc+='<span class="gmc">'+G_PRM[k].e+gStars(G_MT.farmQ[k]||1)+' <b>'+n+'</b></span>';});
+  G_MT.types.forEach(function(t){if(!t.h)fc+=gMtChips(m[t.k],t.e);});
   h+='<div class="gmr"><span class="gme">🧺</span><div><b>텃밭·농장</b> <small>요리·재봉 재료</small><div class="gmq">'+(fc||'<small>아직 없어</small>')+'</div></div></div>';
   h+='<p class="hint" style="font-size:12px">사냥 재료는 층이 높을수록 좋은 품질이 나와요. 지금 최고층 '+g.best+'층: '+gStars(I.q)+(I.pu>0?' + 가끔 '+gStars(I.q+1)+' ('+(I.pu*100).toFixed(0)+'%)':'')+' · 몬스터 한 마리당 드랍 '+(I.pd*100).toFixed(0)+'% · 보스는 '+G_MT.drop.boss+'개 확정.<br>🧭 층을 옮기거나 한 층에 머물려면 전투 화면의 <b>층 이름</b>을 눌러봐!</p>';
   return h;

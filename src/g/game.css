@@ -737,3 +737,4 @@
 .gflv{text-align:center;margin:6px 0}.gflv b{display:block;font-size:30px}.gflv small{font-size:12px}
 .gflb{display:flex;gap:6px;justify-content:center;margin:6px 0}
 #g-st[data-act]{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
+.gcrb.lock{opacity:.45;filter:grayscale(.6)}

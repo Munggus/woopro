@@ -14,6 +14,11 @@ function gVlLoad(o){
   return d;
 }
 function gVl(){var g=gGet();if(!g.vl)g.vl=gVlLoad(null);return g.vl;}
+function gVlLv(k){var vl=gVl(),q=vl.b[k];return q?q.lv:1;}
+function gVlEff(k,lv){var mx=G_VL.maxLv;
+  if(k==='plot'){var ok=G_CROP.filter(function(c){return c.rv<=lv;}).map(function(c){return c.e;}).join(' '),nx=G_CROP.filter(function(c){return c.rv===lv+1;})[0];return '심을 수 있는 작물: '+ok+(nx&&lv<mx?'<br>다음 레벨: '+nx.e+' '+nx.n+' '+gStars(nx.rv):'');}
+  if(k==='farm')return '동물들이 만드는 생산물 품질: '+gStars(lv)+(lv<mx?' → 다음 레벨 '+gStars(lv+1):'');
+  return '';}
 function gVlUpCost(k,l){return Math.ceil(G_VLM[k].up*Math.pow(G_VL.upG,l-1));}
 /* 레벨업 걸리는 시간: Lv1→2는 upMin분, 마지막(5→6)은 upMax분, 그 사이는 곱셈으로 점점 늘어남 */
 function gVlUpMs(l){return Math.round(G_VL.upMin*Math.pow(G_VL.upMax/G_VL.upMin,(l-1)/(G_VL.maxLv-2)))*60000;}
@@ -26,7 +31,7 @@ function gVlMapHtml(g){
   for(var y=0;y<N;y++)for(var x=0;x<N;x++){var r=rnd(),r2=rnd();if(!occ[x+','+y]&&r<G_VL.decorP)h+='<i class="gvd" style="left:'+(x*pc).toFixed(3)+'%;top:'+(y*pc).toFixed(3)+'%">'+D[Math.floor(r2*D.length)]+'</i>';}
   if(gVlEdit&&gVlSel&&vl.b[gVlSel]){for(var cy=0;cy+S<=N;cy++)for(var cx=0;cx+S<=N;cx++)if(gVlFits(vl,cx,cy,0,gVlSel))h+='<button class="gvcell" style="left:'+(cx*pc).toFixed(3)+'%;top:'+(cy*pc).toFixed(3)+'%" data-act="gvil" data-f="put" data-x="'+cx+'" data-y="'+cy+'" aria-label="여기에 놓기"></button>';}
   G_VL.bld.forEach(function(B){var q=vl.b[B.k];if(!q)return;
-    var lab=B.free?'':(q.ut?'<small class="gvt" data-k="'+B.k+'">⏳ '+gVlDur(q.ut-now)+'</small>':'<small>Lv.'+q.lv+'</small>');
+    var lab=(q.ut?'<small class="gvt" data-k="'+B.k+'">⏳ '+gVlDur(q.ut-now)+'</small>':'<small>Lv.'+q.lv+'</small>');
     h+='<button class="gvb'+(gVlSel===B.k?' sel':'')+'" style="left:'+(q.x*pc).toFixed(3)+'%;top:'+(q.y*pc).toFixed(3)+'%" data-act="gvil" data-f="bld" data-k="'+B.k+'"><span class="gve">'+B.e+'</span><b>'+B.n+'</b>'+lab+'</button>';});
   return h+'</div></div>';
 }
@@ -45,13 +50,15 @@ function gVlModal(k){
   if(mx)body='<button class="btn sm" disabled>레벨 MAX</button>';
   else if(q.ut)body='<p class="hint">⏳ Lv.'+q.lv+' → Lv.'+(q.lv+1)+' 레벨업 중!<br>남은 시간 <b id="gvmt">'+gVlDur(q.ut-Date.now())+'</b></p>';
   else body='<button class="btn sm gevob gvub" data-act="gvil" data-f="up" data-k="'+k+'">'+gRuby(14)+'<span>'+gFmt(cost)+' · Lv.'+q.lv+' → Lv.'+(q.lv+1)+'</span></button><p class="hint" style="font-size:12px">⏱️ 걸리는 시간 '+gVlDur(ms)+'</p>';
-  gFModal('<h3>'+B.e+' '+B.n+' <small>Lv.'+q.lv+'/'+G_VL.maxLv+'</small></h3><p class="hint">'+B.d+'</p><p class="hint" style="font-size:12px">🔒 여기서 만들 수 있는 것들은 곧 열릴 거야. 지금은 레벨을 올려둘 수 있어!</p>'+body+'<button class="mini" style="margin-top:8px" data-act="gvil" data-f="close">닫기</button>');
+  var enter=(k==='farm'||k==='plot'),eff=gVlEff(k,q.lv);
+  gFModal('<h3>'+B.e+' '+B.n+' <small>Lv.'+q.lv+'/'+G_VL.maxLv+'</small></h3><p class="hint">'+B.d+'</p>'+(enter?'<p class="hint" style="font-size:13px">'+eff+'</p><button class="btn sm gevob" style="margin-bottom:8px" data-act="gvil" data-f="enter" data-k="'+k+'">🚪 들어가기</button>':'<p class="hint" style="font-size:12px">🔒 여기서 만들 수 있는 것들은 곧 열릴 거야. 지금은 레벨을 올려둘 수 있어!</p>')+body+'<button class="mini" style="margin-top:8px" data-act="gvil" data-f="close">닫기</button>');
 }
 function gvDo(b){
   var f=b.dataset.f,k=b.dataset.k,g=gGet(),vl=gVl();
   if(f==='bld'){
     if(gVlEdit){gVlSel=(gVlSel===k)?'':k;gRefresh();return;}
-    if(k==='farm')gVlGo('farm','a');else if(k==='plot')gVlGo('farm','f');else gVlModal(k);}
+    gVlModal(k);}
+  else if(f==='enter'){gVlGo('farm',k==='farm'?'a':'f');}
   else if(f==='edit'){gVlEdit=!gVlEdit;gVlSel='';gRefresh();}
   else if(f==='put'){var q=vl.b[gVlSel];if(!q)return;var x=+b.dataset.x,y=+b.dataset.y;if(!gVlFits(vl,x,y,0,gVlSel)){toast('거기엔 놓을 수 없어');return;}
     q.x=x;q.y=y;var nm=G_VLM[gVlSel];gVlSel='';gSfx('buy');gSave();gRefresh();toast(nm.e+' '+nm.n+' 자리를 옮겼어!');}
