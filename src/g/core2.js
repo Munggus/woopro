@@ -28,13 +28,13 @@ function gUNeed(g,i){return i<3?gCbT(g)*(i+1):G_DATA.combo.full;}
 function gRuZero(){var o={};G_RBU.forEach(function(u){o[u[0]]=0;});return o;}
 function gRu(g,k){return (g.ru&&g.ru[k])||0;}
 function gStartStage(g){return 1+G_DATA.start.ru*gRu(g,'st')+G_DATA.start.rp*((g.rp&&g.rp.st)||0);}
-function gRBGain(g){return (function(r){return g.stage<r.from?0:Math.floor(Math.pow((g.stage-r.from)/r.per+1,r.pow));})(G_DATA.rbGain);}
+function gRBGain(g){return (function(r){return g.stage<r.from?0:r.base+Math.floor(r.mult*Math.pow((g.stage-r.from)/r.per+1,r.pow));})(G_DATA.rbGain);}
 var G_RBU=G_DATA.RBU;
 function gRBCost(u,l){return Math.ceil(u[4]*Math.pow(u[5],l));}
 function gCost(k,l){return k==='atk'?GP.CA0*Math.pow(GP.CAg,l):k==='inc'?GP.CI0*Math.pow(GP.CIg,l):GP.CS0*Math.pow(GP.CSg,l);}
 function gRCost(l){return Math.ceil(G_DATA.rCost.a*Math.pow(G_DATA.rCost.g,l));}
 function gCanBoss(g,n){return gDps(g)*gBossT(g)>=gHp(n);}
-function gRPGain(g){var q=G_DATA.rpGain;return Math.floor(Math.pow(Math.log10(1+Math.max(g.hearts,g.ch||0)/q.unit),q.pow)*(q.evoBase+q.evoPer*g.evo)*(1+q.rpgPer*((g.rp&&g.rp.rpg)||0)));}
+function gRPGain(g){var q=G_DATA.rpGain;return q.base+Math.floor(q.mult*Math.pow(Math.log10(1+Math.max(g.hearts,g.ch||0)/q.unit),q.pow)*(q.evoBase+q.evoPer*g.evo)*(1+q.rpgPer*((g.rp&&g.rp.rpg)||0)));}
 var G_RPU=G_DATA.RPU;
 function gRPCost(u,l){return Math.ceil(u[4]*Math.pow(u[5],l));}
 function gAdvance(g,dt){

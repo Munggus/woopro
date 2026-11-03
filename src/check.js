@@ -347,7 +347,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v87';
+var APPV='v88';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -951,7 +951,7 @@ var G_DATA={
  /* 기본: 몬스터 체력·처치 하트·강화 비용·성장 단계 등 */
  base:{H0:13,PW:2.1,BM:6,KR:0.62,BOSS_T:30,A0:3,AM:1.07,SS:0.024,SCAP:4,DLY:3,CA0:10,CAg:1.155,CS0:60,CSg:1.22,CI0:25,CIg:1.10,EM:1.3,RAT:0.15,RHT:0.15,RU:0.12,SG:0.40,IM:0.10,EH:0.45,EK:1.5},
  /* 몬스터 체력 곡선: 1000층마다 기울기(XR), 500층 이후 추가 곱(hmFrom/hmPow), 보스 처치 하트 배수 */
- curve:{XR:[0.407,0.6,2.0,1.2,0.7,0.35],hmFrom:500,hmPow:1.85,bossKill:4},
+ curve:{XR:[0.407,0.887,2.043,1.351,0.523,0.35],hmFrom:500,hmPow:1.85,bossKill:4},
  /* 연속 운동 보너스: 하루마다 +5%, 이틀 지나면 끊김(휴식권 있으면 3일) */
  streak:{per:0.05,graceDays:2,graceShield:1},
  /* 강화가 올려주는 값 */
@@ -967,8 +967,8 @@ var G_DATA={
  ultCd:[20,40,60,90],
  ultShort:['하트빔','별똥별','무지개','친구들'],
  /* 환생(1000층 이상)·성장포인트 보상 */
- rbGain:{from:1000,per:100,pow:1.5},
- rpGain:{unit:1e6,pow:1.6,evoBase:0.5,evoPer:0.5,rpgPer:0.1},
+ rbGain:{from:1000,per:100,pow:1.5,base:8,mult:2},   /* 포인트 = base + 기존공식×mult */
+ rpGain:{unit:1e6,pow:1.6,evoBase:0.5,evoPer:0.5,rpgPer:0.1,base:11,mult:2},
  rCost:{a:5,g:1.5},
  /* 환생 강화 [키,아이콘,이름,설명,기본비용,비용배수,필요환생횟수(해금)] */
  RBU:[['atk','⚔️','공격력','+12%',2,1.5,0],['inc','💗','하트 수입','+12%',2,1.5,0],['spd','⚡','공격 속도','+3%',3,1.55,0],['sk','🪜','층 건너뛰기','확률 +2% (최대 40%)',4,1.5,20],['st','🚀','시작 층','환생·진화 뒤 +4층에서 시작',5,1.5,25],['ult','💥','필살기 위력','+8%',4,1.55,25]],
@@ -1014,13 +1014,13 @@ function gUNeed(g,i){return i<3?gCbT(g)*(i+1):G_DATA.combo.full;}
 function gRuZero(){var o={};G_RBU.forEach(function(u){o[u[0]]=0;});return o;}
 function gRu(g,k){return (g.ru&&g.ru[k])||0;}
 function gStartStage(g){return 1+G_DATA.start.ru*gRu(g,'st')+G_DATA.start.rp*((g.rp&&g.rp.st)||0);}
-function gRBGain(g){return (function(r){return g.stage<r.from?0:Math.floor(Math.pow((g.stage-r.from)/r.per+1,r.pow));})(G_DATA.rbGain);}
+function gRBGain(g){return (function(r){return g.stage<r.from?0:r.base+Math.floor(r.mult*Math.pow((g.stage-r.from)/r.per+1,r.pow));})(G_DATA.rbGain);}
 var G_RBU=G_DATA.RBU;
 function gRBCost(u,l){return Math.ceil(u[4]*Math.pow(u[5],l));}
 function gCost(k,l){return k==='atk'?GP.CA0*Math.pow(GP.CAg,l):k==='inc'?GP.CI0*Math.pow(GP.CIg,l):GP.CS0*Math.pow(GP.CSg,l);}
 function gRCost(l){return Math.ceil(G_DATA.rCost.a*Math.pow(G_DATA.rCost.g,l));}
 function gCanBoss(g,n){return gDps(g)*gBossT(g)>=gHp(n);}
-function gRPGain(g){var q=G_DATA.rpGain;return Math.floor(Math.pow(Math.log10(1+Math.max(g.hearts,g.ch||0)/q.unit),q.pow)*(q.evoBase+q.evoPer*g.evo)*(1+q.rpgPer*((g.rp&&g.rp.rpg)||0)));}
+function gRPGain(g){var q=G_DATA.rpGain;return q.base+Math.floor(q.mult*Math.pow(Math.log10(1+Math.max(g.hearts,g.ch||0)/q.unit),q.pow)*(q.evoBase+q.evoPer*g.evo)*(1+q.rpgPer*((g.rp&&g.rp.rpg)||0)));}
 var G_RPU=G_DATA.RPU;
 function gRPCost(u,l){return Math.ceil(u[4]*Math.pow(u[5],l));}
 function gAdvance(g,dt){
