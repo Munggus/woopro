@@ -22,7 +22,7 @@ function gVlEff(k,lv){var mx=G_VL.maxLv;
   return '';}
 function gVlUpCost(k,l){return Math.ceil(G_VLM[k].up*Math.pow(G_VL.upG,l-1));}
 /* 레벨업 걸리는 시간: Lv1→2는 upMin분, 마지막(5→6)은 upMax분, 그 사이는 곱셈으로 점점 늘어남 */
-function gVlUpMs(l){return Math.round(G_VL.upMin*Math.pow(G_VL.upMax/G_VL.upMin,(l-1)/(G_VL.maxLv-2)))*60000;}
+function gVlUpMs(l){return Math.round(Math.round(G_VL.upMin*Math.pow(G_VL.upMax/G_VL.upMin,(l-1)/(G_VL.maxLv-2)))*60000*(1-(typeof gBfV==='function'?gBfV('upg'):0)));}
 function gVlDur(ms){var s=Math.max(0,Math.ceil(ms/1000)),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),r=s%60;return d?d+'일 '+h+'시간':h?h+'시간 '+m+'분':m?m+'분 '+r+'초':r+'초';}
 function gVlSync(g){var vl=g.vl,now=Date.now(),msgs=[];if(!vl)return msgs;G_VL.bld.forEach(function(B){var q=vl.b[B.k];if(q&&q.ut&&now>=q.ut){q.lv=Math.min(G_VL.maxLv,q.lv+1);q.ut=0;msgs.push(B.e+' '+B.n+' Lv.'+q.lv+' 완성! 🎉');}});return msgs;}
 var gVlDrag=null,gVlNoClick=0;

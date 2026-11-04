@@ -347,7 +347,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v93';
+var APPV='v94';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -991,54 +991,54 @@ var G_DATA={
     cap=요리로 올릴 수 있는 한계(키별) */
  craft:{cap:{atk:0.5,inc:0.5,spd:0.25},
   items:[
-   {"id":"c10","f":"cook","lv":1,"e":"🍙","n":"주먹밥","d":"든든한 한 끼","min":2,"mat":[["snack",1,3],["carrot",1,2]],"fx":{"atk":0.002}},
-   {"id":"c11","f":"cook","lv":1,"e":"🍳","n":"계란후라이","d":"노릇노릇 반숙","min":3,"mat":[["snack",1,4],["milk",1,2]],"fx":{"inc":0.002}},
-   {"id":"c12","f":"cook","lv":1,"e":"🥞","n":"팬케이크","d":"폭신폭신 달콤","min":5,"mat":[["snack",1,3],["snack",1,3],["egg",1,2],["carrot",1,1]],"fx":{"spd":0.002}},
+   {"id":"c10","f":"cook","lv":1,"e":"🍙","n":"든든한 도시락","d":"챙겨두면 안 볼 때도 든든해","min":2,"mat":[["snack",1,3],["carrot",1,2]],"ef":{"t":"buff","k":"off","v":0.3,"h":12}},
+   {"id":"c11","f":"cook","lv":1,"e":"🍳","n":"행운의 한 입","d":"한 입에 행운이 퐁!","min":3,"mat":[["snack",1,4],["milk",1,2]],"ef":{"t":"buff","k":"drop","v":0.3,"h":12}},
+   {"id":"c12","f":"cook","lv":1,"e":"🥞","n":"빠른 손맛","d":"손이 날쌔게 움직여요","min":5,"mat":[["snack",1,3],["snack",1,3],["egg",1,2],["carrot",1,1]],"ef":{"t":"buff","k":"cts","v":0.2,"h":12}},
    {"id":"w10","f":"smith","lv":1,"e":"🪵","n":"나무 막대","d":"주워 온 튼튼한 막대","min":2,"mat":[["part",1,4],["dust",1,1]],"fx":{"atk":0.02}},
    {"id":"w11","f":"smith","lv":1,"e":"🔨","n":"장난감 망치","d":"뿅뿅 소리가 나요","min":3,"mat":[["part",1,6],["dust",1,2]],"fx":{"atk":0.014,"spd":0.003}},
    {"id":"w12","f":"smith","lv":1,"e":"🏏","n":"나무 배트","d":"홈런을 노려봐","min":5,"mat":[["part",1,4],["part",1,4],["dust",1,3]],"fx":{"atk":0.012,"ult":0.01}},
    {"id":"t10","f":"tailor","lv":1,"e":"🎀","n":"리본 머리띠","d":"살랑살랑 리본","min":2,"mat":[["cloth",1,4],["egg",1,1]],"slot":"hat"},
    {"id":"t11","f":"tailor","lv":1,"e":"👕","n":"꼬마 티셔츠","d":"편안한 면 티셔츠","min":3,"mat":[["cloth",1,6],["egg",1,2]],"slot":"out"},
    {"id":"t12","f":"tailor","lv":1,"e":"🧢","n":"야구 모자","d":"챙이 달린 모자","min":5,"mat":[["cloth",1,4],["cloth",1,4],["dust",1,2]],"slot":"hat"},
-   {"id":"c20","f":"cook","lv":2,"e":"🍝","n":"파스타","d":"돌돌 말아 먹는 면","min":10,"mat":[["snack",2,4],["straw",2,3]],"fx":{"atk":0.004}},
-   {"id":"c21","f":"cook","lv":2,"e":"🍲","n":"따끈 수프","d":"속이 따뜻해져","min":15,"mat":[["snack",2,6],["milk",2,3]],"fx":{"inc":0.004}},
-   {"id":"c22","f":"cook","lv":2,"e":"🥗","n":"싱싱 샐러드","d":"아삭아삭 비타민","min":20,"mat":[["snack",2,4],["snack",1,4],["egg",2,3],["carrot",1,1]],"fx":{"spd":0.004}},
+   {"id":"c20","f":"cook","lv":2,"e":"🍝","n":"풍년 밥상","d":"수확이 풍성해지는 맛","min":10,"mat":[["snack",2,4],["straw",2,3]],"ef":{"t":"buff","k":"harv","v":0.3,"h":12}},
+   {"id":"c21","f":"cook","lv":2,"e":"🍲","n":"서두르는 일꾼","d":"일꾼들이 부지런해져요","min":15,"mat":[["snack",2,6],["milk",2,3]],"ef":{"t":"buff","k":"upg","v":0.2,"h":12}},
+   {"id":"c22","f":"cook","lv":2,"e":"🥗","n":"미식가의 혀","d":"좋은 재료를 알아봐요","min":20,"mat":[["snack",2,4],["snack",1,4],["egg",2,3],["carrot",1,1]],"ef":{"t":"buff","k":"dq","v":1,"h":12}},
    {"id":"w20","f":"smith","lv":2,"e":"🗡️","n":"반짝 단검","d":"작지만 날카로워","min":10,"mat":[["part",2,6],["dust",2,1]],"fx":{"atk":0.05}},
    {"id":"w21","f":"smith","lv":2,"e":"🪓","n":"꼬마 도끼","d":"쿵! 하고 내리쳐","min":15,"mat":[["part",2,8],["dust",2,3]],"fx":{"atk":0.035,"spd":0.0075}},
    {"id":"w22","f":"smith","lv":2,"e":"🏹","n":"솜털 활","d":"멀리멀리 쏘는 활","min":20,"mat":[["part",2,6],["part",1,6],["dust",2,4]],"fx":{"atk":0.03,"ult":0.025}},
    {"id":"t20","f":"tailor","lv":2,"e":"👗","n":"나풀 원피스","d":"치마가 나풀나풀","min":10,"mat":[["cloth",2,6],["egg",2,1]],"slot":"out"},
    {"id":"t21","f":"tailor","lv":2,"e":"👒","n":"밀짚 모자","d":"소풍 갈 때 쓰는 모자","min":15,"mat":[["cloth",2,8],["egg",2,3]],"slot":"hat"},
    {"id":"t22","f":"tailor","lv":2,"e":"🧣","n":"포근 목도리","d":"따뜻따뜻 겨울","min":20,"mat":[["cloth",2,6],["cloth",1,6],["dust",2,3]],"slot":"out"},
-   {"id":"c30","f":"cook","lv":3,"e":"🍕","n":"치즈 피자","d":"쭈욱 늘어나는 치즈","min":45,"mat":[["snack",3,5],["corn",3,4]],"fx":{"atk":0.007}},
-   {"id":"c31","f":"cook","lv":3,"e":"🍔","n":"햄버거","d":"한입 가득","min":60,"mat":[["snack",3,7],["milk",3,4]],"fx":{"inc":0.007}},
-   {"id":"c32","f":"cook","lv":3,"e":"🌭","n":"핫도그","d":"소시지 듬뿍","min":90,"mat":[["snack",3,5],["snack",2,5],["egg",3,4],["straw",2,1]],"fx":{"spd":0.007}},
+   {"id":"c30","f":"cook","lv":3,"e":"🍕","n":"보온 도시락","d":"따뜻하게 연속 기록을 지켜줘요","min":45,"mat":[["snack",3,5],["corn",3,4]],"ef":{"t":"buff","k":"stk","v":1,"h":24}},
+   {"id":"c31","f":"cook","lv":3,"e":"🍔","n":"야식 세트","d":"자는 동안도 든든!","min":60,"mat":[["snack",3,7],["milk",3,4]],"ef":{"t":"buff","k":"cap","v":14400,"h":24}},
+   {"id":"c32","f":"cook","lv":3,"e":"🌭","n":"푸짐한 한 상","d":"켜져 있는 효과가 더 오래가요","min":90,"mat":[["snack",3,5],["snack",2,5],["egg",3,4],["straw",2,1]],"ef":{"t":"ext","h":3}},
    {"id":"w30","f":"smith","lv":3,"e":"⚔️","n":"쌍둥이 검","d":"두 자루가 한 쌍","min":45,"mat":[["part",3,7],["dust",3,2]],"fx":{"atk":0.09}},
    {"id":"w31","f":"smith","lv":3,"e":"🔱","n":"바다 삼지창","d":"철썩철썩 파도의 힘","min":60,"mat":[["part",3,11],["dust",3,4]],"fx":{"atk":0.063,"spd":0.0135}},
    {"id":"w32","f":"smith","lv":3,"e":"🪃","n":"부메랑","d":"던지면 돌아와요","min":90,"mat":[["part",3,7],["part",2,7],["dust",3,5]],"fx":{"atk":0.054,"ult":0.045}},
    {"id":"t30","f":"tailor","lv":3,"e":"🎩","n":"마술사 모자","d":"모자 속에서 토끼가?","min":45,"mat":[["cloth",3,7],["egg",3,2]],"slot":"hat"},
    {"id":"t31","f":"tailor","lv":3,"e":"🥋","n":"씩씩 도복","d":"기합이 들어가요","min":60,"mat":[["cloth",3,11],["egg",3,4]],"slot":"out"},
    {"id":"t32","f":"tailor","lv":3,"e":"🕶️","n":"멋쟁이 선글라스","d":"눈이 부셔요","min":90,"mat":[["cloth",3,7],["cloth",2,7],["dust",3,4]],"slot":"hat"},
-   {"id":"c40","f":"cook","lv":4,"e":"🍣","n":"초밥","d":"한입에 쏙","min":180,"mat":[["snack",4,7],["tomato",4,4]],"fx":{"atk":0.01}},
-   {"id":"c41","f":"cook","lv":4,"e":"🍤","n":"새우튀김","d":"바삭바삭","min":240,"mat":[["snack",4,9],["milk",4,4]],"fx":{"inc":0.01}},
-   {"id":"c42","f":"cook","lv":4,"e":"🥘","n":"든든 스튜","d":"오래 끓인 깊은 맛","min":300,"mat":[["snack",4,7],["snack",3,7],["egg",4,4],["corn",3,1]],"fx":{"spd":0.01}},
+   {"id":"c40","f":"cook","lv":4,"e":"🍣","n":"하늘빛 오라","d":"몸에서 푸른 빛이 나요","min":180,"mat":[["snack",4,7],["tomato",4,4]],"ef":{"t":"vis","s":"col","v":"sky"}},
+   {"id":"c41","f":"cook","lv":4,"e":"🍤","n":"불꽃 오라","d":"뜨거운 기운이 활활!","min":240,"mat":[["snack",4,9],["milk",4,4]],"ef":{"t":"vis","s":"col","v":"fire"}},
+   {"id":"c42","f":"cook","lv":4,"e":"🥘","n":"세은이 입맛 정식","d":"오늘 최애 음식을 알려줘요","min":300,"mat":[["snack",4,7],["snack",3,7],["egg",4,4],["corn",3,1]],"ef":{"t":"taste"}},
    {"id":"w40","f":"smith","lv":4,"e":"🪄","n":"마법봉","d":"반짝반짝 마법","min":180,"mat":[["part",4,9],["dust",4,2]],"fx":{"atk":0.14}},
    {"id":"w41","f":"smith","lv":4,"e":"🧹","n":"마법 빗자루","d":"타고 날아도 돼요","min":240,"mat":[["part",4,13],["dust",4,4]],"fx":{"atk":0.098,"spd":0.021}},
    {"id":"w42","f":"smith","lv":4,"e":"🎸","n":"번개 기타","d":"쿵짝쿵짝 울려 퍼져요","min":300,"mat":[["part",4,9],["part",3,9],["dust",4,7]],"fx":{"atk":0.084,"ult":0.07}},
    {"id":"t40","f":"tailor","lv":4,"e":"🎓","n":"똑똑 학사모","d":"졸업을 축하해","min":180,"mat":[["cloth",4,9],["egg",4,2]],"slot":"hat"},
    {"id":"t41","f":"tailor","lv":4,"e":"👘","n":"고운 한복","d":"단아한 색동 한복","min":240,"mat":[["cloth",4,13],["egg",4,4]],"slot":"out"},
    {"id":"t42","f":"tailor","lv":4,"e":"🦺","n":"튼튼 조끼","d":"주머니가 많아요","min":300,"mat":[["cloth",4,9],["cloth",3,9],["dust",4,4]],"slot":"out"},
-   {"id":"c50","f":"cook","lv":5,"e":"🍰","n":"딸기 케이크","d":"달콤한 생크림","min":480,"mat":[["snack",5,8],["sun",5,5]],"fx":{"atk":0.015}},
-   {"id":"c51","f":"cook","lv":5,"e":"🍨","n":"아이스크림","d":"시원 달콤","min":600,"mat":[["snack",5,10],["milk",5,5]],"fx":{"inc":0.015}},
-   {"id":"c52","f":"cook","lv":5,"e":"🧁","n":"컵케이크","d":"작고 귀여운 행복","min":720,"mat":[["snack",5,8],["snack",4,8],["egg",5,5],["tomato",4,1]],"fx":{"spd":0.015}},
+   {"id":"c50","f":"cook","lv":5,"e":"🍰","n":"별가루 케이크","d":"반짝반짝 별가루가 날려요","min":480,"mat":[["snack",5,8],["sun",5,5]],"ef":{"t":"vis","s":"spk","v":1}},
+   {"id":"c51","f":"cook","lv":5,"e":"🍨","n":"무지개 오라","d":"무지갯빛으로 반짝!","min":600,"mat":[["snack",5,10],["milk",5,5]],"ef":{"t":"vis","s":"col","v":"rb"}},
+   {"id":"c52","f":"cook","lv":5,"e":"🧁","n":"우람한 오라","d":"오라가 쑤욱 커져요","min":720,"mat":[["snack",5,8],["snack",4,8],["egg",5,5],["tomato",4,1]],"ef":{"t":"vis","s":"asz","v":1}},
    {"id":"w50","f":"smith","lv":5,"e":"🔥","n":"불꽃검","d":"활활 타오르는 검","min":480,"mat":[["part",5,10],["dust",5,3]],"fx":{"atk":0.2}},
    {"id":"w51","f":"smith","lv":5,"e":"❄️","n":"얼음창","d":"차갑게 얼려버려","min":600,"mat":[["part",5,16],["dust",5,5]],"fx":{"atk":0.14,"spd":0.03}},
    {"id":"w52","f":"smith","lv":5,"e":"⚡","n":"번개 지팡이","d":"찌릿찌릿","min":720,"mat":[["part",5,10],["part",4,10],["dust",5,8]],"fx":{"atk":0.12,"ult":0.1}},
    {"id":"t50","f":"tailor","lv":5,"e":"👑","n":"반짝 왕관","d":"공주님을 위한 왕관","min":480,"mat":[["cloth",5,10],["egg",5,3]],"slot":"hat"},
    {"id":"t51","f":"tailor","lv":5,"e":"🦸","n":"영웅 망토","d":"휘날리는 붉은 망토","min":600,"mat":[["cloth",5,16],["egg",5,5]],"slot":"out"},
    {"id":"t52","f":"tailor","lv":5,"e":"🪽","n":"천사 날개","d":"사뿐히 날아올라요","min":720,"mat":[["cloth",5,10],["cloth",4,10],["dust",5,5]],"slot":"out"},
-   {"id":"c60","f":"cook","lv":6,"e":"🎂","n":"생일 케이크","d":"특별한 날의 케이크","min":900,"mat":[["snack",6,9],["melon",6,6]],"fx":{"atk":0.02}},
-   {"id":"c61","f":"cook","lv":6,"e":"🍱","n":"왕 도시락","d":"소풍 가는 날","min":1200,"mat":[["snack",6,12],["milk",6,6]],"fx":{"inc":0.02}},
-   {"id":"c62","f":"cook","lv":6,"e":"🥧","n":"황금 파이","d":"비밀 레시피","min":1440,"mat":[["snack",6,9],["snack",5,9],["egg",6,6],["sun",5,1]],"fx":{"spd":0.02}},
+   {"id":"c60","f":"cook","lv":6,"e":"🎂","n":"오늘의 특식","d":"하루에 한 번! 모든 효과가 한꺼번에","min":900,"mat":[["snack",6,9],["melon",6,6]],"ef":{"t":"special","h":24}},
+   {"id":"c61","f":"cook","lv":6,"e":"🍱","n":"쑥쑥 도시락","d":"세은이가 쑥 커져요","min":1200,"mat":[["snack",6,12],["milk",6,6]],"ef":{"t":"vis","s":"hsz","v":1}},
+   {"id":"c62","f":"cook","lv":6,"e":"🥧","n":"황금 오라 파이","d":"황금빛으로 눈부셔요","min":1440,"mat":[["snack",6,9],["snack",5,9],["egg",6,6],["sun",5,1]],"ef":{"t":"vis","s":"col","v":"gold"}},
    {"id":"w60","f":"smith","lv":6,"e":"🌈","n":"무지개 검","d":"일곱 빛깔 전설의 검","min":900,"mat":[["part",6,12],["dust",6,3]],"fx":{"atk":0.28}},
    {"id":"w61","f":"smith","lv":6,"e":"🌟","n":"별빛 지팡이","d":"별이 쏟아져요","min":1200,"mat":[["part",6,18],["dust",6,6]],"fx":{"atk":0.196,"spd":0.042}},
    {"id":"w62","f":"smith","lv":6,"e":"👑","n":"왕의 홀","d":"모두가 고개를 숙여요","min":1440,"mat":[["part",6,12],["part",5,12],["dust",6,9]],"fx":{"atk":0.168,"ult":0.14}},
@@ -1068,7 +1068,7 @@ var G_XR=G_DATA.curve.XR,G_XP=[0];(function(){for(var j=0;j<80;j++)G_XP.push(G_X
 function gXm(n){if(!(n>0))return 1;var j=Math.min(79,Math.floor(n/1000));return Math.exp(G_XP[j]+G_XR[Math.min(j,G_XR.length-1)]*(n-1000*j)/1000);}
 function gHp(n){return gXm(n)*gHm(n)*GP.H0*Math.pow(n,GP.PW)*(n%10===0?GP.BM:1)*gEH(n);}
 function gBase(n){return GP.H0*Math.pow(n,GP.PW);}
-function gStkExp(s){var d=new Date(s.ld);return new Date(d.getFullYear(),d.getMonth(),d.getDate()+G_DATA.streak.graceDays+(s.sh?G_DATA.streak.graceShield:0)).getTime();}
+function gStkExp(s){var d=new Date(s.ld);return new Date(d.getFullYear(),d.getMonth(),d.getDate()+G_DATA.streak.graceDays+(s.sh?G_DATA.streak.graceShield:0)+((typeof gBfV==='function')?gBfV('stk'):0)).getTime();}
 function gStkB(g){var s=g.stk;if(!s||!s.n||!s.ld)return 0;return Date.now()<gStkExp(s)?G_DATA.streak.per*s.n:0;}
 function gGb(g,k){return (typeof gGearB==='function')?gGearB(g,k):0;}
 function gPb(g,k){return (typeof gPetB==='function'&&g.ceq)?(gPetB(g)[k]||0):0;}
@@ -1330,12 +1330,12 @@ function gAuraHtml(g){
   var sp=[0,0,2,4][r];for(var j=0;j<sp;j++)h+='<span class="gasp" style="--a0:'+Math.round(j/sp*360+20)+'deg;--d:'+(j*.5)+'s">✨</span>';
   return h+'</div>';
 }
-function gHeroKey(g){var e=g.ceq||{};return gFormLv(g)+'|'+(g.hero||'')+'|'+(e.gnd||'')+'|'+(e.sky||'')+'|'+(e.veh||'')+'|'+((g.eq&&g.eq.hat)||'')+'|'+((g.eq&&g.eq.out)||'');}
+function gHeroKey(g){var e=g.ceq||{};return gFormLv(g)+'|'+(g.hero||'')+'|'+(e.gnd||'')+'|'+(e.sky||'')+'|'+(e.veh||'')+'|'+((g.eq&&g.eq.hat)||'')+'|'+((g.eq&&g.eq.out)||'')+'|'+(g.vx?g.vx.col+g.vx.spk+g.vx.asz+g.vx.hsz:'');}
 function gHeroSrc(g){return SPR_F[gFormLv(g)]||'';}
 function gFront(L){return SPR_F[Math.max(0,Math.min(10,L|0))]||'';}
 function gHeroHtml(g){
   var e=g.ceq||{},ride=e.veh&&g.cdex[e.veh]&&G_CPM[e.veh];
-  return '<div class="ghw" id="g-hw">'+gAuraHtml(g)+gCrewHtml(g)+'<div class="ghero gsp" id="g-hero" data-act="ghero" style="background-image:url('+(SPR_S[gFormLv(g)]||'')+')"></div>'+gCosHtml(g)+'</div>';
+  return '<div class="ghw'+((g.vx&&g.vx.hsz)?' hs':'')+'" id="g-hw">'+gFxHtml(g)+gAuraHtml(g)+gCrewHtml(g)+'<div class="ghero gsp" id="g-hero" data-act="ghero" style="background-image:url('+(SPR_S[gFormLv(g)]||'')+')"></div>'+gCosHtml(g)+'</div>';
 }
 var gHK='';
 function gHeroCheck(g){
@@ -1483,7 +1483,7 @@ var G_F={
  },
  harv:function(b){
   var f=gFm(),p=f.pl[+b.dataset.i];if(!p||!p.c||gPlRemain(p,Date.now())>0)return;
-  var c=G_CRM[p.c],n=1+(Math.random()<.3?1:0);f.inv[c.k]=(f.inv[c.k]||0)+n;p.c='';p.t=0;p.w=0;gSfx('coin');gSave();gRefresh();toast(c.e+' '+c.n+' '+n+'개 수확! 🎉');
+  var c=G_CRM[p.c],n=1+(Math.random()<.3+gBfV('harv')?1:0);f.inv[c.k]=(f.inv[c.k]||0)+n;p.c='';p.t=0;p.w=0;gSfx('coin');gSave();gRefresh();toast(c.e+' '+c.n+' '+n+'개 수확! 🎉');
  },
  bpl:function(b){var g=gGet(),f=gFm();if(f.np>=16)return;var cost=10*(f.np-3);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.np++;f.pl.push({c:'',t:0,w:0});gSfx('buy');gSave();gRefresh();toast('밭이 넓어졌어! 🌾');},
  bsl:function(b){var g=gGet(),f=gFm();if(f.ns>=10)return;var cost=30*(f.ns-2);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.ns++;gSfx('buy');gSave();gRefresh();toast('마당이 넓어졌어! 🐾');},
@@ -1554,7 +1554,7 @@ function gVlEff(k,lv){var mx=G_VL.maxLv;
   return '';}
 function gVlUpCost(k,l){return Math.ceil(G_VLM[k].up*Math.pow(G_VL.upG,l-1));}
 /* 레벨업 걸리는 시간: Lv1→2는 upMin분, 마지막(5→6)은 upMax분, 그 사이는 곱셈으로 점점 늘어남 */
-function gVlUpMs(l){return Math.round(G_VL.upMin*Math.pow(G_VL.upMax/G_VL.upMin,(l-1)/(G_VL.maxLv-2)))*60000;}
+function gVlUpMs(l){return Math.round(Math.round(G_VL.upMin*Math.pow(G_VL.upMax/G_VL.upMin,(l-1)/(G_VL.maxLv-2)))*60000*(1-(typeof gBfV==='function'?gBfV('upg'):0)));}
 function gVlDur(ms){var s=Math.max(0,Math.ceil(ms/1000)),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),r=s%60;return d?d+'일 '+h+'시간':h?h+'시간 '+m+'분':m?m+'분 '+r+'초':r+'초';}
 function gVlSync(g){var vl=g.vl,now=Date.now(),msgs=[];if(!vl)return msgs;G_VL.bld.forEach(function(B){var q=vl.b[B.k];if(q&&q.ut&&now>=q.ut){q.lv=Math.min(G_VL.maxLv,q.lv+1);q.ut=0;msgs.push(B.e+' '+B.n+' Lv.'+q.lv+' 완성! 🎉');}});return msgs;}
 var gVlDrag=null,gVlNoClick=0;
@@ -1655,6 +1655,7 @@ function gMtInfo(n){
   n=Math.max(1,Math.floor(n));var B=G_MT.block,q=Math.min(G_MT.maxQ,Math.floor((n-1)/B)+1),pos=(n-1)%B,h=Math.floor(B*G_MT.upFrom)-1,pu=0;
   if(q<G_MT.maxQ&&pos>=h)pu=G_MT.up.p0+(G_MT.up.p1-G_MT.up.p0)*Math.min(1,(pos-h)/(B-1-h));
   var pd=G_MT.drop.p0+(G_MT.drop.p1-G_MT.drop.p0)*Math.min(1,n/G_MT.drop.fl1);
+  if(typeof gBfV==='function'){pd=Math.min(1,pd*(1+gBfV('drop')));pu=Math.min(.6,pu*(1+gBfV('dq')));}
   return {q:q,pu:pu,pd:pd};
 }
 function gMtAdd(k,q,c){var m=gMt();m[k][q-1]=Math.min(999999,m[k][q-1]+c);var key=k+'|'+q;gMatAcc[key]=(gMatAcc[key]||0)+c;gDropQ.push([k,q,c]);}
@@ -1735,27 +1736,47 @@ var G_CR=G_DATA.craft,G_CRI={},gCrK='cook';G_CR.items.forEach(function(it){G_CRI
 var G_CRKN={atk:'공격력',inc:'하트 수입',spd:'공격 속도',ult:'필살기 위력'};
 var G_CRSL={w:'무기',hat:'모자',out:'옷'};
 function gCrSlot(it){return it.f==='smith'?'w':it.slot;}
-function gCx(g){g=g||gGet();if(!g.cr)g.cr={};if(!g.eq)g.eq={w:'',hat:'',out:''};if(!g.fd)g.fd={atk:0,inc:0,spd:0};if(!g.cq)g.cq={};return g;}
+function gDay(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function gCx(g){g=g||gGet();if(!g.cr)g.cr={};if(!g.eq)g.eq={w:'',hat:'',out:''};if(!g.cq)g.cq={};if(!g.bf)g.bf={};if(!g.vu)g.vu={};if(!g.vx)g.vx={col:'',spk:0,asz:0,hsz:0};if(!g.cd)g.cd={};return g;}
 function gCrLoad(o,d){
-  d.cr={};d.eq={w:'',hat:'',out:''};d.fd={atk:0,inc:0,spd:0};d.cq={};
+  d.cr={};d.eq={w:'',hat:'',out:''};d.cq={};d.bf={};d.vu={};d.vx={col:'',spk:0,asz:0,hsz:0};d.cd={};d.sp='';d.tf='';
   if(!o||typeof o!=='object')return;
   if(o.cr&&typeof o.cr==='object')Object.keys(o.cr).forEach(function(id){if(G_CRI[id]){var n=Math.min(9999,Math.max(0,Math.floor(gNum(o.cr[id],0))));if(n)d.cr[id]=n;}});
   if(o.eq&&typeof o.eq==='object')['w','hat','out'].forEach(function(s){var id=o.eq[s];if(id&&G_CRI[id]&&d.cr[id]>0&&gCrSlot(G_CRI[id])===s)d.eq[s]=id;});
-  ['atk','inc','spd'].forEach(function(k){d.fd[k]=Math.min(G_CR.cap[k],Math.max(0,gNum(o.fd&&o.fd[k],0)));});
   if(o.cq&&typeof o.cq==='object')Object.keys(o.cq).forEach(function(f){var q=o.cq[f];if(q&&G_CRI[q.id]&&G_CRI[q.id].f===f)d.cq[f]={id:q.id,end:gNum(q.end,0)};});
+  if(o.bf&&typeof o.bf==='object')Object.keys(G_BFV).forEach(function(k){var t=gNum(o.bf[k],0);if(t>Date.now())d.bf[k]=Math.min(t,Date.now()+259200000);});
+  if(o.vu&&typeof o.vu==='object')Object.keys(o.vu).forEach(function(id){if(G_CRI[id]&&G_CRI[id].ef&&G_CRI[id].ef.t==='vis')d.vu[id]=1;});
+  if(o.cd&&typeof o.cd==='object')Object.keys(o.cd).forEach(function(id){if(G_CRI[id]&&G_CRI[id].f==='cook')d.cd[id]=1;});
+  var x=o.vx||{};if(['sky','fire','rb','gold'].indexOf(x.col)>=0&&gCrVuHas(d,'col',x.col))d.vx.col=x.col;
+  ['spk','asz','hsz'].forEach(function(k){if(x[k]&&gCrVuHas(d,k,1))d.vx[k]=1;});
+  d.sp=typeof o.sp==='string'?o.sp.slice(0,12):'';d.tf=typeof o.tf==='string'?o.tf.slice(0,12):'';
 }
+function gCrVuHas(g,s,v){return G_CR.items.some(function(it){return it.ef&&it.ef.t==='vis'&&it.ef.s===s&&it.ef.v===v&&g.vu[it.id];});}
+/* 요리 효과: 먹으면 일정 시간 켜지는 버프 (전투 능력치 아님) */
+var G_BFV={},G_BFT={off:function(v){return '오프라인 수익 +'+Math.round(v*100)+'%';},drop:function(v){return '재료 드랍 확률 +'+Math.round(v*100)+'%';},cts:function(v){return '제작 시간 -'+Math.round(v*100)+'%';},harv:function(v){return '수확 때 추가 수확 확률 +'+Math.round(v*100)+'%p';},upg:function(v){return '건물 레벨업 시간 -'+Math.round(v*100)+'%';},dq:function(v){return '고품질 재료 확률 ×'+(1+v);},stk:function(v){return '연속 운동 유예 +'+v+'일';},cap:function(v){return '오프라인 보관 한도 +'+(v/3600)+'시간';}};
+G_CR.items.forEach(function(it){if(it.ef&&it.ef.t==='buff')G_BFV[it.ef.k]=it.ef.v;});
+function gBfOn(k,t){var g=gS;return !!(g&&g.bf&&g.bf[k]>(t||Date.now()));}
+function gBfV(k,t){return gBfOn(k,t)?(G_BFV[k]||0):0;}
+function gBfAdd(g,k,ms){var now=Date.now();g.bf[k]=Math.min(now+259200000,Math.max(now,g.bf[k]||0)+ms);}
+function gCrDexDone(g){return Object.keys(g.cd).length>=G_CR.items.filter(function(i){return i.f==='cook';}).length;}
+function gCrFav(){var d=gDay(),h=0,i,P=G_CR.items.filter(function(it){return it.ef&&it.ef.t==='buff';});for(i=0;i<d.length;i++)h=(h*31+d.charCodeAt(i))%9973;return P[h%P.length];}
 /* 능력치 보너스: 먹은 요리(영구) + 장착한 무기. 공식(core2)이 (1+보너스)로 곱해요 */
-function gFoodB(g,k){return (g.fd&&g.fd[k])||0;}
 function gWeapB(g,k){var w=g.eq&&g.eq.w&&G_CRI[g.eq.w];return (w&&w.fx&&w.fx[k])||0;}
-function gGearB(g,k){return gFoodB(g,k)+gWeapB(g,k);}
+function gGearB(g,k){return gWeapB(g,k);}
 /* 재료 확인/사용: 사냥·농장 생산물은 품질별 창고, 작물은 밭 창고 */
 function gCrHave(key,q){if(G_MTM[key])return gMt()[key][q-1]||0;return G_CRM[key]?(gFm().inv[key]||0):0;}
 function gCrTake(key,q,n){if(G_MTM[key])gMt()[key][q-1]-=n;else gFm().inv[key]-=n;}
 function gCrChip(m){var have=gCrHave(m[0],m[1]),mt=G_MTM[m[0]],e=mt?mt.e:G_CRM[m[0]].e,q=mt?m[1]:G_CRM[m[0]].rv;return '<span class="gmc '+(have>=m[2]?'ok':'no')+'">'+e+gStars(q)+' <b>'+have+'/'+m[2]+'</b></span>';}
 function gCrFxTxt(it){
   if(it.f==='tailor')return G_CRSL[it.slot]+' · 보기 전용';
+  if(it.f==='cook'){var e=it.ef;
+    if(e.t==='buff')return G_BFT[e.k](e.v)+' ('+e.h+'시간)';
+    if(e.t==='ext')return '켜져 있는 효과 전부 +'+e.h+'시간';
+    if(e.t==='taste')return '오늘 세은이가 제일 좋아하는 요리를 알려줘요';
+    if(e.t==='special')return '하루 1번 · 모든 효과를 '+e.h+'시간 동안 한꺼번에';
+    return {col:'오라 색깔 바꾸기',spk:'별가루 이펙트',asz:'오라 크게',hsz:'세은이 크게'}[e.s]+' · 보기 전용 (한 번 먹으면 영구)';}
   var k=Object.keys(it.fx),t=k.map(function(x){return G_CRKN[x]+' +'+(Math.round(it.fx[x]*1000)/10)+'%';}).join(', ');
-  return (it.f==='cook'?'먹으면 영구로 ':'장착하면 ')+t;
+  return '장착하면 '+t;
 }
 function gCrSync(g){
   var msgs=[],now=Date.now();if(!g||!g.cq)return msgs;
@@ -1763,20 +1784,25 @@ function gCrSync(g){
   return msgs;
 }
 function gCrRow(g,it,fl,busy){
-  var own=g.cr[it.id]||0,lock=it.lv>fl,okm=it.mat.every(function(m){return gCrHave(m[0],m[1])>=m[2];}),can=!lock&&!busy&&okm,eqd=g.eq[gCrSlot(it)]===it.id;
-  var act='';
-  if(own){
-    if(it.f==='cook'){var k=Object.keys(it.fx)[0];act='<button class="mini" data-act="gcr" data-f="eat" data-id="'+it.id+'"'+(g.fd[k]>=G_CR.cap[k]-1e-9?' disabled':'')+'>🍽️ 먹기 ('+own+')</button>';}
-    else act='<button class="mini'+(eqd?' on':'')+'" data-act="gcr" data-f="eq" data-id="'+it.id+'">'+(eqd?'✔ 착용 중':'착용')+'</button>';
-  }
-  return '<div class="gcrr'+(lock?' lock':'')+'"><span class="gcre">'+it.e+'</span><div class="gcrt"><b>'+it.n+'</b> <small>'+it.d+'</small><small class="gcfx">'+gCrFxTxt(it)+'</small><div class="gmq">'+it.mat.map(gCrChip).join('')+'</div><small>⏱️ '+gVlDur(it.min*60000)+(own&&it.f!=='cook'?' · 보유 '+own:'')+'</small></div><div class="gcra">'
-    +(lock?'<small>🔒 Lv.'+it.lv+'</small>':'<button class="mini rb" data-act="gcr" data-f="make" data-id="'+it.id+'"'+(can?'':' disabled')+'>만들기</button>')+act+'</div></div>';
+  var own=g.cr[it.id]||0,lock=it.lv>fl,okm=it.mat.every(function(m){return gCrHave(m[0],m[1])>=m[2];}),vis=it.f==='cook'&&it.ef.t==='vis',got=vis&&g.vu[it.id],can=!lock&&!busy&&okm&&!got,eqd=g.eq[gCrSlot(it)]===it.id;
+  var act='',fav=it.f==='cook'&&g.tf===gDay()&&gCrFav().id===it.id;
+  if(it.f==='cook'){
+    if(got){var on=it.ef.s==='col'?g.vx.col===it.ef.v:!!g.vx[it.ef.s];act='<button class="mini'+(on?' on':'')+'" data-act="gcr" data-f="vt" data-id="'+it.id+'">'+(on?'✔ 켜짐':'켜기')+'</button>';}
+    else if(own)act='<button class="mini" data-act="gcr" data-f="eat" data-id="'+it.id+'">🍽️ 먹기 ('+own+')</button>';
+  }else if(own)act='<button class="mini'+(eqd?' on':'')+'" data-act="gcr" data-f="eq" data-id="'+it.id+'">'+(eqd?'✔ 착용 중':'착용')+'</button>';
+  return '<div class="gcrr'+(lock?' lock':'')+'"><span class="gcre">'+it.e+'</span><div class="gcrt"><b>'+it.n+'</b>'+(fav?' <span class="gfav">💗 오늘 최애</span>':'')+(g.cd[it.id]?' <small style="display:inline">📖</small>':'')+' <small>'+it.d+'</small><small class="gcfx">'+gCrFxTxt(it)+'</small><div class="gmq">'+it.mat.map(gCrChip).join('')+'</div><small>⏱️ '+gVlDur(it.min*60000)+(own&&it.f!=='cook'?' · 보유 '+own:'')+'</small></div><div class="gcra">'
+    +(lock?'<small>🔒 Lv.'+it.lv+'</small>':got?'<small>✅ 획득</small>':'<button class="mini rb" data-act="gcr" data-f="make" data-id="'+it.id+'"'+(can?'':' disabled')+'>만들기</button>')+act+'</div></div>';
+}
+function gCrBuffList(g){
+  var now=Date.now(),a=Object.keys(g.bf).filter(function(k){return g.bf[k]>now;});
+  if(!a.length)return '<p class="hint" style="font-size:12px">🍽️ 켜져 있는 요리 효과가 없어. 만들어서 먹여보자!</p>';
+  return '<div class="gbfl">'+a.map(function(k){return '<span class="gbf">'+G_BFT[k](G_BFV[k])+' <b>'+gVlDur(g.bf[k]-now)+'</b></span>';}).join('')+'</div>';
 }
 function gCrCard(g){
   gCx(g);var B=G_VLM[gCrK],fl=gVlLv(gCrK),q=g.cq[gCrK],h='<button class="mini gvbk" data-act="gvil" data-f="map">🏡 마을로</button><div class="gvh"><h2>'+B.e+' '+B.n+' <small>Lv.'+fl+'</small></h2></div>';
   if(q){var it=G_CRI[q.id];h+='<div class="gcq"><span class="gcre">'+it.e+'</span><div><b>'+it.n+' 만드는 중…</b><br><small>남은 시간 <b class="gcqt">'+gVlDur(q.end-Date.now())+'</b></small></div></div>';}
   else h+='<p class="hint">지금은 쉬는 중이야. 아래에서 만들 걸 골라봐!</p>';
-  if(gCrK==='cook')h+='<p class="hint" style="font-size:12px">🍽️ 먹은 요리로 올린 능력: '+['atk','inc','spd'].map(function(k){return G_CRKN[k]+' +'+(Math.round(g.fd[k]*1000)/10)+'% (최대 '+(G_CR.cap[k]*100)+'%)';}).join(' · ')+'</p>';
+  if(gCrK==='cook'){var nd=Object.keys(g.cd).length,tot=G_CR.items.filter(function(i){return i.f==='cook';}).length;h+=gCrBuffList(g)+'<p class="hint" style="font-size:12px">📖 맛 도감 '+nd+'/'+tot+(gCrDexDone(g)?' · 완성! 모든 효과 지속시간 +50% 🎉':' · 전부 먹어보면 모든 효과 지속시간 +50%')+'<br>💗 세은이가 좋아하는 요리를 먹이면 효과 시간이 2배! ('+(g.tf===gDay()?'오늘은 '+gCrFav().e+' '+gCrFav().n:'오늘 최애는 비밀 — 🥘 세은이 입맛 정식을 먹이면 알려줘')+')</p>';}
   else if(gCrK==='smith'){var w=G_CRI[g.eq.w];h+='<p class="hint" style="font-size:12px">⚔️ 착용한 무기: '+(w?w.e+' '+w.n+' ('+gCrFxTxt(w)+')':'없음')+'</p>';}
   else{var a=G_CRI[g.eq.hat],c=G_CRI[g.eq.out];h+='<p class="hint" style="font-size:12px">🧵 입고 있는 코스튬: 모자 '+(a?a.e+' '+a.n:'없음')+' · 옷 '+(c?c.e+' '+c.n:'없음')+' (모자 1개 + 옷 1개)</p>';}
   for(var lv=1;lv<=G_VL.maxLv;lv++){
@@ -1791,18 +1817,39 @@ function gCrMake(id){
   if(g.cq[it.f]){toast('지금 다른 걸 만드는 중이야');return;}
   if(!it.mat.every(function(m){return gCrHave(m[0],m[1])>=m[2];})){toast('재료가 모자라 🎒');return;}
   it.mat.forEach(function(m){gCrTake(m[0],m[1],m[2]);});
-  g.cq[it.f]={id:id,end:Date.now()+it.min*60000};gSfx('buy');gSave();gRefresh();toast(it.e+' 만들기 시작! ('+gVlDur(it.min*60000)+')');
+  var ms=Math.round(it.min*60000*(1-gBfV('cts')));g.cq[it.f]={id:id,end:Date.now()+ms};gSfx('buy');gSave();gRefresh();toast(it.e+' 만들기 시작! ('+gVlDur(ms)+')');
+}
+var G_FDL=['냠냠냠~ 맛있다아! 😋','우와~ 완전 최고야! 💖','배불러~ 기분 좋아! 🥰','또 먹고 싶다~ 히히 😆','쪽쪽~ 힘이 막 솟아나! 💪','세은이 행복해~ 🌈'];
+function gFeedScene(g,it,line,sub){
+  var old=document.getElementById('gfeed');if(old&&old.parentNode)old.parentNode.removeChild(old);
+  var el=document.createElement('div');el.id='gfeed';el.className='gfeed';
+  var hs='';for(var i=0;i<7;i++)hs+='<i style="--x:'+(10+i*13)+'%;--d:'+(i*.18).toFixed(2)+'s">'+['💖','✨','💗','⭐'][i%4]+'</i>';
+  el.innerHTML='<div class="gfc"><div class="gfb">'+line+'</div><div class="gfh"><img src="'+gFront(gFormLv(g))+'" alt=""><span class="gff">'+it.e+'</span></div><div class="gfs">'+sub+'</div>'+hs+'</div>';
+  function cl(){if(el.parentNode)el.parentNode.removeChild(el);}
+  el.addEventListener('click',cl);setTimeout(cl,3600);document.body.appendChild(el);
 }
 function gCrEat(id){
   var g=gCx(),it=G_CRI[id];if(!it||it.f!=='cook'||!(g.cr[id]>0))return;
-  var k=Object.keys(it.fx)[0],cap=G_CR.cap[k];if(g.fd[k]>=cap-1e-9){toast('이 능력은 더 못 올려! 😋');return;}
-  var add=Math.min(it.fx[k],cap-g.fd[k]);g.cr[id]--;g.fd[k]+=add;gSfx('coin');gSave();gRefresh();toast(it.e+' 냠냠! '+G_CRKN[k]+' +'+(Math.round(add*1000)/10)+'%');
+  var e=it.ef,sub='',line=G_FDL[Math.floor(Math.random()*G_FDL.length)],today=gDay(),fav=gCrFav(),isFav=fav.id===id,m=(gCrDexDone(g)?1.5:1)*(isFav?2:1),i;
+  if(e.t==='buff'){gBfAdd(g,e.k,e.h*3600000*m);sub=G_BFT[e.k](e.v)+' · '+gVlDur(e.h*3600000*m)+(isFav?' (최애라 2배!)':'');}
+  else if(e.t==='ext'){var ks=Object.keys(g.bf).filter(function(k){return g.bf[k]>Date.now();});if(!ks.length){toast('켜져 있는 효과가 없어서 아직 못 먹어! 먼저 다른 요리부터 😋');return;}ks.forEach(function(k){g.bf[k]+=e.h*3600000;});sub='켜져 있는 효과 '+ks.length+'개가 +'+e.h+'시간!';}
+  else if(e.t==='special'){if(g.sp===today){toast('오늘의 특식은 하루에 한 번만! 내일 또 먹자 🎂');return;}g.sp=today;Object.keys(G_BFV).forEach(function(k){gBfAdd(g,k,e.h*3600000*(gCrDexDone(g)?1.5:1));});sub='모든 요리 효과 '+e.h+'시간!';}
+  else if(e.t==='taste'){g.tf=today;line='오늘은 '+fav.e+' '+fav.n+'가 제일 좋아! 😍';sub='💗 오늘 세은이 최애: '+fav.n;}
+  else if(e.t==='vis'){g.vu[id]=1;if(e.s==='col')g.vx.col=e.v;else g.vx[e.s]=1;sub='✨ 영구 획득! '+gCrFxTxt(it).split(' · ')[0];}
+  if(isFav&&e.t==='buff')line='어머 내 최애다!! 💗💗';
+  var nw=!g.cd[id];if(nw){g.cd[id]=1;sub+=(sub?'<br>':'')+'📖 맛 도감 등록! ('+Object.keys(g.cd).length+'/18)';}
+  g.cr[id]--;gSfx('coin');gSave();gRefresh();gFeedScene(g,it,line,sub);
+}
+function gCrVt(id){
+  var g=gCx(),it=G_CRI[id];if(!it||!it.ef||it.ef.t!=='vis'||!g.vu[id])return;var e=it.ef;
+  if(e.s==='col')g.vx.col=(g.vx.col===e.v)?'':e.v;else g.vx[e.s]=g.vx[e.s]?0:1;
+  gSfx('tap');gSave();gRefresh();toast(it.e+' '+it.n+((e.s==='col'?g.vx.col===e.v:g.vx[e.s])?' 켰어!':' 껐어'));
 }
 function gCrEq(id){
   var g=gCx(),it=G_CRI[id];if(!it||it.f==='cook'||!(g.cr[id]>0))return;var s=gCrSlot(it);
   g.eq[s]=(g.eq[s]===id)?'':id;gSfx('tap');gSave();gRefresh();toast(g.eq[s]?it.e+' '+it.n+' 착용!':'해제했어');
 }
-function gcrDo(b){var f=b.dataset.f,id=b.dataset.id;if(f==='make')gCrMake(id);else if(f==='eat')gCrEat(id);else if(f==='eq')gCrEq(id);}
+function gcrDo(b){var f=b.dataset.f,id=b.dataset.id;if(f==='make')gCrMake(id);else if(f==='eat')gCrEat(id);else if(f==='vt')gCrVt(id);else if(f==='eq')gCrEq(id);}
 /* 코스튬: 세은이에게 이모지로 보여줘요 (임시 그림) */
 function gCosHtml(g){var e=g.eq||{},h='';if(e.out&&G_CRI[e.out])h+='<i class="gcos out">'+G_CRI[e.out].e+'</i>';if(e.hat&&G_CRI[e.hat])h+='<i class="gcos hat">'+G_CRI[e.hat].e+'</i>';return h;}
 function gCrTick(){
@@ -1813,6 +1860,17 @@ function gCrTick(){
   var q=gS.cq[gCrK],e=document.querySelector('.gcqt');if(q&&e){var s=gVlDur(q.end-Date.now());if(e.textContent!==s)e.textContent=s;}
 }
 setInterval(gCrTick,1000);
+
+/* 세은이 주변 이펙트 (요리로 얻은 보기 전용 효과) */
+function gFxHtml(g){
+  var x=g.vx||{},c=x.col,h='';if(!c&&!x.spk)return '';
+  var col={sky:'#5ec8ff',fire:'#ff7043',gold:'#ffd54a',rb:'#ff80ab'}[c]||'#fff';
+  h='<div class="gvfx'+(c==='rb'?' rb':'')+(c==='fire'?' fire':'')+'" style="--vc:'+col+';--as:'+(x.asz?1.45:1)+'">';
+  if(c)h+='<i class="vg"></i>';
+  if(c==='fire')for(var i=0;i<5;i++)h+='<span class="vf" style="--a:'+(i*72)+'deg;--d:'+(i*.35)+'s">🔥</span>';
+  if(x.spk)for(var j=0;j<6;j++)h+='<span class="vs" style="--a:'+(j*60+15)+'deg;--d:'+(j*.4)+'s">'+(j%2?'⭐':'✨')+'</span>';
+  return h+'</div>';
+}
 /* ===== 사랑이 키우기 v2 UI ===== */
 var GKEY='wt.game2',G_CAP=28800;
 var G_NAMES=['아기','꼬물','호기심','짜잔','씽씽','병아리 요정','멋쟁이','브이 스타','파티 퀸','마법사','전설의 사랑이'];
@@ -1892,8 +1950,8 @@ function gDayView(g){return g.day.d===gDayKey(Date.now())?g.day:{d:'',t:0,w:0,c:
 function gCatch(){
   var g=gGet(),now=Date.now(),dt=(now-g.last)/1000;
   if(!(dt>0)){g.last=now;return;}
-  var raw=dt;dt=Math.min(dt,G_CAP);gMatAcc={};gDropQ.length=0;var r=gAdvance(g,dt);g.last=now;var dr=gMatAcc;gMatAcc={};gDropQ.length=0;
-  if(raw>=60)gOff={sec:raw,h:r.h,s:r.s,cap:raw>G_CAP,dr:dr};
+  var raw=dt,lt=g.last,cap=G_CAP+gBfV('cap',lt);dt=Math.min(dt,cap)*(1+gBfV('off',lt));gMatAcc={};gDropQ.length=0;var r=gAdvance(g,dt);g.last=now;var dr=gMatAcc;gMatAcc={};gDropQ.length=0;
+  if(raw>=60)gOff={sec:raw,h:r.h,s:r.s,cap:raw>cap,dr:dr};
   gSave();
 }
 function gMkTk(g,L){
@@ -2036,13 +2094,13 @@ function gSpecs(g){
   var S=[];
   var mulRows=function(base,rows,pk,bl){return [[bl||'기본',base]].concat(rows.filter(function(r){return r[1]!==0;}).map(function(r){return [r[0],gSpP(r[1])];})).concat(pets(pk,pp));};
   S.push({ic:'⚔️',n:'공격력',v:gSpN(gAtk(g)),rows:mulRows(gFmt(GP.A0*Math.pow(GP.AM,L.atk)),[
-    ['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],['🍳 요리',gFoodB(g,'atk')],['⚔️ 무기',gWeapB(g,'atk')],
+    ['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],['⚔️ 무기',gWeapB(g,'atk')],
     ['💎 루비 강화',GP.RAT*(rl.atk||0)],['🔁 환생 강화',GP.RU*gRu(g,'atk')],['🌸 성장 강화',GP.SG*(rp.atk||0)]],'atk','기본 (3 + 💗 하트 강화 Lv.'+L.atk+')'),note:'하트 강화가 기본 공격력을 키우고, 나머지는 그 위에 곱해져요'});
   S.push({ic:'⚡',n:'공격 속도',v:gSpN(gSpd(g))+'/초',rows:mulRows('1',[
-    ['💗 하트 강화 (Lv.'+L.spd+')',Math.min(GP.SCAP,1+GP.SS*L.spd)-1],['💎 루비 강화',0],['🔁 환생 강화',G_DATA.spd.ru*gRu(g,'spd')],['🌸 성장 강화',G_DATA.spd.rp*(rp.spd||0)],['🍳 요리',gFoodB(g,'spd')],['⚔️ 무기',gWeapB(g,'spd')]],'spd'),note:'하트 강화로는 최대 ×'+GP.SCAP+'까지, 나머지는 곱해져요'});
+    ['💗 하트 강화 (Lv.'+L.spd+')',Math.min(GP.SCAP,1+GP.SS*L.spd)-1],['💎 루비 강화',0],['🔁 환생 강화',G_DATA.spd.ru*gRu(g,'spd')],['🌸 성장 강화',G_DATA.spd.rp*(rp.spd||0)],['⚔️ 무기',gWeapB(g,'spd')]],'spd'),note:'하트 강화로는 최대 ×'+GP.SCAP+'까지, 나머지는 곱해져요'});
   S.push({ic:'🗡️',n:'초당 공격력',v:gFmt(gDps(g)),rows:[['공격력',gSpN(gAtk(g))],['× 공격 속도',gSpN(gSpd(g))+'/초']],note:'공격력 × 공격 속도'});
   S.push({ic:'💗',n:'하트 수입',v:'×'+gSpN(gInc(g)),rows:mulRows('×1',[
-    ['💗 하트 강화 (Lv.'+L.inc+')',GP.IM*L.inc],['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],['🍳 요리',gFoodB(g,'inc')],
+    ['💗 하트 강화 (Lv.'+L.inc+')',GP.IM*L.inc],['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],
     ['💎 루비 강화',GP.RHT*(rl.heart||0)],['🔁 환생 강화',GP.RU*gRu(g,'inc')],['🌸 성장 강화',GP.SG*(rp.inc||0)]],'inc'),note:'모두 곱해져요'});
   S.push({ic:'🪜',n:'층 건너뛰기',v:gSpP(gSkipP(g)),rows:[['기본','+0%'],['💎 루비 강화',gSpP(G_DATA.skip.rl*(rl.sk||0))],['🔁 환생 강화',gSpP(G_DATA.skip.ru*gRu(g,'sk'))],['🌸 성장 강화',gSpP(G_DATA.skip.rp*(rp.sk||0))]].concat(pets('skip',pp)),note:'더해지고 최대 80%'});
   S.push({ic:'🚀',n:'시작 층',v:gStartStage(g)+'층',rows:[['기본','1층'],['🔁 환생 강화','+'+G_DATA.start.ru*gRu(g,'st')+'층'],['🌸 성장 강화','+'+G_DATA.start.rp*(rp.st||0)+'층']],note:'환생·진화 뒤 이 층에서 시작해요'});

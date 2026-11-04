@@ -77,8 +77,8 @@ function gDayView(g){return g.day.d===gDayKey(Date.now())?g.day:{d:'',t:0,w:0,c:
 function gCatch(){
   var g=gGet(),now=Date.now(),dt=(now-g.last)/1000;
   if(!(dt>0)){g.last=now;return;}
-  var raw=dt;dt=Math.min(dt,G_CAP);gMatAcc={};gDropQ.length=0;var r=gAdvance(g,dt);g.last=now;var dr=gMatAcc;gMatAcc={};gDropQ.length=0;
-  if(raw>=60)gOff={sec:raw,h:r.h,s:r.s,cap:raw>G_CAP,dr:dr};
+  var raw=dt,lt=g.last,cap=G_CAP+gBfV('cap',lt);dt=Math.min(dt,cap)*(1+gBfV('off',lt));gMatAcc={};gDropQ.length=0;var r=gAdvance(g,dt);g.last=now;var dr=gMatAcc;gMatAcc={};gDropQ.length=0;
+  if(raw>=60)gOff={sec:raw,h:r.h,s:r.s,cap:raw>cap,dr:dr};
   gSave();
 }
 function gMkTk(g,L){
@@ -221,13 +221,13 @@ function gSpecs(g){
   var S=[];
   var mulRows=function(base,rows,pk,bl){return [[bl||'기본',base]].concat(rows.filter(function(r){return r[1]!==0;}).map(function(r){return [r[0],gSpP(r[1])];})).concat(pets(pk,pp));};
   S.push({ic:'⚔️',n:'공격력',v:gSpN(gAtk(g)),rows:mulRows(gFmt(GP.A0*Math.pow(GP.AM,L.atk)),[
-    ['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],['🍳 요리',gFoodB(g,'atk')],['⚔️ 무기',gWeapB(g,'atk')],
+    ['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],['⚔️ 무기',gWeapB(g,'atk')],
     ['💎 루비 강화',GP.RAT*(rl.atk||0)],['🔁 환생 강화',GP.RU*gRu(g,'atk')],['🌸 성장 강화',GP.SG*(rp.atk||0)]],'atk','기본 (3 + 💗 하트 강화 Lv.'+L.atk+')'),note:'하트 강화가 기본 공격력을 키우고, 나머지는 그 위에 곱해져요'});
   S.push({ic:'⚡',n:'공격 속도',v:gSpN(gSpd(g))+'/초',rows:mulRows('1',[
-    ['💗 하트 강화 (Lv.'+L.spd+')',Math.min(GP.SCAP,1+GP.SS*L.spd)-1],['💎 루비 강화',0],['🔁 환생 강화',G_DATA.spd.ru*gRu(g,'spd')],['🌸 성장 강화',G_DATA.spd.rp*(rp.spd||0)],['🍳 요리',gFoodB(g,'spd')],['⚔️ 무기',gWeapB(g,'spd')]],'spd'),note:'하트 강화로는 최대 ×'+GP.SCAP+'까지, 나머지는 곱해져요'});
+    ['💗 하트 강화 (Lv.'+L.spd+')',Math.min(GP.SCAP,1+GP.SS*L.spd)-1],['💎 루비 강화',0],['🔁 환생 강화',G_DATA.spd.ru*gRu(g,'spd')],['🌸 성장 강화',G_DATA.spd.rp*(rp.spd||0)],['⚔️ 무기',gWeapB(g,'spd')]],'spd'),note:'하트 강화로는 최대 ×'+GP.SCAP+'까지, 나머지는 곱해져요'});
   S.push({ic:'🗡️',n:'초당 공격력',v:gFmt(gDps(g)),rows:[['공격력',gSpN(gAtk(g))],['× 공격 속도',gSpN(gSpd(g))+'/초']],note:'공격력 × 공격 속도'});
   S.push({ic:'💗',n:'하트 수입',v:'×'+gSpN(gInc(g)),rows:mulRows('×1',[
-    ['💗 하트 강화 (Lv.'+L.inc+')',GP.IM*L.inc],['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],['🍳 요리',gFoodB(g,'inc')],
+    ['💗 하트 강화 (Lv.'+L.inc+')',GP.IM*L.inc],['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],
     ['💎 루비 강화',GP.RHT*(rl.heart||0)],['🔁 환생 강화',GP.RU*gRu(g,'inc')],['🌸 성장 강화',GP.SG*(rp.inc||0)]],'inc'),note:'모두 곱해져요'});
   S.push({ic:'🪜',n:'층 건너뛰기',v:gSpP(gSkipP(g)),rows:[['기본','+0%'],['💎 루비 강화',gSpP(G_DATA.skip.rl*(rl.sk||0))],['🔁 환생 강화',gSpP(G_DATA.skip.ru*gRu(g,'sk'))],['🌸 성장 강화',gSpP(G_DATA.skip.rp*(rp.sk||0))]].concat(pets('skip',pp)),note:'더해지고 최대 80%'});
   S.push({ic:'🚀',n:'시작 층',v:gStartStage(g)+'층',rows:[['기본','1층'],['🔁 환생 강화','+'+G_DATA.start.ru*gRu(g,'st')+'층'],['🌸 성장 강화','+'+G_DATA.start.rp*(rp.st||0)+'층']],note:'환생·진화 뒤 이 층에서 시작해요'});

@@ -138,7 +138,7 @@ var G_F={
  },
  harv:function(b){
   var f=gFm(),p=f.pl[+b.dataset.i];if(!p||!p.c||gPlRemain(p,Date.now())>0)return;
-  var c=G_CRM[p.c],n=1+(Math.random()<.3?1:0);f.inv[c.k]=(f.inv[c.k]||0)+n;p.c='';p.t=0;p.w=0;gSfx('coin');gSave();gRefresh();toast(c.e+' '+c.n+' '+n+'개 수확! 🎉');
+  var c=G_CRM[p.c],n=1+(Math.random()<.3+gBfV('harv')?1:0);f.inv[c.k]=(f.inv[c.k]||0)+n;p.c='';p.t=0;p.w=0;gSfx('coin');gSave();gRefresh();toast(c.e+' '+c.n+' '+n+'개 수확! 🎉');
  },
  bpl:function(b){var g=gGet(),f=gFm();if(f.np>=16)return;var cost=10*(f.np-3);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.np++;f.pl.push({c:'',t:0,w:0});gSfx('buy');gSave();gRefresh();toast('밭이 넓어졌어! 🌾');},
  bsl:function(b){var g=gGet(),f=gFm();if(f.ns>=10)return;var cost=30*(f.ns-2);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.ns++;gSfx('buy');gSave();gRefresh();toast('마당이 넓어졌어! 🐾');},

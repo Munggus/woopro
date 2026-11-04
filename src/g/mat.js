@@ -10,6 +10,7 @@ function gMtInfo(n){
   n=Math.max(1,Math.floor(n));var B=G_MT.block,q=Math.min(G_MT.maxQ,Math.floor((n-1)/B)+1),pos=(n-1)%B,h=Math.floor(B*G_MT.upFrom)-1,pu=0;
   if(q<G_MT.maxQ&&pos>=h)pu=G_MT.up.p0+(G_MT.up.p1-G_MT.up.p0)*Math.min(1,(pos-h)/(B-1-h));
   var pd=G_MT.drop.p0+(G_MT.drop.p1-G_MT.drop.p0)*Math.min(1,n/G_MT.drop.fl1);
+  if(typeof gBfV==='function'){pd=Math.min(1,pd*(1+gBfV('drop')));pu=Math.min(.6,pu*(1+gBfV('dq')));}
   return {q:q,pu:pu,pd:pd};
 }
 function gMtAdd(k,q,c){var m=gMt();m[k][q-1]=Math.min(999999,m[k][q-1]+c);var key=k+'|'+q;gMatAcc[key]=(gMatAcc[key]||0)+c;gDropQ.push([k,q,c]);}

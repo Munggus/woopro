@@ -90,12 +90,12 @@ function gAuraHtml(g){
   var sp=[0,0,2,4][r];for(var j=0;j<sp;j++)h+='<span class="gasp" style="--a0:'+Math.round(j/sp*360+20)+'deg;--d:'+(j*.5)+'s">✨</span>';
   return h+'</div>';
 }
-function gHeroKey(g){var e=g.ceq||{};return gFormLv(g)+'|'+(g.hero||'')+'|'+(e.gnd||'')+'|'+(e.sky||'')+'|'+(e.veh||'')+'|'+((g.eq&&g.eq.hat)||'')+'|'+((g.eq&&g.eq.out)||'');}
+function gHeroKey(g){var e=g.ceq||{};return gFormLv(g)+'|'+(g.hero||'')+'|'+(e.gnd||'')+'|'+(e.sky||'')+'|'+(e.veh||'')+'|'+((g.eq&&g.eq.hat)||'')+'|'+((g.eq&&g.eq.out)||'')+'|'+(g.vx?g.vx.col+g.vx.spk+g.vx.asz+g.vx.hsz:'');}
 function gHeroSrc(g){return SPR_F[gFormLv(g)]||'';}
 function gFront(L){return SPR_F[Math.max(0,Math.min(10,L|0))]||'';}
 function gHeroHtml(g){
   var e=g.ceq||{},ride=e.veh&&g.cdex[e.veh]&&G_CPM[e.veh];
-  return '<div class="ghw" id="g-hw">'+gAuraHtml(g)+gCrewHtml(g)+'<div class="ghero gsp" id="g-hero" data-act="ghero" style="background-image:url('+(SPR_S[gFormLv(g)]||'')+')"></div>'+gCosHtml(g)+'</div>';
+  return '<div class="ghw'+((g.vx&&g.vx.hsz)?' hs':'')+'" id="g-hw">'+gFxHtml(g)+gAuraHtml(g)+gCrewHtml(g)+'<div class="ghero gsp" id="g-hero" data-act="ghero" style="background-image:url('+(SPR_S[gFormLv(g)]||'')+')"></div>'+gCosHtml(g)+'</div>';
 }
 var gHK='';
 function gHeroCheck(g){
