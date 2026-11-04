@@ -819,3 +819,10 @@
 /* v98: 필살기 맥동 애니메이션이 -50%로 밀던 문제 → 제자리에서 커졌다 작아지게 */
 @keyframes gup2{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
 .gults .gult{animation-name:gup2}
+/* v99: 작물 고르기 칸 정렬 (별이 길어도 칸 밖으로 안 나가게) */
+.gcr{grid-template-columns:repeat(3,minmax(0,1fr))}
+.gcrb{min-width:0;padding:8px 2px;justify-content:flex-start;gap:2px;min-height:112px;box-sizing:border-box}
+.gcrb b{display:flex;flex-direction:column;align-items:center;font-size:14px;line-height:1.25;text-align:center;max-width:100%}
+.gcrb b .gs,.gcrb b .gsx{display:block;font-size:12px;letter-spacing:-1px;white-space:nowrap;max-width:100%}
+.gcrb b .gsx{font-size:16px}
+.gcrb small{text-align:center;line-height:1.2;margin-top:auto;padding-top:2px}
