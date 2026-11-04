@@ -1112,6 +1112,16 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gvup{padding:10px 12px;margin:8px 0;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
 .gvuh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
 .gvmi.dc .gvcell{background:rgba(255,255,255,.28)}
+/* v96: 연속버프 작게 왼쪽위 / 콤보·필살기 가운데 */
+.gbuff{left:8px;right:auto;top:44px;align-items:flex-start;padding:2px 8px;border-radius:11px;border-width:1.5px}
+.gbuff b{font-size:11px}.gbuff small{display:none}
+.garena.sm .gbuff{left:4px;right:auto;top:2px}
+.gcmb{left:50%;top:30px}
+.gults{top:calc(50% + 4px);bottom:auto;transform:translate(-50%,-50%)}
+.garena.sm .gcmb{top:2px}
+.garena.sm .gults{top:auto;bottom:6px;transform:translateX(-50%)}
+.gults{width:max-content;max-width:100%;gap:6px}
+.gults .gult{width:66px;height:66px}.gults .gult span{font-size:24px}.gults .gult b{font-size:10px}
 
 </style>
 
@@ -1520,7 +1530,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v95';
+var APPV='v96';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
