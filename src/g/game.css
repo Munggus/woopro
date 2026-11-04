@@ -816,3 +816,6 @@
 .gults .gult[hidden]{display:none!important}
 .gults .gult{width:86px;height:86px}.gults .gult span{font-size:34px}.gults .gult b{font-size:12px}
 .garena.sm .gults{left:0;right:0;margin:0 auto;bottom:5px;transform:none}
+/* v98: 필살기 맥동 애니메이션이 -50%로 밀던 문제 → 제자리에서 커졌다 작아지게 */
+@keyframes gup2{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.gults .gult{animation-name:gup2}
