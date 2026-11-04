@@ -24,6 +24,7 @@ function gVlUpCost(k,l){return Math.ceil(G_VLM[k].up*Math.pow(G_VL.upG,l-1));}
 function gVlUpMs(l){return Math.round(G_VL.upMin*Math.pow(G_VL.upMax/G_VL.upMin,(l-1)/(G_VL.maxLv-2)))*60000;}
 function gVlDur(ms){var s=Math.max(0,Math.ceil(ms/1000)),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),r=s%60;return d?d+'일 '+h+'시간':h?h+'시간 '+m+'분':m?m+'분 '+r+'초':r+'초';}
 function gVlSync(g){var vl=g.vl,now=Date.now(),msgs=[];if(!vl)return msgs;G_VL.bld.forEach(function(B){var q=vl.b[B.k];if(q&&q.ut&&now>=q.ut){q.lv=Math.min(G_VL.maxLv,q.lv+1);q.ut=0;msgs.push(B.e+' '+B.n+' Lv.'+q.lv+' 완성! 🎉');}});return msgs;}
+var gVlDrag=null,gVlNoClick=0;
 function gVlMapHtml(g){
   var vl=g.vl,N=G_VL.N,S=G_VL.size,occ={},k,o,dx,dy,now=Date.now();
   for(k in vl.b){o=vl.b[k];for(dx=0;dx<S;dx++)for(dy=0;dy<S;dy++)occ[(o.x+dx)+','+(o.y+dy)]=1;}
@@ -38,7 +39,7 @@ function gVlMapHtml(g){
 function gVlCard(g){
   var vl=gVl();gVlSync(g);
   var h='<div class="gvh"><h2>🏡 우리 마을</h2><button class="mini'+(gVlEdit?' on':'')+'" data-act="gvil" data-f="edit">'+(gVlEdit?'✅ 완료':'🛠️ 배치 바꾸기')+'</button></div>'+gVlMapHtml(g)
-   +'<p class="hint" style="font-size:12px">'+(gVlEdit?(gVlSel?'<b>'+G_VLM[gVlSel].n+'</b>을(를) 놓을 자리(밝은 칸)를 눌러! 칸이 건물의 왼쪽 위가 돼.':'옮길 건물을 눌러봐!'):'건물을 누르면 안으로 들어가요!')+'</p>',rows='';
+   +'<p class="hint" style="font-size:12px">'+(gVlEdit?(gVlSel?'<b>'+G_VLM[gVlSel].n+'</b>을(를) 놓을 자리(밝은 칸)를 눌러! 칸이 건물의 왼쪽 위가 돼.':'건물을 <b>꾹 끌어서</b> 옮겨봐! 놓을 자리가 초록색으로 보여.'):'건물을 누르면 안으로 들어가요!')+'</p>',rows='';
   G_VL.bld.forEach(function(B){if(B.free||vl.b[B.k])return;
     rows+='<div class="gvc"><span class="gvce">'+B.e+'</span><div><b>'+B.n+'</b><small>'+B.d+'</small></div><button class="mini rb" data-act="gvil" data-f="build" data-k="'+B.k+'">'+gRuby(14)+' '+B.build+' 짓기</button></div>';});
   return h+(rows?'<h3 class="gcph">🏗️ 지을 수 있는 시설</h3>'+rows:'<p class="hint">모든 시설을 지었어! 🎉</p>')+gMatPanel(g);
@@ -56,6 +57,7 @@ function gVlModal(k){
 function gvDo(b){
   var f=b.dataset.f,k=b.dataset.k,g=gGet(),vl=gVl();
   if(f==='bld'){
+    if(Date.now()<gVlNoClick)return;
     if(gVlEdit){gVlSel=(gVlSel===k)?'':k;gRefresh();return;}
     gVlModal(k);}
   else if(f==='enter'){gVlGo('farm',k==='farm'?'a':'f');}
@@ -81,3 +83,30 @@ function gVlTick(){
   var m=document.getElementById('gvmt');if(m&&gVlModalK&&gS.vl.b[gVlModalK]&&gS.vl.b[gVlModalK].ut)m.textContent=gVlDur(gS.vl.b[gVlModalK].ut-now);
 }
 setInterval(gVlTick,1000);
+
+/* ---- 끌어서 옮기기: 손가락을 따라 건물이 움직이고, 놓일 자리를 초록(가능)/빨강(불가능)으로 미리 보여줘요 ---- */
+function gVlCellAt(px,py,off,rect){var N=G_VL.N,S=G_VL.size,cw=rect.width/N;return [Math.max(0,Math.min(N-S,Math.round((px-off.x-rect.left)/cw))),Math.max(0,Math.min(N-S,Math.round((py-off.y-rect.top)/cw)))];}
+document.addEventListener('pointerdown',function(e){
+  if(!gVlEdit||(e.button!=null&&e.button>0))return;var b=e.target.closest?e.target.closest('.gvb'):null;if(!b)return;
+  var br=b.getBoundingClientRect();
+  gVlDrag={k:b.dataset.k,el:b,map:b.parentNode,sx:e.clientX,sy:e.clientY,off:{x:e.clientX-br.left,y:e.clientY-br.top},moved:false,id:e.pointerId,ghost:null,cell:null,ok:false};
+},true);
+window.addEventListener('pointermove',function(e){
+  var d=gVlDrag;if(!d||e.pointerId!==d.id)return;
+  if(!d.moved){if(Math.abs(e.clientX-d.sx)+Math.abs(e.clientY-d.sy)<8)return;
+    d.moved=true;d.el.classList.add('drag');var gh=document.createElement('i');gh.className='gvghost ok';gh.innerHTML='<span>'+G_VLM[d.k].e+'</span>';d.map.appendChild(gh);d.ghost=gh;}
+  e.preventDefault();
+  var rect=d.map.getBoundingClientRect(),pc=100/G_VL.N;
+  d.el.style.left=((e.clientX-d.off.x-rect.left)/rect.width*100).toFixed(2)+'%';d.el.style.top=((e.clientY-d.off.y-rect.top)/rect.height*100).toFixed(2)+'%';
+  var c=gVlCellAt(e.clientX,e.clientY,d.off,rect);d.cell=c;d.ok=gVlFits(gVl(),c[0],c[1],0,d.k);
+  d.ghost.style.left=(c[0]*pc).toFixed(3)+'%';d.ghost.style.top=(c[1]*pc).toFixed(3)+'%';d.ghost.className='gvghost '+(d.ok?'ok':'no');
+},{passive:false});
+function gVlDragEnd(e,cancel){
+  var d=gVlDrag;if(!d||(e&&e.pointerId!==d.id))return;gVlDrag=null;if(!d.moved)return;
+  gVlNoClick=Date.now()+400;if(d.ghost&&d.ghost.parentNode)d.ghost.parentNode.removeChild(d.ghost);
+  var q=gVl().b[d.k];
+  if(!cancel&&d.ok&&q){q.x=d.cell[0];q.y=d.cell[1];gVlSel='';gSfx('buy');gSave();gRefresh();toast(G_VLM[d.k].e+' '+G_VLM[d.k].n+' 자리를 옮겼어!');}
+  else{gRefresh();if(!cancel)toast('거기엔 놓을 수 없어');}
+}
+window.addEventListener('pointerup',function(e){gVlDragEnd(e,false);});
+window.addEventListener('pointercancel',function(e){gVlDragEnd(e,true);});

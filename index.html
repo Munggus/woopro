@@ -1050,6 +1050,14 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 #g-st[data-act]{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
 .gcrb.lock{opacity:.45;filter:grayscale(.6)}
 
+.gvmi.ed .gvb{touch-action:none;cursor:grab}
+.gvb.sel{pointer-events:auto!important}
+.gvb.drag{z-index:6;transform:scale(1.07);opacity:.92;box-shadow:0 8px 16px rgba(0,0,0,.35);transition:none;cursor:grabbing}
+.gvghost{position:absolute;width:16.6667%;height:16.6667%;box-sizing:border-box;border:3px dashed;border-radius:14%;z-index:1;pointer-events:none;display:flex;align-items:center;justify-content:center;font-style:normal}
+.gvghost span{font-size:8cqw;opacity:.45;line-height:1}
+.gvghost.ok{border-color:#2e9e4f;background:rgba(80,200,110,.38)}
+.gvghost.no{border-color:#d33;background:rgba(230,60,60,.32)}
+
 </style>
 
 <div id="app">
@@ -1457,7 +1465,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v91';
+var APPV='v92';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2405,7 +2413,6 @@ var G_PROD={gnd:{k:'milk',e:'🥛',n:'우유'},sky:{k:'egg',e:'🥚',n:'달걀'}
 var G_PRK=['milk','egg','dust'];
 var G_PRM={milk:G_PROD.gnd,egg:G_PROD.sky,dust:G_PROD.veh};
 var G_FPI=[120,90,66,45];           // 등급별 생산 간격(분)
-var G_PRV=[5,12,30,75];            // 등급별 생산물 가치(수확 가치 배수)
 var G_WSTEP=.15,G_WMAX=3,G_ANCAP=12;
 function gFmDef(){var o={pl:[],water:5,inv:{},an:[],ns:3,np:4};for(var i=0;i<4;i++)o.pl.push({c:'',t:0,w:0});G_CROP.forEach(function(c){o.inv[c.k]=0;});G_PRK.forEach(function(k){o.inv[k]=0;});return o;}
 function gFmLoad(o){
@@ -2437,12 +2444,11 @@ function gFmWater(n){var f=gFm();f.water=Math.min(30,f.water+n);}
 /* ---- 화면 ---- */
 var gFmT='f';
 function gInvHtml(g){
-  var f=gFm(),base=gFmBase(g),tot=0,rows='';
-  G_CROP.forEach(function(c){var n=f.inv[c.k]||0;if(n){var h=c.rv*n;tot+=h;rows+='<span class="gii">'+c.e+gStars(c.rv)+' <b>'+n+'</b></span>';}});
-  var mm=gMt();G_MT.types.forEach(function(t){if(t.h)return;mm[t.k].forEach(function(n,i){if(n>0){tot+=gPrVal(t.k)*n;rows+='<span class="gii">'+t.e+gStars(i+1)+' <b>'+n+'</b></span>';}});});
-  return '<h3 class="gcph">🧺 창고</h3>'+(rows?'<div class="gih">'+rows+'</div><button class="btn sm gevob" data-act="gf" data-f="sell">'+gRuby(14)+' 모두 팔기 (+'+gFmt(tot)+')</button><p class="hint" style="font-size:12px">작물은 농장 동물의 먹이로도 쓸 수 있어. 먹이로 줄 건 남겨두고 팔아! (품질과 상관없이 같은 값이야. 높은 품질은 나중에 만들기 재료로 쓰는 게 이득이야)</p>':'<p class="hint">수확한 작물이랑 농장에서 얻은 물건이 여기에 모여. 루비로 바꿀 수 있어!</p>');
+  var f=gFm(),rows='';
+  G_CROP.forEach(function(c){var n=f.inv[c.k]||0;if(n)rows+='<span class="gii">'+c.e+gStars(c.rv)+' <b>'+n+'</b></span>';});
+  var mm=gMt();G_MT.types.forEach(function(t){if(t.h)return;mm[t.k].forEach(function(n,i){if(n>0)rows+='<span class="gii">'+t.e+gStars(i+1)+' <b>'+n+'</b></span>';});});
+  return '<h3 class="gcph">🧺 창고</h3>'+(rows?'<div class="gih">'+rows+'</div><p class="hint" style="font-size:12px">작물은 농장 동물의 먹이로 줄 수 있어. 나머지는 요리나 제작 재료로 쓰일 거야!</p>':'<p class="hint">수확한 작물이랑 농장에서 얻은 물건이 여기에 모여.</p>');
 }
-function gPrVal(k){return {milk:3,egg:5,dust:8}[k]||3;}
 function gFarmCard(g){
   gFmSyncAll(g);
   var tabs='<div class="gseg"><button class="gsg'+(gFmT==='f'?' on':'')+'" data-act="gtab" data-t="farm" data-k="f">🌱 텃밭</button><button class="gsg'+(gFmT==='a'?' on':'')+'" data-act="gtab" data-t="farm" data-k="a">🐄 농장</button></div>';
@@ -2521,7 +2527,7 @@ function gFModal(html){
 var G_F={
  seed:function(b){
   var f=gFm(),i=+b.dataset.i,g=gGet(),base=gFmBase(g);
-  var pl=gVlLv('plot');gFModal('<div class="gdmn">🌱 무엇을 심을까? <small>텃밭 Lv.'+pl+'</small></div><div class="gcr">'+G_CROP.map(function(c){var lk=c.rv>pl;return '<button class="gcrb'+(lk?' lock':'')+'" data-act="gf" data-f="plant" data-i="'+i+'" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+' '+gStars(c.rv)+'</b>'+(lk?'<small>🔒 텃밭 Lv.'+c.rv+'</small>':'<small>'+gHM(c.t*1000)+'</small><small>'+gRuby(11)+' '+c.rv+'</small>')+'</button>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
+  var pl=gVlLv('plot');gFModal('<div class="gdmn">🌱 무엇을 심을까? <small>텃밭 Lv.'+pl+'</small></div><div class="gcr">'+G_CROP.map(function(c){var lk=c.rv>pl;return '<button class="gcrb'+(lk?' lock':'')+'" data-act="gf" data-f="plant" data-i="'+i+'" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+' '+gStars(c.rv)+'</b>'+(lk?'<small>🔒 텃밭 Lv.'+c.rv+'</small>':'<small>'+gHM(c.t*1000)+'</small>')+'</button>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
  },
  plant:function(b){var f=gFm(),p=f.pl[+b.dataset.i];if(!p||p.c)return;var cc=G_CRM[b.dataset.k];if(!cc)return;if(cc.rv>gVlLv('plot')){toast('🔒 텃밭이 Lv.'+cc.rv+'이 되면 심을 수 있어!');return;}p.c=b.dataset.k;p.t=Date.now();p.w=0;gSfx('buy');gSave();gDexModalClose();gRefresh();},
  water:function(b){
@@ -2537,12 +2543,6 @@ var G_F={
  },
  bpl:function(b){var g=gGet(),f=gFm();if(f.np>=16)return;var cost=10*(f.np-3);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.np++;f.pl.push({c:'',t:0,w:0});gSfx('buy');gSave();gRefresh();toast('밭이 넓어졌어! 🌾');},
  bsl:function(b){var g=gGet(),f=gFm();if(f.ns>=10)return;var cost=30*(f.ns-2);if(g.rubies<cost){toast('루비가 모자라 💎');return;}g.rubies-=cost;f.ns++;gSfx('buy');gSave();gRefresh();toast('마당이 넓어졌어! 🐾');},
- sell:function(b){
-  var g=gGet(),f=gFm(),base=gFmBase(g),tot=0;
-  G_CROP.forEach(function(c){tot+=c.rv*(f.inv[c.k]||0);f.inv[c.k]=0;});
-  var mm=gMt();G_MT.types.forEach(function(t){if(t.h)return;for(var i=0;i<mm[t.k].length;i++){tot+=gPrVal(t.k)*mm[t.k][i];mm[t.k][i]=0;}});
-  if(!tot)return;g.rubies+=tot;g.st.rub+=tot;gSfx('coin');gSave();gRefresh();toast('💎 루비 +'+gFmt(tot)+' 받았어!');
- },
  addm:function(b){
   var g=gGet(),f=gFm(),have=G_CPL.filter(function(p){return g.cdex[p.id]&&!f.an.some(function(a){return a.id===p.id;});}).sort(function(a,b){return b.r-a.r;});
   if(!have.length){toast('데려올 동료가 없어! 뽑기에서 동료를 뽑아봐 🎟️');return;}
@@ -2612,6 +2612,7 @@ function gVlUpCost(k,l){return Math.ceil(G_VLM[k].up*Math.pow(G_VL.upG,l-1));}
 function gVlUpMs(l){return Math.round(G_VL.upMin*Math.pow(G_VL.upMax/G_VL.upMin,(l-1)/(G_VL.maxLv-2)))*60000;}
 function gVlDur(ms){var s=Math.max(0,Math.ceil(ms/1000)),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),r=s%60;return d?d+'일 '+h+'시간':h?h+'시간 '+m+'분':m?m+'분 '+r+'초':r+'초';}
 function gVlSync(g){var vl=g.vl,now=Date.now(),msgs=[];if(!vl)return msgs;G_VL.bld.forEach(function(B){var q=vl.b[B.k];if(q&&q.ut&&now>=q.ut){q.lv=Math.min(G_VL.maxLv,q.lv+1);q.ut=0;msgs.push(B.e+' '+B.n+' Lv.'+q.lv+' 완성! 🎉');}});return msgs;}
+var gVlDrag=null,gVlNoClick=0;
 function gVlMapHtml(g){
   var vl=g.vl,N=G_VL.N,S=G_VL.size,occ={},k,o,dx,dy,now=Date.now();
   for(k in vl.b){o=vl.b[k];for(dx=0;dx<S;dx++)for(dy=0;dy<S;dy++)occ[(o.x+dx)+','+(o.y+dy)]=1;}
@@ -2626,7 +2627,7 @@ function gVlMapHtml(g){
 function gVlCard(g){
   var vl=gVl();gVlSync(g);
   var h='<div class="gvh"><h2>🏡 우리 마을</h2><button class="mini'+(gVlEdit?' on':'')+'" data-act="gvil" data-f="edit">'+(gVlEdit?'✅ 완료':'🛠️ 배치 바꾸기')+'</button></div>'+gVlMapHtml(g)
-   +'<p class="hint" style="font-size:12px">'+(gVlEdit?(gVlSel?'<b>'+G_VLM[gVlSel].n+'</b>을(를) 놓을 자리(밝은 칸)를 눌러! 칸이 건물의 왼쪽 위가 돼.':'옮길 건물을 눌러봐!'):'건물을 누르면 안으로 들어가요!')+'</p>',rows='';
+   +'<p class="hint" style="font-size:12px">'+(gVlEdit?(gVlSel?'<b>'+G_VLM[gVlSel].n+'</b>을(를) 놓을 자리(밝은 칸)를 눌러! 칸이 건물의 왼쪽 위가 돼.':'건물을 <b>꾹 끌어서</b> 옮겨봐! 놓을 자리가 초록색으로 보여.'):'건물을 누르면 안으로 들어가요!')+'</p>',rows='';
   G_VL.bld.forEach(function(B){if(B.free||vl.b[B.k])return;
     rows+='<div class="gvc"><span class="gvce">'+B.e+'</span><div><b>'+B.n+'</b><small>'+B.d+'</small></div><button class="mini rb" data-act="gvil" data-f="build" data-k="'+B.k+'">'+gRuby(14)+' '+B.build+' 짓기</button></div>';});
   return h+(rows?'<h3 class="gcph">🏗️ 지을 수 있는 시설</h3>'+rows:'<p class="hint">모든 시설을 지었어! 🎉</p>')+gMatPanel(g);
@@ -2644,6 +2645,7 @@ function gVlModal(k){
 function gvDo(b){
   var f=b.dataset.f,k=b.dataset.k,g=gGet(),vl=gVl();
   if(f==='bld'){
+    if(Date.now()<gVlNoClick)return;
     if(gVlEdit){gVlSel=(gVlSel===k)?'':k;gRefresh();return;}
     gVlModal(k);}
   else if(f==='enter'){gVlGo('farm',k==='farm'?'a':'f');}
@@ -2669,6 +2671,33 @@ function gVlTick(){
   var m=document.getElementById('gvmt');if(m&&gVlModalK&&gS.vl.b[gVlModalK]&&gS.vl.b[gVlModalK].ut)m.textContent=gVlDur(gS.vl.b[gVlModalK].ut-now);
 }
 setInterval(gVlTick,1000);
+
+/* ---- 끌어서 옮기기: 손가락을 따라 건물이 움직이고, 놓일 자리를 초록(가능)/빨강(불가능)으로 미리 보여줘요 ---- */
+function gVlCellAt(px,py,off,rect){var N=G_VL.N,S=G_VL.size,cw=rect.width/N;return [Math.max(0,Math.min(N-S,Math.round((px-off.x-rect.left)/cw))),Math.max(0,Math.min(N-S,Math.round((py-off.y-rect.top)/cw)))];}
+document.addEventListener('pointerdown',function(e){
+  if(!gVlEdit||(e.button!=null&&e.button>0))return;var b=e.target.closest?e.target.closest('.gvb'):null;if(!b)return;
+  var br=b.getBoundingClientRect();
+  gVlDrag={k:b.dataset.k,el:b,map:b.parentNode,sx:e.clientX,sy:e.clientY,off:{x:e.clientX-br.left,y:e.clientY-br.top},moved:false,id:e.pointerId,ghost:null,cell:null,ok:false};
+},true);
+window.addEventListener('pointermove',function(e){
+  var d=gVlDrag;if(!d||e.pointerId!==d.id)return;
+  if(!d.moved){if(Math.abs(e.clientX-d.sx)+Math.abs(e.clientY-d.sy)<8)return;
+    d.moved=true;d.el.classList.add('drag');var gh=document.createElement('i');gh.className='gvghost ok';gh.innerHTML='<span>'+G_VLM[d.k].e+'</span>';d.map.appendChild(gh);d.ghost=gh;}
+  e.preventDefault();
+  var rect=d.map.getBoundingClientRect(),pc=100/G_VL.N;
+  d.el.style.left=((e.clientX-d.off.x-rect.left)/rect.width*100).toFixed(2)+'%';d.el.style.top=((e.clientY-d.off.y-rect.top)/rect.height*100).toFixed(2)+'%';
+  var c=gVlCellAt(e.clientX,e.clientY,d.off,rect);d.cell=c;d.ok=gVlFits(gVl(),c[0],c[1],0,d.k);
+  d.ghost.style.left=(c[0]*pc).toFixed(3)+'%';d.ghost.style.top=(c[1]*pc).toFixed(3)+'%';d.ghost.className='gvghost '+(d.ok?'ok':'no');
+},{passive:false});
+function gVlDragEnd(e,cancel){
+  var d=gVlDrag;if(!d||(e&&e.pointerId!==d.id))return;gVlDrag=null;if(!d.moved)return;
+  gVlNoClick=Date.now()+400;if(d.ghost&&d.ghost.parentNode)d.ghost.parentNode.removeChild(d.ghost);
+  var q=gVl().b[d.k];
+  if(!cancel&&d.ok&&q){q.x=d.cell[0];q.y=d.cell[1];gVlSel='';gSfx('buy');gSave();gRefresh();toast(G_VLM[d.k].e+' '+G_VLM[d.k].n+' 자리를 옮겼어!');}
+  else{gRefresh();if(!cancel)toast('거기엔 놓을 수 없어');}
+}
+window.addEventListener('pointerup',function(e){gVlDragEnd(e,false);});
+window.addEventListener('pointercancel',function(e){gVlDragEnd(e,true);});
 /* ===== 재료 (사냥 드랍 · 품질 ★1~6) · 층 이동/고정 ===== */
 var G_MT=G_DATA.mat,G_MTK=G_MT.types.map(function(t){return t.k;}),G_MTM={};G_MT.types.forEach(function(t){G_MTM[t.k]=t;});
 var G_MTH=G_MT.types.filter(function(t){return t.h;}).map(function(t){return t.k;});

@@ -738,3 +738,11 @@
 .gflb{display:flex;gap:6px;justify-content:center;margin:6px 0}
 #g-st[data-act]{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
 .gcrb.lock{opacity:.45;filter:grayscale(.6)}
+
+.gvmi.ed .gvb{touch-action:none;cursor:grab}
+.gvb.sel{pointer-events:auto!important}
+.gvb.drag{z-index:6;transform:scale(1.07);opacity:.92;box-shadow:0 8px 16px rgba(0,0,0,.35);transition:none;cursor:grabbing}
+.gvghost{position:absolute;width:16.6667%;height:16.6667%;box-sizing:border-box;border:3px dashed;border-radius:14%;z-index:1;pointer-events:none;display:flex;align-items:center;justify-content:center;font-style:normal}
+.gvghost span{font-size:8cqw;opacity:.45;line-height:1}
+.gvghost.ok{border-color:#2e9e4f;background:rgba(80,200,110,.38)}
+.gvghost.no{border-color:#d33;background:rgba(230,60,60,.32)}
