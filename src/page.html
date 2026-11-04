@@ -1122,6 +1122,11 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .garena.sm .gults{top:auto;bottom:6px;transform:translateX(-50%)}
 .gults{width:max-content;max-width:100%;gap:6px}
 .gults .gult{width:66px;height:66px}.gults .gult span{font-size:24px}.gults .gult b{font-size:10px}
+/* v97: 필살기 버튼 정중앙(가로) · 크게 · 체력바 바로 위 */
+.gults{left:0;right:0;top:auto;bottom:14px;margin:0 auto;transform:none;width:max-content;max-width:100%;justify-content:center}
+.gults .gult[hidden]{display:none!important}
+.gults .gult{width:86px;height:86px}.gults .gult span{font-size:34px}.gults .gult b{font-size:12px}
+.garena.sm .gults{left:0;right:0;margin:0 auto;bottom:5px;transform:none}
 
 </style>
 
@@ -1530,7 +1535,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v96';
+var APPV='v97';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
