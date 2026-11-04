@@ -826,3 +826,6 @@
 .gcrb b .gs,.gcrb b .gsx{display:block;font-size:12px;letter-spacing:-1px;white-space:nowrap;max-width:100%}
 .gcrb b .gsx{font-size:16px}
 .gcrb small{text-align:center;line-height:1.2;margin-top:auto;padding-top:2px}
+
+/* v100: 하부탭(현재상태/진화, 하트/루비/환생 …)은 스크롤해도 위에 고정 */
+.card>.gseg{position:sticky;top:calc(var(--gh,0px) + var(--gt,0px) + 2px);z-index:5;background:var(--surface);padding:6px 0;margin:-6px 0;box-shadow:0 8px 6px -8px rgba(0,0,0,.18)}

@@ -526,6 +526,8 @@ function gFit(noAnim){
   var v=$('view'),f=$('g-field'),h=document.querySelector('.ghead'),gt=document.querySelector('.gtop'),m=$('main');
   if(!v||!f||!h||!gt||!m||nav.tab!=='game')return;
   v.style.setProperty('--gh',h.offsetHeight+'px');
+  v.style.setProperty('--gt',gt.offsetHeight+'px');
+  if(window.ResizeObserver){if(!window.gRO)window.gRO=new ResizeObserver(function(){var vv=$('view'),g2=document.querySelector('.gtop');if(vv&&g2)vv.style.setProperty('--gt',g2.offsetHeight+'px');});window.gRO.disconnect();window.gRO.observe(gt);}
   if(gSub!==''){f.style.height='';return;}
   var cs=getComputedStyle(v),hs=getComputedStyle(h);
   var top=parseFloat(cs.paddingTop)+parseFloat(hs.marginTop)+h.offsetHeight+(parseFloat(cs.rowGap)||14);
