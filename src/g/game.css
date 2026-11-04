@@ -746,3 +746,17 @@
 .gvghost span{font-size:8cqw;opacity:.45;line-height:1}
 .gvghost.ok{border-color:#2e9e4f;background:rgba(80,200,110,.38)}
 .gvghost.no{border-color:#d33;background:rgba(230,60,60,.32)}
+
+/* ===== v93 제작 ===== */
+.gcq{display:flex;align-items:center;gap:10px;padding:10px;border:2px solid #ffb300;border-radius:14px;background:rgba(255,179,0,.12);margin:8px 0}
+.gcrr{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.gcrr.lock{opacity:.5}
+.gcre{font-size:30px;line-height:1.1;flex:none}
+.gcrt{flex:1;min-width:0}.gcrt b{font-size:14px}.gcrt small{display:block;font-size:12px;opacity:.8}
+.gcrt .gcfx{color:#c2185b;font-weight:700;opacity:1}
+.gcra{display:flex;flex-direction:column;gap:6px;align-items:stretch;flex:none}
+.gmc.no{border-color:#e57373;color:#c62828}.gmc.ok{border-color:#81c784}
+.gcph.lk{opacity:.6}
+.gcos{position:absolute;font-style:normal;z-index:5;pointer-events:none;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+.gcos.hat{left:50%;top:8%;transform:translateX(-50%);font-size:calc(34px*var(--k))}
+.gcos.out{left:56%;bottom:14%;font-size:calc(26px*var(--k))}

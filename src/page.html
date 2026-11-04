@@ -1058,6 +1058,20 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 .gvghost.ok{border-color:#2e9e4f;background:rgba(80,200,110,.38)}
 .gvghost.no{border-color:#d33;background:rgba(230,60,60,.32)}
 
+/* ===== v93 제작 ===== */
+.gcq{display:flex;align-items:center;gap:10px;padding:10px;border:2px solid #ffb300;border-radius:14px;background:rgba(255,179,0,.12);margin:8px 0}
+.gcrr{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.gcrr.lock{opacity:.5}
+.gcre{font-size:30px;line-height:1.1;flex:none}
+.gcrt{flex:1;min-width:0}.gcrt b{font-size:14px}.gcrt small{display:block;font-size:12px;opacity:.8}
+.gcrt .gcfx{color:#c2185b;font-weight:700;opacity:1}
+.gcra{display:flex;flex-direction:column;gap:6px;align-items:stretch;flex:none}
+.gmc.no{border-color:#e57373;color:#c62828}.gmc.ok{border-color:#81c784}
+.gcph.lk{opacity:.6}
+.gcos{position:absolute;font-style:normal;z-index:5;pointer-events:none;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+.gcos.hat{left:50%;top:8%;transform:translateX(-50%);font-size:calc(34px*var(--k))}
+.gcos.out{left:56%;bottom:14%;font-size:calc(26px*var(--k))}
+
 </style>
 
 <div id="app">
@@ -1465,7 +1479,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v92';
+var APPV='v93';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2104,6 +2118,67 @@ var G_DATA={
   types:[{k:'part',e:'🔩',n:'부품',u:'대장간',h:1},{k:'cloth',e:'🧶',n:'솜뭉치',u:'재봉소',h:1},{k:'snack',e:'🍪',n:'간식',u:'요리사',h:1},
    {k:'milk',e:'🥛',n:'우유',u:'농장'},{k:'egg',e:'🥚',n:'달걀',u:'농장'},{k:'dust',e:'✨',n:'반짝가루',u:'농장'}],   /* h:1 = 사냥으로 얻는 재료. 나머지는 농장 동물 생산물(품질=농장 레벨) */
   farmQ:{carrot:1,straw:2,corn:3,tomato:4,sun:5,melon:6}},
+ /* 제작: 시설(요리사 cook / 대장간 smith / 재봉소 tailor)마다 레벨별 3개씩. 임시 이름·그림(이모지)·효과이고 나중에 바꿀 수 있어.
+    min=만드는 데 걸리는 분 / mat=[재료키,품질,개수] (재료키: part·cloth·snack·milk·egg·dust 또는 작물 이름) / fx=효과(요리=먹으면 영구로 +, 무기=장착하는 동안 +) / slot=코스튬 부위(hat 모자, out 옷, 보기 전용)
+    cap=요리로 올릴 수 있는 한계(키별) */
+ craft:{cap:{atk:0.5,inc:0.5,spd:0.25},
+  items:[
+   {"id":"c10","f":"cook","lv":1,"e":"🍙","n":"주먹밥","d":"든든한 한 끼","min":2,"mat":[["snack",1,3],["carrot",1,2]],"fx":{"atk":0.002}},
+   {"id":"c11","f":"cook","lv":1,"e":"🍳","n":"계란후라이","d":"노릇노릇 반숙","min":3,"mat":[["snack",1,4],["milk",1,2]],"fx":{"inc":0.002}},
+   {"id":"c12","f":"cook","lv":1,"e":"🥞","n":"팬케이크","d":"폭신폭신 달콤","min":5,"mat":[["snack",1,3],["snack",1,3],["egg",1,2],["carrot",1,1]],"fx":{"spd":0.002}},
+   {"id":"w10","f":"smith","lv":1,"e":"🪵","n":"나무 막대","d":"주워 온 튼튼한 막대","min":2,"mat":[["part",1,4],["dust",1,1]],"fx":{"atk":0.02}},
+   {"id":"w11","f":"smith","lv":1,"e":"🔨","n":"장난감 망치","d":"뿅뿅 소리가 나요","min":3,"mat":[["part",1,6],["dust",1,2]],"fx":{"atk":0.014,"spd":0.003}},
+   {"id":"w12","f":"smith","lv":1,"e":"🏏","n":"나무 배트","d":"홈런을 노려봐","min":5,"mat":[["part",1,4],["part",1,4],["dust",1,3]],"fx":{"atk":0.012,"ult":0.01}},
+   {"id":"t10","f":"tailor","lv":1,"e":"🎀","n":"리본 머리띠","d":"살랑살랑 리본","min":2,"mat":[["cloth",1,4],["egg",1,1]],"slot":"hat"},
+   {"id":"t11","f":"tailor","lv":1,"e":"👕","n":"꼬마 티셔츠","d":"편안한 면 티셔츠","min":3,"mat":[["cloth",1,6],["egg",1,2]],"slot":"out"},
+   {"id":"t12","f":"tailor","lv":1,"e":"🧢","n":"야구 모자","d":"챙이 달린 모자","min":5,"mat":[["cloth",1,4],["cloth",1,4],["dust",1,2]],"slot":"hat"},
+   {"id":"c20","f":"cook","lv":2,"e":"🍝","n":"파스타","d":"돌돌 말아 먹는 면","min":10,"mat":[["snack",2,4],["straw",2,3]],"fx":{"atk":0.004}},
+   {"id":"c21","f":"cook","lv":2,"e":"🍲","n":"따끈 수프","d":"속이 따뜻해져","min":15,"mat":[["snack",2,6],["milk",2,3]],"fx":{"inc":0.004}},
+   {"id":"c22","f":"cook","lv":2,"e":"🥗","n":"싱싱 샐러드","d":"아삭아삭 비타민","min":20,"mat":[["snack",2,4],["snack",1,4],["egg",2,3],["carrot",1,1]],"fx":{"spd":0.004}},
+   {"id":"w20","f":"smith","lv":2,"e":"🗡️","n":"반짝 단검","d":"작지만 날카로워","min":10,"mat":[["part",2,6],["dust",2,1]],"fx":{"atk":0.05}},
+   {"id":"w21","f":"smith","lv":2,"e":"🪓","n":"꼬마 도끼","d":"쿵! 하고 내리쳐","min":15,"mat":[["part",2,8],["dust",2,3]],"fx":{"atk":0.035,"spd":0.0075}},
+   {"id":"w22","f":"smith","lv":2,"e":"🏹","n":"솜털 활","d":"멀리멀리 쏘는 활","min":20,"mat":[["part",2,6],["part",1,6],["dust",2,4]],"fx":{"atk":0.03,"ult":0.025}},
+   {"id":"t20","f":"tailor","lv":2,"e":"👗","n":"나풀 원피스","d":"치마가 나풀나풀","min":10,"mat":[["cloth",2,6],["egg",2,1]],"slot":"out"},
+   {"id":"t21","f":"tailor","lv":2,"e":"👒","n":"밀짚 모자","d":"소풍 갈 때 쓰는 모자","min":15,"mat":[["cloth",2,8],["egg",2,3]],"slot":"hat"},
+   {"id":"t22","f":"tailor","lv":2,"e":"🧣","n":"포근 목도리","d":"따뜻따뜻 겨울","min":20,"mat":[["cloth",2,6],["cloth",1,6],["dust",2,3]],"slot":"out"},
+   {"id":"c30","f":"cook","lv":3,"e":"🍕","n":"치즈 피자","d":"쭈욱 늘어나는 치즈","min":45,"mat":[["snack",3,5],["corn",3,4]],"fx":{"atk":0.007}},
+   {"id":"c31","f":"cook","lv":3,"e":"🍔","n":"햄버거","d":"한입 가득","min":60,"mat":[["snack",3,7],["milk",3,4]],"fx":{"inc":0.007}},
+   {"id":"c32","f":"cook","lv":3,"e":"🌭","n":"핫도그","d":"소시지 듬뿍","min":90,"mat":[["snack",3,5],["snack",2,5],["egg",3,4],["straw",2,1]],"fx":{"spd":0.007}},
+   {"id":"w30","f":"smith","lv":3,"e":"⚔️","n":"쌍둥이 검","d":"두 자루가 한 쌍","min":45,"mat":[["part",3,7],["dust",3,2]],"fx":{"atk":0.09}},
+   {"id":"w31","f":"smith","lv":3,"e":"🔱","n":"바다 삼지창","d":"철썩철썩 파도의 힘","min":60,"mat":[["part",3,11],["dust",3,4]],"fx":{"atk":0.063,"spd":0.0135}},
+   {"id":"w32","f":"smith","lv":3,"e":"🪃","n":"부메랑","d":"던지면 돌아와요","min":90,"mat":[["part",3,7],["part",2,7],["dust",3,5]],"fx":{"atk":0.054,"ult":0.045}},
+   {"id":"t30","f":"tailor","lv":3,"e":"🎩","n":"마술사 모자","d":"모자 속에서 토끼가?","min":45,"mat":[["cloth",3,7],["egg",3,2]],"slot":"hat"},
+   {"id":"t31","f":"tailor","lv":3,"e":"🥋","n":"씩씩 도복","d":"기합이 들어가요","min":60,"mat":[["cloth",3,11],["egg",3,4]],"slot":"out"},
+   {"id":"t32","f":"tailor","lv":3,"e":"🕶️","n":"멋쟁이 선글라스","d":"눈이 부셔요","min":90,"mat":[["cloth",3,7],["cloth",2,7],["dust",3,4]],"slot":"hat"},
+   {"id":"c40","f":"cook","lv":4,"e":"🍣","n":"초밥","d":"한입에 쏙","min":180,"mat":[["snack",4,7],["tomato",4,4]],"fx":{"atk":0.01}},
+   {"id":"c41","f":"cook","lv":4,"e":"🍤","n":"새우튀김","d":"바삭바삭","min":240,"mat":[["snack",4,9],["milk",4,4]],"fx":{"inc":0.01}},
+   {"id":"c42","f":"cook","lv":4,"e":"🥘","n":"든든 스튜","d":"오래 끓인 깊은 맛","min":300,"mat":[["snack",4,7],["snack",3,7],["egg",4,4],["corn",3,1]],"fx":{"spd":0.01}},
+   {"id":"w40","f":"smith","lv":4,"e":"🪄","n":"마법봉","d":"반짝반짝 마법","min":180,"mat":[["part",4,9],["dust",4,2]],"fx":{"atk":0.14}},
+   {"id":"w41","f":"smith","lv":4,"e":"🧹","n":"마법 빗자루","d":"타고 날아도 돼요","min":240,"mat":[["part",4,13],["dust",4,4]],"fx":{"atk":0.098,"spd":0.021}},
+   {"id":"w42","f":"smith","lv":4,"e":"🎸","n":"번개 기타","d":"쿵짝쿵짝 울려 퍼져요","min":300,"mat":[["part",4,9],["part",3,9],["dust",4,7]],"fx":{"atk":0.084,"ult":0.07}},
+   {"id":"t40","f":"tailor","lv":4,"e":"🎓","n":"똑똑 학사모","d":"졸업을 축하해","min":180,"mat":[["cloth",4,9],["egg",4,2]],"slot":"hat"},
+   {"id":"t41","f":"tailor","lv":4,"e":"👘","n":"고운 한복","d":"단아한 색동 한복","min":240,"mat":[["cloth",4,13],["egg",4,4]],"slot":"out"},
+   {"id":"t42","f":"tailor","lv":4,"e":"🦺","n":"튼튼 조끼","d":"주머니가 많아요","min":300,"mat":[["cloth",4,9],["cloth",3,9],["dust",4,4]],"slot":"out"},
+   {"id":"c50","f":"cook","lv":5,"e":"🍰","n":"딸기 케이크","d":"달콤한 생크림","min":480,"mat":[["snack",5,8],["sun",5,5]],"fx":{"atk":0.015}},
+   {"id":"c51","f":"cook","lv":5,"e":"🍨","n":"아이스크림","d":"시원 달콤","min":600,"mat":[["snack",5,10],["milk",5,5]],"fx":{"inc":0.015}},
+   {"id":"c52","f":"cook","lv":5,"e":"🧁","n":"컵케이크","d":"작고 귀여운 행복","min":720,"mat":[["snack",5,8],["snack",4,8],["egg",5,5],["tomato",4,1]],"fx":{"spd":0.015}},
+   {"id":"w50","f":"smith","lv":5,"e":"🔥","n":"불꽃검","d":"활활 타오르는 검","min":480,"mat":[["part",5,10],["dust",5,3]],"fx":{"atk":0.2}},
+   {"id":"w51","f":"smith","lv":5,"e":"❄️","n":"얼음창","d":"차갑게 얼려버려","min":600,"mat":[["part",5,16],["dust",5,5]],"fx":{"atk":0.14,"spd":0.03}},
+   {"id":"w52","f":"smith","lv":5,"e":"⚡","n":"번개 지팡이","d":"찌릿찌릿","min":720,"mat":[["part",5,10],["part",4,10],["dust",5,8]],"fx":{"atk":0.12,"ult":0.1}},
+   {"id":"t50","f":"tailor","lv":5,"e":"👑","n":"반짝 왕관","d":"공주님을 위한 왕관","min":480,"mat":[["cloth",5,10],["egg",5,3]],"slot":"hat"},
+   {"id":"t51","f":"tailor","lv":5,"e":"🦸","n":"영웅 망토","d":"휘날리는 붉은 망토","min":600,"mat":[["cloth",5,16],["egg",5,5]],"slot":"out"},
+   {"id":"t52","f":"tailor","lv":5,"e":"🪽","n":"천사 날개","d":"사뿐히 날아올라요","min":720,"mat":[["cloth",5,10],["cloth",4,10],["dust",5,5]],"slot":"out"},
+   {"id":"c60","f":"cook","lv":6,"e":"🎂","n":"생일 케이크","d":"특별한 날의 케이크","min":900,"mat":[["snack",6,9],["melon",6,6]],"fx":{"atk":0.02}},
+   {"id":"c61","f":"cook","lv":6,"e":"🍱","n":"왕 도시락","d":"소풍 가는 날","min":1200,"mat":[["snack",6,12],["milk",6,6]],"fx":{"inc":0.02}},
+   {"id":"c62","f":"cook","lv":6,"e":"🥧","n":"황금 파이","d":"비밀 레시피","min":1440,"mat":[["snack",6,9],["snack",5,9],["egg",6,6],["sun",5,1]],"fx":{"spd":0.02}},
+   {"id":"w60","f":"smith","lv":6,"e":"🌈","n":"무지개 검","d":"일곱 빛깔 전설의 검","min":900,"mat":[["part",6,12],["dust",6,3]],"fx":{"atk":0.28}},
+   {"id":"w61","f":"smith","lv":6,"e":"🌟","n":"별빛 지팡이","d":"별이 쏟아져요","min":1200,"mat":[["part",6,18],["dust",6,6]],"fx":{"atk":0.196,"spd":0.042}},
+   {"id":"w62","f":"smith","lv":6,"e":"👑","n":"왕의 홀","d":"모두가 고개를 숙여요","min":1440,"mat":[["part",6,12],["part",5,12],["dust",6,9]],"fx":{"atk":0.168,"ult":0.14}},
+   {"id":"t60","f":"tailor","lv":6,"e":"💎","n":"보석 왕관","d":"빛나는 보석이 가득","min":900,"mat":[["cloth",6,12],["egg",6,3]],"slot":"hat"},
+   {"id":"t61","f":"tailor","lv":6,"e":"🌈","n":"무지개 드레스","d":"입으면 반짝반짝","min":1200,"mat":[["cloth",6,18],["egg",6,6]],"slot":"out"},
+   {"id":"t62","f":"tailor","lv":6,"e":"🧚","n":"요정 날개","d":"요정들의 선물","min":1440,"mat":[["cloth",6,12],["cloth",5,12],["dust",6,6]],"slot":"out"}
+  ],
+ },
  /* 마을: 12×12 지도, 건물 크기(칸), 시설 최대 레벨, 레벨업 비용 증가율, 장식 밀도.
     시설: build=짓는 루비, up=1→2레벨 루비 (그 뒤 매 레벨 upG배씩 증가), free=처음부터 있음 */
  village:{N:12,size:2,maxLv:6,upG:1.8,upMin:5,upMax:4320,decorP:0.14,decor:['🌳','🌲','🌸','🌼','🍄','🪨','🌷'],
@@ -2127,11 +2202,12 @@ function gHp(n){return gXm(n)*gHm(n)*GP.H0*Math.pow(n,GP.PW)*(n%10===0?GP.BM:1)*
 function gBase(n){return GP.H0*Math.pow(n,GP.PW);}
 function gStkExp(s){var d=new Date(s.ld);return new Date(d.getFullYear(),d.getMonth(),d.getDate()+G_DATA.streak.graceDays+(s.sh?G_DATA.streak.graceShield:0)).getTime();}
 function gStkB(g){var s=g.stk;if(!s||!s.n||!s.ld)return 0;return Date.now()<gStkExp(s)?G_DATA.streak.per*s.n:0;}
+function gGb(g,k){return (typeof gGearB==='function')?gGearB(g,k):0;}
 function gPb(g,k){return (typeof gPetB==='function'&&g.ceq)?(gPetB(g)[k]||0):0;}
-function gInc(g){return G_EVOM(g.evo)*(1+gStkB(g))*(1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+GP.SG*(g.rp.inc||0))*(1+GP.RU*gRu(g,'inc'))*(1+gPb(g,'inc'));}
+function gInc(g){return G_EVOM(g.evo)*(1+gStkB(g))*(1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+GP.SG*(g.rp.inc||0))*(1+GP.RU*gRu(g,'inc'))*(1+gPb(g,'inc'))*(1+gGb(g,'inc'));}
 function gKill(g,n){return gBase(n)*gEK(n)*GP.KR*gInc(g)*(n%10===0?G_DATA.curve.bossKill:1);}
-function gAtk(g){return (1+gStkB(g))*(1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*(1+GP.RAT*g.rl.atk)*(1+GP.SG*(g.rp.atk||0))*(1+GP.RU*gRu(g,'atk'))*(1+gPb(g,'atk'));}
-function gSpd(g){return Math.min(GP.SCAP,1+GP.SS*g.lv.spd)*(1+G_DATA.spd.rp*(g.rp.spd||0))*(1+G_DATA.spd.ru*gRu(g,'spd'))*(1+gPb(g,'spd'));}
+function gAtk(g){return (1+gStkB(g))*(1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*(1+GP.RAT*g.rl.atk)*(1+GP.SG*(g.rp.atk||0))*(1+GP.RU*gRu(g,'atk'))*(1+gPb(g,'atk'))*(1+gGb(g,'atk'));}
+function gSpd(g){return Math.min(GP.SCAP,1+GP.SS*g.lv.spd)*(1+G_DATA.spd.rp*(g.rp.spd||0))*(1+G_DATA.spd.ru*gRu(g,'spd'))*(1+gPb(g,'spd'))*(1+gGb(g,'spd'));}
 function gDps(g){return gAtk(g)*gSpd(g);}
 function gDly(g){return Math.max(G_DATA.dly.min,GP.DLY*Math.pow(G_DATA.dly.rp,g.rp.mv||0)*Math.pow(G_DATA.dly.rl,(g.rl&&g.rl.mv)||0)/(1+gPb(g,'mv')));}
 function gBossT(g){return GP.BOSS_T+Math.min(G_DATA.bt.max,(g.rp.bt||0))+gPb(g,'bt');}
@@ -2139,7 +2215,7 @@ function gSkipP(g){return Math.min(G_DATA.skip.max,G_DATA.skip.rp*(g.rp.sk||0)+G
 function gCbPer(g){return G_DATA.combo.per+G_DATA.combo.perRp*((g.rp&&g.rp.cbd)||0)+gPb(g,'cbd');}
 function gCbKeep(g){return G_DATA.combo.keep+G_DATA.combo.keepRl*((g.rl&&g.rl.cbt)||0)+gPb(g,'cbt');}
 function gCbT(g){var r=Math.floor(((g.rl&&g.rl.cbn)||0)/G_DATA.combo.rlStep)+Math.floor(gPb(g,'cbn')+1e-9);return Math.max(G_DATA.combo.Tmin,G_DATA.combo.T0-r);}
-function gUlt(g){return (1+G_DATA.ult.ru*gRu(g,'ult'))*(1+gPb(g,'ult'));}
+function gUlt(g){return (1+G_DATA.ult.ru*gRu(g,'ult'))*(1+gPb(g,'ult'))*(1+gGb(g,'ult'));}
 var G_ULT=G_DATA.ults;
 var G_UCD=G_DATA.ultCd,G_USH=G_DATA.ultShort;
 function gUNeed(g,i){return i<3?gCbT(g)*(i+1):G_DATA.combo.full;}
@@ -2386,12 +2462,12 @@ function gAuraHtml(g){
   var sp=[0,0,2,4][r];for(var j=0;j<sp;j++)h+='<span class="gasp" style="--a0:'+Math.round(j/sp*360+20)+'deg;--d:'+(j*.5)+'s">✨</span>';
   return h+'</div>';
 }
-function gHeroKey(g){var e=g.ceq||{};return gFormLv(g)+'|'+(g.hero||'')+'|'+(e.gnd||'')+'|'+(e.sky||'')+'|'+(e.veh||'');}
+function gHeroKey(g){var e=g.ceq||{};return gFormLv(g)+'|'+(g.hero||'')+'|'+(e.gnd||'')+'|'+(e.sky||'')+'|'+(e.veh||'')+'|'+((g.eq&&g.eq.hat)||'')+'|'+((g.eq&&g.eq.out)||'');}
 function gHeroSrc(g){return SPR_F[gFormLv(g)]||'';}
 function gFront(L){return SPR_F[Math.max(0,Math.min(10,L|0))]||'';}
 function gHeroHtml(g){
   var e=g.ceq||{},ride=e.veh&&g.cdex[e.veh]&&G_CPM[e.veh];
-  return '<div class="ghw" id="g-hw">'+gAuraHtml(g)+gCrewHtml(g)+'<div class="ghero gsp" id="g-hero" data-act="ghero" style="background-image:url('+(SPR_S[gFormLv(g)]||'')+')"></div></div>';
+  return '<div class="ghw" id="g-hw">'+gAuraHtml(g)+gCrewHtml(g)+'<div class="ghero gsp" id="g-hero" data-act="ghero" style="background-image:url('+(SPR_S[gFormLv(g)]||'')+')"></div>'+gCosHtml(g)+'</div>';
 }
 var gHK='';
 function gHeroCheck(g){
@@ -2605,6 +2681,7 @@ function gVl(){var g=gGet();if(!g.vl)g.vl=gVlLoad(null);return g.vl;}
 function gVlLv(k){var vl=gVl(),q=vl.b[k];return q?q.lv:1;}
 function gVlEff(k,lv){var mx=G_VL.maxLv;
   if(k==='plot'){var ok=G_CROP.filter(function(c){return c.rv<=lv;}).map(function(c){return c.e;}).join(' '),nx=G_CROP.filter(function(c){return c.rv===lv+1;})[0];return '심을 수 있는 작물: '+ok+(nx&&lv<mx?'<br>다음 레벨: '+nx.e+' '+nx.n+' '+gStars(nx.rv):'');}
+  if(k==='cook'||k==='smith'||k==='tailor'){var nm={cook:'요리',smith:'무기',tailor:'코스튬'}[k];return '만들 수 있는 '+nm+': Lv.1~'+lv+(lv<mx?' → 다음 레벨 Lv.'+(lv+1)+' '+nm+' 3종':'');}
   if(k==='farm')return '동물들이 만드는 생산물 품질: '+gStars(lv)+(lv<mx?' → 다음 레벨 '+gStars(lv+1):'');
   return '';}
 function gVlUpCost(k,l){return Math.ceil(G_VLM[k].up*Math.pow(G_VL.upG,l-1));}
@@ -2639,7 +2716,7 @@ function gVlModal(k){
   if(mx)body='<button class="btn sm" disabled>레벨 MAX</button>';
   else if(q.ut)body='<p class="hint">⏳ Lv.'+q.lv+' → Lv.'+(q.lv+1)+' 레벨업 중!<br>남은 시간 <b id="gvmt">'+gVlDur(q.ut-Date.now())+'</b></p>';
   else body='<button class="btn sm gevob gvub" data-act="gvil" data-f="up" data-k="'+k+'">'+gRuby(14)+'<span>'+gFmt(cost)+' · Lv.'+q.lv+' → Lv.'+(q.lv+1)+'</span></button><p class="hint" style="font-size:12px">⏱️ 걸리는 시간 '+gVlDur(ms)+'</p>';
-  var enter=(k==='farm'||k==='plot'),eff=gVlEff(k,q.lv);
+  var enter=(k!=='house'),eff=gVlEff(k,q.lv);
   gFModal('<h3>'+B.e+' '+B.n+' <small>Lv.'+q.lv+'/'+G_VL.maxLv+'</small></h3><p class="hint">'+B.d+'</p>'+(enter?'<p class="hint" style="font-size:13px">'+eff+'</p><button class="btn sm gevob" style="margin-bottom:8px" data-act="gvil" data-f="enter" data-k="'+k+'">🚪 들어가기</button>':'<p class="hint" style="font-size:12px">🔒 여기서 만들 수 있는 것들은 곧 열릴 거야. 지금은 레벨을 올려둘 수 있어!</p>')+body+'<button class="mini" style="margin-top:8px" data-act="gvil" data-f="close">닫기</button>');
 }
 function gvDo(b){
@@ -2648,7 +2725,7 @@ function gvDo(b){
     if(Date.now()<gVlNoClick)return;
     if(gVlEdit){gVlSel=(gVlSel===k)?'':k;gRefresh();return;}
     gVlModal(k);}
-  else if(f==='enter'){gVlGo('farm',k==='farm'?'a':'f');}
+  else if(f==='enter'){if(k==='farm')gVlGo('farm','a');else if(k==='plot')gVlGo('farm','f');else{gCrK=k;gVlGo('craft');}}
   else if(f==='edit'){gVlEdit=!gVlEdit;gVlSel='';gRefresh();}
   else if(f==='put'){var q=vl.b[gVlSel];if(!q)return;var x=+b.dataset.x,y=+b.dataset.y;if(!gVlFits(vl,x,y,0,gVlSel)){toast('거기엔 놓을 수 없어');return;}
     q.x=x;q.y=y;var nm=G_VLM[gVlSel];gVlSel='';gSfx('buy');gSave();gRefresh();toast(nm.e+' '+nm.n+' 자리를 옮겼어!');}
@@ -2785,6 +2862,89 @@ function gflDo(b){
   }
   if(f==='unpin'){gDexModalClose();g.pin=0;g.farm=false;g.bossLock=false;g.stage=Math.max(1,g.best);g.fails=0;g.sk=0;gFlSel=0;toast('🔓 고정을 풀었어. 최고층으로 돌아가!');gFloorApply(g);}
 }
+/* ===== 제작: 요리사(요리) · 대장간(무기) · 재봉소(코스튬) ===== */
+var G_CR=G_DATA.craft,G_CRI={},gCrK='cook';G_CR.items.forEach(function(it){G_CRI[it.id]=it;});
+var G_CRKN={atk:'공격력',inc:'하트 수입',spd:'공격 속도',ult:'필살기 위력'};
+var G_CRSL={w:'무기',hat:'모자',out:'옷'};
+function gCrSlot(it){return it.f==='smith'?'w':it.slot;}
+function gCx(g){g=g||gGet();if(!g.cr)g.cr={};if(!g.eq)g.eq={w:'',hat:'',out:''};if(!g.fd)g.fd={atk:0,inc:0,spd:0};if(!g.cq)g.cq={};return g;}
+function gCrLoad(o,d){
+  d.cr={};d.eq={w:'',hat:'',out:''};d.fd={atk:0,inc:0,spd:0};d.cq={};
+  if(!o||typeof o!=='object')return;
+  if(o.cr&&typeof o.cr==='object')Object.keys(o.cr).forEach(function(id){if(G_CRI[id]){var n=Math.min(9999,Math.max(0,Math.floor(gNum(o.cr[id],0))));if(n)d.cr[id]=n;}});
+  if(o.eq&&typeof o.eq==='object')['w','hat','out'].forEach(function(s){var id=o.eq[s];if(id&&G_CRI[id]&&d.cr[id]>0&&gCrSlot(G_CRI[id])===s)d.eq[s]=id;});
+  ['atk','inc','spd'].forEach(function(k){d.fd[k]=Math.min(G_CR.cap[k],Math.max(0,gNum(o.fd&&o.fd[k],0)));});
+  if(o.cq&&typeof o.cq==='object')Object.keys(o.cq).forEach(function(f){var q=o.cq[f];if(q&&G_CRI[q.id]&&G_CRI[q.id].f===f)d.cq[f]={id:q.id,end:gNum(q.end,0)};});
+}
+/* 능력치 보너스: 먹은 요리(영구) + 장착한 무기. 공식(core2)이 (1+보너스)로 곱해요 */
+function gFoodB(g,k){return (g.fd&&g.fd[k])||0;}
+function gWeapB(g,k){var w=g.eq&&g.eq.w&&G_CRI[g.eq.w];return (w&&w.fx&&w.fx[k])||0;}
+function gGearB(g,k){return gFoodB(g,k)+gWeapB(g,k);}
+/* 재료 확인/사용: 사냥·농장 생산물은 품질별 창고, 작물은 밭 창고 */
+function gCrHave(key,q){if(G_MTM[key])return gMt()[key][q-1]||0;return G_CRM[key]?(gFm().inv[key]||0):0;}
+function gCrTake(key,q,n){if(G_MTM[key])gMt()[key][q-1]-=n;else gFm().inv[key]-=n;}
+function gCrChip(m){var have=gCrHave(m[0],m[1]),mt=G_MTM[m[0]],e=mt?mt.e:G_CRM[m[0]].e,q=mt?m[1]:G_CRM[m[0]].rv;return '<span class="gmc '+(have>=m[2]?'ok':'no')+'">'+e+gStars(q)+' <b>'+have+'/'+m[2]+'</b></span>';}
+function gCrFxTxt(it){
+  if(it.f==='tailor')return G_CRSL[it.slot]+' · 보기 전용';
+  var k=Object.keys(it.fx),t=k.map(function(x){return G_CRKN[x]+' +'+(Math.round(it.fx[x]*1000)/10)+'%';}).join(', ');
+  return (it.f==='cook'?'먹으면 영구로 ':'장착하면 ')+t;
+}
+function gCrSync(g){
+  var msgs=[],now=Date.now();if(!g||!g.cq)return msgs;
+  Object.keys(g.cq).forEach(function(f){var q=g.cq[f];if(q&&now>=q.end){var it=G_CRI[q.id];g.cr[q.id]=Math.min(9999,(g.cr[q.id]||0)+1);delete g.cq[f];msgs.push(it.e+' '+it.n+' 완성! 🎉');}});
+  return msgs;
+}
+function gCrRow(g,it,fl,busy){
+  var own=g.cr[it.id]||0,lock=it.lv>fl,okm=it.mat.every(function(m){return gCrHave(m[0],m[1])>=m[2];}),can=!lock&&!busy&&okm,eqd=g.eq[gCrSlot(it)]===it.id;
+  var act='';
+  if(own){
+    if(it.f==='cook'){var k=Object.keys(it.fx)[0];act='<button class="mini" data-act="gcr" data-f="eat" data-id="'+it.id+'"'+(g.fd[k]>=G_CR.cap[k]-1e-9?' disabled':'')+'>🍽️ 먹기 ('+own+')</button>';}
+    else act='<button class="mini'+(eqd?' on':'')+'" data-act="gcr" data-f="eq" data-id="'+it.id+'">'+(eqd?'✔ 착용 중':'착용')+'</button>';
+  }
+  return '<div class="gcrr'+(lock?' lock':'')+'"><span class="gcre">'+it.e+'</span><div class="gcrt"><b>'+it.n+'</b> <small>'+it.d+'</small><small class="gcfx">'+gCrFxTxt(it)+'</small><div class="gmq">'+it.mat.map(gCrChip).join('')+'</div><small>⏱️ '+gVlDur(it.min*60000)+(own&&it.f!=='cook'?' · 보유 '+own:'')+'</small></div><div class="gcra">'
+    +(lock?'<small>🔒 Lv.'+it.lv+'</small>':'<button class="mini rb" data-act="gcr" data-f="make" data-id="'+it.id+'"'+(can?'':' disabled')+'>만들기</button>')+act+'</div></div>';
+}
+function gCrCard(g){
+  gCx(g);var B=G_VLM[gCrK],fl=gVlLv(gCrK),q=g.cq[gCrK],h='<button class="mini gvbk" data-act="gvil" data-f="map">🏡 마을로</button><div class="gvh"><h2>'+B.e+' '+B.n+' <small>Lv.'+fl+'</small></h2></div>';
+  if(q){var it=G_CRI[q.id];h+='<div class="gcq"><span class="gcre">'+it.e+'</span><div><b>'+it.n+' 만드는 중…</b><br><small>남은 시간 <b class="gcqt">'+gVlDur(q.end-Date.now())+'</b></small></div></div>';}
+  else h+='<p class="hint">지금은 쉬는 중이야. 아래에서 만들 걸 골라봐!</p>';
+  if(gCrK==='cook')h+='<p class="hint" style="font-size:12px">🍽️ 먹은 요리로 올린 능력: '+['atk','inc','spd'].map(function(k){return G_CRKN[k]+' +'+(Math.round(g.fd[k]*1000)/10)+'% (최대 '+(G_CR.cap[k]*100)+'%)';}).join(' · ')+'</p>';
+  else if(gCrK==='smith'){var w=G_CRI[g.eq.w];h+='<p class="hint" style="font-size:12px">⚔️ 착용한 무기: '+(w?w.e+' '+w.n+' ('+gCrFxTxt(w)+')':'없음')+'</p>';}
+  else{var a=G_CRI[g.eq.hat],c=G_CRI[g.eq.out];h+='<p class="hint" style="font-size:12px">🧵 입고 있는 코스튬: 모자 '+(a?a.e+' '+a.n:'없음')+' · 옷 '+(c?c.e+' '+c.n:'없음')+' (모자 1개 + 옷 1개)</p>';}
+  for(var lv=1;lv<=G_VL.maxLv;lv++){
+    h+='<h3 class="gcph'+(lv>fl?' lk':'')+'">Lv.'+lv+(lv>fl?' 🔒':'')+'</h3>';
+    G_CR.items.forEach(function(it){if(it.f===gCrK&&it.lv===lv)h+=gCrRow(g,it,fl,!!q);});
+  }
+  return h+'<p class="hint" style="font-size:12px">재료는 사냥(층마다 품질이 달라져)과 텃밭·농장에서 모아요. 높은 레벨 건물일수록 더 좋은 걸 만들어요.</p>';
+}
+function gCrMake(id){
+  var g=gCx(),it=G_CRI[id];if(!it)return;var fl=gVlLv(it.f);
+  if(it.lv>fl){toast('🔒 '+G_VLM[it.f].n+' Lv.'+it.lv+'이 필요해');return;}
+  if(g.cq[it.f]){toast('지금 다른 걸 만드는 중이야');return;}
+  if(!it.mat.every(function(m){return gCrHave(m[0],m[1])>=m[2];})){toast('재료가 모자라 🎒');return;}
+  it.mat.forEach(function(m){gCrTake(m[0],m[1],m[2]);});
+  g.cq[it.f]={id:id,end:Date.now()+it.min*60000};gSfx('buy');gSave();gRefresh();toast(it.e+' 만들기 시작! ('+gVlDur(it.min*60000)+')');
+}
+function gCrEat(id){
+  var g=gCx(),it=G_CRI[id];if(!it||it.f!=='cook'||!(g.cr[id]>0))return;
+  var k=Object.keys(it.fx)[0],cap=G_CR.cap[k];if(g.fd[k]>=cap-1e-9){toast('이 능력은 더 못 올려! 😋');return;}
+  var add=Math.min(it.fx[k],cap-g.fd[k]);g.cr[id]--;g.fd[k]+=add;gSfx('coin');gSave();gRefresh();toast(it.e+' 냠냠! '+G_CRKN[k]+' +'+(Math.round(add*1000)/10)+'%');
+}
+function gCrEq(id){
+  var g=gCx(),it=G_CRI[id];if(!it||it.f==='cook'||!(g.cr[id]>0))return;var s=gCrSlot(it);
+  g.eq[s]=(g.eq[s]===id)?'':id;gSfx('tap');gSave();gRefresh();toast(g.eq[s]?it.e+' '+it.n+' 착용!':'해제했어');
+}
+function gcrDo(b){var f=b.dataset.f,id=b.dataset.id;if(f==='make')gCrMake(id);else if(f==='eat')gCrEat(id);else if(f==='eq')gCrEq(id);}
+/* 코스튬: 세은이에게 이모지로 보여줘요 (임시 그림) */
+function gCosHtml(g){var e=g.eq||{},h='';if(e.out&&G_CRI[e.out])h+='<i class="gcos out">'+G_CRI[e.out].e+'</i>';if(e.hat&&G_CRI[e.hat])h+='<i class="gcos hat">'+G_CRI[e.hat].e+'</i>';return h;}
+function gCrTick(){
+  if(!gS||!gS.cq)return;
+  var m=gCrSync(gS);
+  if(m.length){gSave();m.forEach(function(x){toast(x);});if(nav.tab==='game'&&gSub==='craft')gRefresh();return;}
+  if(nav.tab!=='game'||gSub!=='craft'||document.hidden)return;
+  var q=gS.cq[gCrK],e=document.querySelector('.gcqt');if(q&&e){var s=gVlDur(q.end-Date.now());if(e.textContent!==s)e.textContent=s;}
+}
+setInterval(gCrTick,1000);
 /* ===== 사랑이 키우기 v2 UI ===== */
 var GKEY='wt.game2',G_CAP=28800;
 var G_NAMES=['아기','꼬물','호기심','짜잔','씽씽','병아리 요정','멋쟁이','브이 스타','파티 퀸','마법사','전설의 사랑이'];
@@ -2833,7 +2993,7 @@ function gLoad(){
   ['fl','kg','hr','rb','wk'].forEach(function(k){d.rc[k]=Math.min(99999,Math.max(0,Math.floor(gNum(o.rc&&o.rc[k],0))));});
   d.mxe=Math.min(10,Math.max(0,Math.floor(gNum(o.mxe,0))));d.form=Math.min(10,Math.max(-1,Math.floor(gNum(o.form,-1))));
   d.rbEvo=Math.min(10,Math.max(0,Math.floor(gNum(o.rbEvo,0))));
-  d.fm=gFmLoad(o.fm);d.vl=gVlLoad(o.vl);d.mt=gMtLoad(o.mt);gPrMigrate(d);
+  d.fm=gFmLoad(o.fm);d.vl=gVlLoad(o.vl);d.mt=gMtLoad(o.mt);gPrMigrate(d);gCrLoad(o,d);
   d.md={};if(o.md&&typeof o.md==='object')Object.keys(o.md).forEach(function(k){if(/^[0-9]_[0-9]$/.test(k))d.md[k]=Math.min(5,Math.max(1,Math.floor(gNum(o.md[k],1))));});
   gMdBackfill(d);
   if(o.ach&&typeof o.ach==='object')Object.keys(o.ach).forEach(function(k){if(/^[a-z]+\d+$/.test(k))d.ach[k]=1;});
@@ -3008,13 +3168,13 @@ function gSpecs(g){
   var S=[];
   var mulRows=function(base,rows,pk,bl){return [[bl||'기본',base]].concat(rows.filter(function(r){return r[1]!==0;}).map(function(r){return [r[0],gSpP(r[1])];})).concat(pets(pk,pp));};
   S.push({ic:'⚔️',n:'공격력',v:gSpN(gAtk(g)),rows:mulRows(gFmt(GP.A0*Math.pow(GP.AM,L.atk)),[
-    ['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],
+    ['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],['🍳 요리',gFoodB(g,'atk')],['⚔️ 무기',gWeapB(g,'atk')],
     ['💎 루비 강화',GP.RAT*(rl.atk||0)],['🔁 환생 강화',GP.RU*gRu(g,'atk')],['🌸 성장 강화',GP.SG*(rp.atk||0)]],'atk','기본 (3 + 💗 하트 강화 Lv.'+L.atk+')'),note:'하트 강화가 기본 공격력을 키우고, 나머지는 그 위에 곱해져요'});
   S.push({ic:'⚡',n:'공격 속도',v:gSpN(gSpd(g))+'/초',rows:mulRows('1',[
-    ['💗 하트 강화 (Lv.'+L.spd+')',Math.min(GP.SCAP,1+GP.SS*L.spd)-1],['💎 루비 강화',0],['🔁 환생 강화',G_DATA.spd.ru*gRu(g,'spd')],['🌸 성장 강화',G_DATA.spd.rp*(rp.spd||0)]],'spd'),note:'하트 강화로는 최대 ×'+GP.SCAP+'까지, 나머지는 곱해져요'});
+    ['💗 하트 강화 (Lv.'+L.spd+')',Math.min(GP.SCAP,1+GP.SS*L.spd)-1],['💎 루비 강화',0],['🔁 환생 강화',G_DATA.spd.ru*gRu(g,'spd')],['🌸 성장 강화',G_DATA.spd.rp*(rp.spd||0)],['🍳 요리',gFoodB(g,'spd')],['⚔️ 무기',gWeapB(g,'spd')]],'spd'),note:'하트 강화로는 최대 ×'+GP.SCAP+'까지, 나머지는 곱해져요'});
   S.push({ic:'🗡️',n:'초당 공격력',v:gFmt(gDps(g)),rows:[['공격력',gSpN(gAtk(g))],['× 공격 속도',gSpN(gSpd(g))+'/초']],note:'공격력 × 공격 속도'});
   S.push({ic:'💗',n:'하트 수입',v:'×'+gSpN(gInc(g)),rows:mulRows('×1',[
-    ['💗 하트 강화 (Lv.'+L.inc+')',GP.IM*L.inc],['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],
+    ['💗 하트 강화 (Lv.'+L.inc+')',GP.IM*L.inc],['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],['🍳 요리',gFoodB(g,'inc')],
     ['💎 루비 강화',GP.RHT*(rl.heart||0)],['🔁 환생 강화',GP.RU*gRu(g,'inc')],['🌸 성장 강화',GP.SG*(rp.inc||0)]],'inc'),note:'모두 곱해져요'});
   S.push({ic:'🪜',n:'층 건너뛰기',v:gSpP(gSkipP(g)),rows:[['기본','+0%'],['💎 루비 강화',gSpP(G_DATA.skip.rl*(rl.sk||0))],['🔁 환생 강화',gSpP(G_DATA.skip.ru*gRu(g,'sk'))],['🌸 성장 강화',gSpP(G_DATA.skip.rp*(rp.sk||0))]].concat(pets('skip',pp)),note:'더해지고 최대 80%'});
   S.push({ic:'🚀',n:'시작 층',v:gStartStage(g)+'층',rows:[['기본','1층'],['🔁 환생 강화','+'+G_DATA.start.ru*gRu(g,'st')+'층'],['🌸 성장 강화','+'+G_DATA.start.rp*(rp.st||0)+'층']],note:'환생·진화 뒤 이 층에서 시작해요'});
@@ -3024,7 +3184,7 @@ function gSpecs(g){
   S.push({ic:'🔥',n:'콤보 파워',v:'콤보당 '+gSpP(gCbPer(g)),rows:[['기본','+3%'],['🌸 성장 강화 (콤보 파워)',gSpP(G_DATA.combo.perRp*(rp.cbd||0))]].concat(pets('cbd',pp)),note:'콤보 1개당 추가 데미지 (100콤보면 ×100)'});
   S.push({ic:'⏳',n:'콤보 유지시간',v:(Math.round(gCbKeep(g)*10)/10)+'초',rows:[['기본','3초'],['💎 루비 강화','+'+(Math.round(0.1*(rl.cbt||0)*10)/10)+'초']].concat(pets('cbt',function(v){return '+'+(Math.round(v*10)/10)+'초';})),note:'마지막 공격 뒤 이 시간이 지나면 콤보가 끊겨요'});
   S.push({ic:'🎯',n:'필살기 필요 타수',v:gCbT(g)+'타',rows:[['기본','10타'],['💎 루비 강화','−'+Math.floor((rl.cbn||0)/3)+'타']].concat(pets('cbn',function(v){return '−'+Math.floor(v+1e-9)+'타';})),note:'하트빔 기준 · 별똥별 ×2 · 무지개 ×3 (최소 6타)'});
-  S.push({ic:'💥',n:'필살기 위력',v:'×'+gSpN(gUlt(g)),rows:[['기본','×1'],['🔁 환생 강화',gSpP(G_DATA.ult.ru*gRu(g,'ult'))]].concat(pets('ult',pp)),note:'곱해져요'});
+  S.push({ic:'💥',n:'필살기 위력',v:'×'+gSpN(gUlt(g)),rows:[['기본','×1'],['🔁 환생 강화',gSpP(G_DATA.ult.ru*gRu(g,'ult'))],['⚔️ 무기',gSpP(gWeapB(g,'ult'))]].concat(pets('ult',pp)),note:'곱해져요'});
   return S;
 }
 function gSpecHtml(g){
@@ -3045,7 +3205,7 @@ function gRdy(g){return {e:g.evo>=3&&g.best>=1000,b:g.stage>=1000};}
 function gGlow(g){var r=gRdy(g);[['.gm[data-k=grow]',r.e],['.gm[data-k=up]',r.b],['.gsg[data-t=grow][data-k=e]',r.e],['.gsg[data-t=up][data-k=b]',r.b]].forEach(function(x){var el=document.querySelector(x[0]);if(el)el.classList.toggle('rdy',!!x[1]);});}
 function gSeg(t,cur,arr){return '<div class="gseg g'+arr.length+'">'+arr.map(function(a){return '<button class="gsg'+(cur===a[0]?' on':'')+(a[2]?' rdy':'')+'" data-act="gtab" data-t="'+t+'" data-k="'+a[0]+'">'+a[1]+'</button>';}).join('')+'</div>';}
 var G_MENU=[['grow','🌱','성장'],['up','💪','강화'],['tk','🎁','보상'],['gac','🎟️','뽑기'],['dex','📖','도감'],['vil','🏡','마을'],['stat','📊','통계']];
-function gMenuOn(k){return gSub===k||(k==='vil'&&gSub==='farm');}
+function gMenuOn(k){return gSub===k||(k==='vil'&&(gSub==='farm'||gSub==='craft'));}
 function gMenuHtml(){var gg=gGet(),rd=gAchReady(gg)>0,rr=gRdy(gg);return '<nav class="gmenu">'+G_MENU.map(function(m){return '<button class="gm'+(gMenuOn(m[0])?' on':'')+((m[0]==='grow'&&rr.e)||(m[0]==='up'&&rr.b)?' rdy':'')+'" data-act="gmenu" data-k="'+m[0]+'"><span>'+m[1]+'</span>'+m[2]+(m[0]==='tk'&&rd?'<i class="gdot"></i>':'')+'</button>';}).join('')+'</nav>';}
 function gDexBonus(g){return gDexB(g)*100;}
 function gDexN(g){return Object.keys(g.dex).length;}
@@ -3221,6 +3381,7 @@ function gSecHtml(g){
   if(gSub==='gac')return '<section class="card" id="g-gac">'+gGacCard(g)+'</section>';
   if(gSub==='dex')return '<section class="card" id="g-dex">'+gDexCard(g)+'</section>';
   if(gSub==='farm')return '<section class="card" id="g-farm">'+gFarmCard(g)+'</section>';
+  if(gSub==='craft')return '<section class="card" id="g-craft">'+gCrCard(g)+'</section>';
   if(gSub==='vil')return '<section class="card" id="g-vil">'+gVlCard(g)+'</section>';
   if(gSub==='stat')return '<section class="card" id="g-stat">'+gStatCard(g)+'</section>';
   if(gSub==='grow'){var r2=gRdy(g),sg2=gSeg('grow',gGrT,[['s','🌱 현재 상태'],['e','🌸 진화',r2.e]]);
@@ -4314,6 +4475,7 @@ var acts={
   gmdi:function(b){G_A.mdi(b);},
   gf:function(b){gfDo(b);},
   gvil:function(b){gvDo(b);},
+  gcr:function(b){gcrDo(b);},
   gfloor:function(){gFloorModal();},
   gfl:function(b){gflDo(b);},
   gbuff:function(){G_A.buff();},

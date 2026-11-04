@@ -90,12 +90,12 @@ function gAuraHtml(g){
   var sp=[0,0,2,4][r];for(var j=0;j<sp;j++)h+='<span class="gasp" style="--a0:'+Math.round(j/sp*360+20)+'deg;--d:'+(j*.5)+'s">✨</span>';
   return h+'</div>';
 }
-function gHeroKey(g){var e=g.ceq||{};return gFormLv(g)+'|'+(g.hero||'')+'|'+(e.gnd||'')+'|'+(e.sky||'')+'|'+(e.veh||'');}
+function gHeroKey(g){var e=g.ceq||{};return gFormLv(g)+'|'+(g.hero||'')+'|'+(e.gnd||'')+'|'+(e.sky||'')+'|'+(e.veh||'')+'|'+((g.eq&&g.eq.hat)||'')+'|'+((g.eq&&g.eq.out)||'');}
 function gHeroSrc(g){return SPR_F[gFormLv(g)]||'';}
 function gFront(L){return SPR_F[Math.max(0,Math.min(10,L|0))]||'';}
 function gHeroHtml(g){
   var e=g.ceq||{},ride=e.veh&&g.cdex[e.veh]&&G_CPM[e.veh];
-  return '<div class="ghw" id="g-hw">'+gAuraHtml(g)+gCrewHtml(g)+'<div class="ghero gsp" id="g-hero" data-act="ghero" style="background-image:url('+(SPR_S[gFormLv(g)]||'')+')"></div></div>';
+  return '<div class="ghw" id="g-hw">'+gAuraHtml(g)+gCrewHtml(g)+'<div class="ghero gsp" id="g-hero" data-act="ghero" style="background-image:url('+(SPR_S[gFormLv(g)]||'')+')"></div>'+gCosHtml(g)+'</div>';
 }
 var gHK='';
 function gHeroCheck(g){

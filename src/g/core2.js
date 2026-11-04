@@ -9,11 +9,12 @@ function gHp(n){return gXm(n)*gHm(n)*GP.H0*Math.pow(n,GP.PW)*(n%10===0?GP.BM:1)*
 function gBase(n){return GP.H0*Math.pow(n,GP.PW);}
 function gStkExp(s){var d=new Date(s.ld);return new Date(d.getFullYear(),d.getMonth(),d.getDate()+G_DATA.streak.graceDays+(s.sh?G_DATA.streak.graceShield:0)).getTime();}
 function gStkB(g){var s=g.stk;if(!s||!s.n||!s.ld)return 0;return Date.now()<gStkExp(s)?G_DATA.streak.per*s.n:0;}
+function gGb(g,k){return (typeof gGearB==='function')?gGearB(g,k):0;}
 function gPb(g,k){return (typeof gPetB==='function'&&g.ceq)?(gPetB(g)[k]||0):0;}
-function gInc(g){return G_EVOM(g.evo)*(1+gStkB(g))*(1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+GP.SG*(g.rp.inc||0))*(1+GP.RU*gRu(g,'inc'))*(1+gPb(g,'inc'));}
+function gInc(g){return G_EVOM(g.evo)*(1+gStkB(g))*(1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+GP.SG*(g.rp.inc||0))*(1+GP.RU*gRu(g,'inc'))*(1+gPb(g,'inc'))*(1+gGb(g,'inc'));}
 function gKill(g,n){return gBase(n)*gEK(n)*GP.KR*gInc(g)*(n%10===0?G_DATA.curve.bossKill:1);}
-function gAtk(g){return (1+gStkB(g))*(1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*(1+GP.RAT*g.rl.atk)*(1+GP.SG*(g.rp.atk||0))*(1+GP.RU*gRu(g,'atk'))*(1+gPb(g,'atk'));}
-function gSpd(g){return Math.min(GP.SCAP,1+GP.SS*g.lv.spd)*(1+G_DATA.spd.rp*(g.rp.spd||0))*(1+G_DATA.spd.ru*gRu(g,'spd'))*(1+gPb(g,'spd'));}
+function gAtk(g){return (1+gStkB(g))*(1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*(1+GP.RAT*g.rl.atk)*(1+GP.SG*(g.rp.atk||0))*(1+GP.RU*gRu(g,'atk'))*(1+gPb(g,'atk'))*(1+gGb(g,'atk'));}
+function gSpd(g){return Math.min(GP.SCAP,1+GP.SS*g.lv.spd)*(1+G_DATA.spd.rp*(g.rp.spd||0))*(1+G_DATA.spd.ru*gRu(g,'spd'))*(1+gPb(g,'spd'))*(1+gGb(g,'spd'));}
 function gDps(g){return gAtk(g)*gSpd(g);}
 function gDly(g){return Math.max(G_DATA.dly.min,GP.DLY*Math.pow(G_DATA.dly.rp,g.rp.mv||0)*Math.pow(G_DATA.dly.rl,(g.rl&&g.rl.mv)||0)/(1+gPb(g,'mv')));}
 function gBossT(g){return GP.BOSS_T+Math.min(G_DATA.bt.max,(g.rp.bt||0))+gPb(g,'bt');}
@@ -21,7 +22,7 @@ function gSkipP(g){return Math.min(G_DATA.skip.max,G_DATA.skip.rp*(g.rp.sk||0)+G
 function gCbPer(g){return G_DATA.combo.per+G_DATA.combo.perRp*((g.rp&&g.rp.cbd)||0)+gPb(g,'cbd');}
 function gCbKeep(g){return G_DATA.combo.keep+G_DATA.combo.keepRl*((g.rl&&g.rl.cbt)||0)+gPb(g,'cbt');}
 function gCbT(g){var r=Math.floor(((g.rl&&g.rl.cbn)||0)/G_DATA.combo.rlStep)+Math.floor(gPb(g,'cbn')+1e-9);return Math.max(G_DATA.combo.Tmin,G_DATA.combo.T0-r);}
-function gUlt(g){return (1+G_DATA.ult.ru*gRu(g,'ult'))*(1+gPb(g,'ult'));}
+function gUlt(g){return (1+G_DATA.ult.ru*gRu(g,'ult'))*(1+gPb(g,'ult'))*(1+gGb(g,'ult'));}
 var G_ULT=G_DATA.ults;
 var G_UCD=G_DATA.ultCd,G_USH=G_DATA.ultShort;
 function gUNeed(g,i){return i<3?gCbT(g)*(i+1):G_DATA.combo.full;}
