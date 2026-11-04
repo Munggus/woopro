@@ -66,7 +66,7 @@ function gCrBuffList(g){
   return '<div class="gbfl">'+a.map(function(k){return '<span class="gbf">'+G_BFT[k](G_BFV[k])+' <b>'+gVlDur(g.bf[k]-now)+'</b></span>';}).join('')+'</div>';
 }
 function gCrCard(g){
-  gCx(g);var B=G_VLM[gCrK],fl=gVlLv(gCrK),q=g.cq[gCrK],h='<button class="mini gvbk" data-act="gvil" data-f="map">🏡 마을로</button><div class="gvh"><h2>'+B.e+' '+B.n+' <small>Lv.'+fl+'</small></h2></div>';
+  gCx(g);var B=G_VLM[gCrK],fl=gVlLv(gCrK),q=g.cq[gCrK],h='<button class="mini gvbk" data-act="gvil" data-f="map">🏡 마을로</button><div class="gvh"><h2>'+B.e+' '+B.n+' <small>Lv.'+fl+'</small></h2></div>'+gVlUpHtml(gCrK);
   if(q){var it=G_CRI[q.id];h+='<div class="gcq"><span class="gcre">'+it.e+'</span><div><b>'+it.n+' 만드는 중…</b><br><small>남은 시간 <b class="gcqt">'+gVlDur(q.end-Date.now())+'</b></small></div></div>';}
   else h+='<p class="hint">지금은 쉬는 중이야. 아래에서 만들 걸 골라봐!</p>';
   if(gCrK==='cook'){var nd=Object.keys(g.cd).length,tot=G_CR.items.filter(function(i){return i.f==='cook';}).length;h+=gCrBuffList(g)+'<p class="hint" style="font-size:12px">📖 맛 도감 '+nd+'/'+tot+(gCrDexDone(g)?' · 완성! 모든 효과 지속시간 +50% 🎉':' · 전부 먹어보면 모든 효과 지속시간 +50%')+'<br>💗 세은이가 좋아하는 요리를 먹이면 효과 시간이 2배! ('+(g.tf===gDay()?'오늘은 '+gCrFav().e+' '+gCrFav().n:'오늘 최애는 비밀 — 🥘 세은이 입맛 정식을 먹이면 알려줘')+')</p>';}

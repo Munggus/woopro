@@ -50,8 +50,8 @@ function gInvHtml(g){
 }
 function gFarmCard(g){
   gFmSyncAll(g);
-  var tabs='<div class="gseg"><button class="gsg'+(gFmT==='f'?' on':'')+'" data-act="gtab" data-t="farm" data-k="f">🌱 텃밭</button><button class="gsg'+(gFmT==='a'?' on':'')+'" data-act="gtab" data-t="farm" data-k="a">🐄 농장</button></div>';
-  return '<button class="mini gvbk" data-act="gvil" data-f="map">🏡 마을로</button>'+tabs+(gFmT==='a'?gPenCard(g):gPlotCard(g))+gInvHtml(g);
+  var bk=gFmT==='a'?'farm':'plot',BB=G_VLM[bk];
+  return '<button class="mini gvbk" data-act="gvil" data-f="map">🏡 마을로</button><div class="gvh"><h2>'+BB.e+' '+BB.n+' <small>Lv.'+gVlLv(bk)+'</small></h2></div>'+gVlUpHtml(bk)+(gFmT==='a'?gPenCard(g):gPlotCard(g))+gInvHtml(g);
 }
 function gPlotCard(g){
   var f=gFm(),now=Date.now(),h='<div class="gfw"><span class="chip">💧 물 <b>'+f.water+'</b>/30</span><span class="chip">🌱 텃밭 Lv.'+gVlLv('plot')+'</span><small>운동을 끝낼 때마다 💧 +3!</small></div>';
