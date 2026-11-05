@@ -1321,7 +1321,7 @@ var BI={};BUILTIN.forEach(function(b){BI[b.id]=b;});
 
 /* ---------- 상태 ---------- */
 function defaults(){return {
-  settings:{sound:true,voice:true,vibrate:true,wake:true,prep:5,theme:'auto',bgmedia:true,mixmusic:true,volume:100,kgStep:5,bkRemind:true,lastBk:0,bkSnooze:0},
+  settings:{sound:true,voice:true,vibrate:true,wake:true,prep:5,theme:'auto',bgmedia:true,mixmusic:false,volume:100,kgStep:5,bkRemind:true,lastBk:0,bkSnooze:0},
   ex:[],
   routines:[
     {id:'r1',name:'전신 맨몸',fav:true,items:['b-squat','b-pushup','b-lunge','b-plank','b-crunch']},
@@ -1365,7 +1365,7 @@ function sanitize(o){
   var d=defaults();if(!o||typeof o!=='object')return d;
   var s=Object.assign({},d.settings,o.settings||{});
   s.prep=clamp(parseInt(s.prep,10)||0,0,30);
-  ['sound','voice','vibrate','wake','bgmedia','bkRemind'].forEach(function(k){s[k]=!!s[k];});s.mixmusic=s.mixmusic!==false;
+  ['sound','voice','vibrate','wake','bgmedia','bkRemind'].forEach(function(k){s[k]=!!s[k];});s.mixmusic=s.mixmusic===true;
   s.volume=clamp(isFinite(s.volume)?+s.volume:100,0,100);s.kgStep=[1,2.5,5].indexOf(+s.kgStep)>=0?+s.kgStep:5;s.lastBk=isFinite(s.lastBk)?Math.max(0,+s.lastBk):0;s.bkSnooze=isFinite(s.bkSnooze)?Math.max(0,+s.bkSnooze):0;
   if(['auto','light','dark'].indexOf(s.theme)<0)s.theme='auto';
   var ex=(Array.isArray(o.ex)?o.ex:[]).slice(0,400).map(cleanEx).filter(Boolean);
@@ -1553,8 +1553,8 @@ function ntUpdate(m){
   var k=m.t+'|'+m.a;if(k===lastNT)return;lastNT=k;
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
-document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();});
-var APPV='v101';
+document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
+var APPV='v102';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2127,7 +2127,7 @@ function soundCard(){
   return '<section class="card"><div class="fld"><span>소리 크기 <b id="vol-n">'+v+'%</b></span><input type="range" min="0" max="100" step="5" value="'+v+'" data-in="vol" aria-label="소리 크기"><small>삐삐 소리와 음성 크기야. 폰 미디어 볼륨보다 크게는 안 돼.</small></div>'+
     '<button class="btn ghost sm" data-act="soundtest">소리 테스트</button>'+
     '<h2>무게 증감 단위</h2><div class="seg" role="group" aria-label="무게 증감 단위">'+[1,2.5,5].map(function(n){return '<button data-act="kgs" data-v="'+n+'" aria-pressed="'+(ks===n)+'">'+n+'kg</button>';}).join('')+'</div>'+
-    tg('bgmedia','백그라운드 표시','알림창에 남은 시간을 보여줘')+tg('mixmusic','듣던 음악 안 끊기','켜면 유튜브·음악이 안 멈춰. 대신 알림창에 미디어 카드는 안 뜨고 일반 알림으로만 보여줘 (끄면 미디어 카드가 뜨지만 음악이 멈출 수 있어)')+'<p class="hint">'+esc(ntState())+'</p><button class="btn ghost sm" data-act="nttest">알림 허용 · 테스트</button></section>';
+    tg('bgmedia','백그라운드 표시','알림창에 남은 시간을 보여줘')+tg('mixmusic','듣던 음악 안 끊기 (실험)','켜면 유튜브·음악이 안 멈춰. 대신 폰이 앱을 잠재워서 알림창 시간이 늦거나 안 뜰 수 있고, 소리 알림도 놓칠 수 있어. 평소엔 꺼두는 걸 추천해')+'<p class="hint">'+esc(ntState())+'</p><button class="btn ghost sm" data-act="nttest">알림 허용 · 테스트</button></section>';
 }
 function rSettings(){
   var canShare=typeof navigator.share==='function',hid=S.ex.filter(function(e){return BI[e.id]&&e.hidden;}).length;
