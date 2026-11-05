@@ -9,11 +9,13 @@ function gHp(n){return gXm(n)*gHm(n)*GP.H0*Math.pow(n,GP.PW)*(n%10===0?GP.BM:1)*
 function gBase(n){return GP.H0*Math.pow(n,GP.PW);}
 function gStkExp(s){var d=new Date(s.ld);return new Date(d.getFullYear(),d.getMonth(),d.getDate()+G_DATA.streak.graceDays+(s.sh?G_DATA.streak.graceShield:0)+((typeof gBfV==='function')?gBfV('stk'):0)).getTime();}
 function gStkB(g){var s=g.stk;if(!s||!s.n||!s.ld)return 0;return Date.now()<gStkExp(s)?G_DATA.streak.per*s.n:0;}
+/* 루비·환생·성장 강화: 레벨마다 곱해져요 (per=레벨당 증가율) */
+function gLvF(per,L){return Math.pow(1+per,L||0);}
 function gGb(g,k){return (typeof gGearB==='function')?gGearB(g,k):0;}
 function gPb(g,k){return (typeof gPetB==='function'&&g.ceq)?(gPetB(g)[k]||0):0;}
-function gInc(g){return G_EVOM(g.evo)*(1+gStkB(g))*(1+gDexB(g))*(1+GP.IM*g.lv.inc)*(1+GP.RHT*g.rl.heart)*(1+GP.SG*(g.rp.inc||0))*(1+GP.RU*gRu(g,'inc'))*(1+gPb(g,'inc'))*(1+gGb(g,'inc'));}
+function gInc(g){return G_EVOM(g.evo)*(1+gStkB(g))*(1+gDexB(g))*(1+GP.IM*g.lv.inc)*gLvF(GP.RHT,g.rl.heart)*gLvF(GP.SG,g.rp.inc)*gLvF(GP.RU,gRu(g,'inc'))*(1+gPb(g,'inc'))*(1+gGb(g,'inc'));}
 function gKill(g,n){return gBase(n)*gEK(n)*GP.KR*gInc(g)*(n%10===0?G_DATA.curve.bossKill:1);}
-function gAtk(g){return (1+gStkB(g))*(1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*(1+GP.RAT*g.rl.atk)*(1+GP.SG*(g.rp.atk||0))*(1+GP.RU*gRu(g,'atk'))*(1+gPb(g,'atk'))*(1+gGb(g,'atk'));}
+function gAtk(g){return (1+gStkB(g))*(1+gDexB(g))*GP.A0*Math.pow(GP.AM,g.lv.atk)*G_EVOM(g.evo)*gLvF(GP.RAT,g.rl.atk)*gLvF(GP.SG,g.rp.atk)*gLvF(GP.RU,gRu(g,'atk'))*(1+gPb(g,'atk'))*(1+gGb(g,'atk'));}
 function gSpd(g){return Math.min(GP.SCAP,1+GP.SS*g.lv.spd)*(1+G_DATA.spd.rp*(g.rp.spd||0))*(1+G_DATA.spd.ru*gRu(g,'spd'))*(1+gPb(g,'spd'))*(1+gGb(g,'spd'));}
 function gDps(g){return gAtk(g)*gSpd(g);}
 function gDly(g){return Math.max(G_DATA.dly.min,GP.DLY*Math.pow(G_DATA.dly.rp,g.rp.mv||0)*Math.pow(G_DATA.dly.rl,(g.rl&&g.rl.mv)||0)/(1+gPb(g,'mv')));}

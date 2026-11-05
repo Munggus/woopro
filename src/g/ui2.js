@@ -161,7 +161,7 @@ function gUpRows(g){
 }
 function gRUpRows(g){
   var R=function(x){x=Math.round(x*10)/10;return x;};
-  return [['atk','루비 특훈','공격력 +15%','+'+gPct(GP.RAT*g.rl.atk*100),0],['heart','루비 간식','하트 수입 +15%','+'+gPct(GP.RHT*g.rl.heart*100),0],['mv','루비 달리기','이동 시간 −3%','−'+gPct((1-Math.pow(0.97,g.rl.mv))*100),0],['sk','루비 점프','층 건너뛰기 확률 +1.5% (최대 30%)','+'+gPct(1.5*g.rl.sk),20],['cbt','루비 집중','콤보 유지시간 +0.1초 (최대 +2초)','+'+R(0.1*g.rl.cbt)+'초',20],['cbn','루비 연타','필살기 필요 타수 3레벨마다 −1 (최대 −3타)','−'+Math.floor(g.rl.cbn/3)+'타',9]].map(function(u){var l=g.rl[u[0]],c=gRCost(l),fl=u[4]&&l>=u[4];return '<li class="grow"><span class="gic">'+gRuby(26)+'</span><span class="xt"><b>'+u[1]+' <em>Lv.'+l+(u[4]?'/'+u[4]:'')+'</em></b><small>'+u[2]+' (환생·진화해도 유지)</small><small class="gtot">지금까지 총 '+u[3]+'</small></span><button class="mini rb" data-act="grbuy" data-k="'+u[0]+'" id="gr-'+u[0]+'"'+(!fl&&g.rubies>=c?'':' disabled')+'>'+(fl?'MAX':gRuby(14)+' '+gFmt(c))+'</button></li>';}).join('');
+  return [['atk','루비 특훈','공격력 레벨마다 ×1.12','+'+gPct((gLvF(GP.RAT,g.rl.atk)-1)*100),0],['heart','루비 간식','하트 수입 레벨마다 ×1.12','+'+gPct((gLvF(GP.RHT,g.rl.heart)-1)*100),0],['mv','루비 달리기','이동 시간 −3%','−'+gPct((1-Math.pow(0.97,g.rl.mv))*100),0],['sk','루비 점프','층 건너뛰기 확률 +1.5% (최대 30%)','+'+gPct(1.5*g.rl.sk),20],['cbt','루비 집중','콤보 유지시간 +0.1초 (최대 +2초)','+'+R(0.1*g.rl.cbt)+'초',20],['cbn','루비 연타','필살기 필요 타수 3레벨마다 −1 (최대 −3타)','−'+Math.floor(g.rl.cbn/3)+'타',9]].map(function(u){var l=g.rl[u[0]],c=gRCost(l),fl=u[4]&&l>=u[4];return '<li class="grow"><span class="gic">'+gRuby(26)+'</span><span class="xt"><b>'+u[1]+' <em>Lv.'+l+(u[4]?'/'+u[4]:'')+'</em></b><small>'+u[2]+' (환생·진화해도 유지)</small><small class="gtot">지금까지 총 '+u[3]+'</small></span><button class="mini rb" data-act="grbuy" data-k="'+u[0]+'" id="gr-'+u[0]+'"'+(!fl&&g.rubies>=c?'':' disabled')+'>'+(fl?'MAX':gRuby(14)+' '+gFmt(c))+'</button></li>';}).join('');
 }
 function gRPTot(k,l){
   if(k==='atk'||k==='inc')return '+'+gPct(40*l);if(k==='spd')return '+'+gPct(5*l);if(k==='rub'||k==='rpg')return '+'+gPct(10*l);if(k==='sk')return '+'+gPct(Math.min(60,3*l));if(k==='st')return '+'+(10*l)+'층';if(k==='cbd')return '+'+(Math.round(l)/10)+'%p';
@@ -222,13 +222,13 @@ function gSpecs(g){
   var mulRows=function(base,rows,pk,bl){return [[bl||'기본',base]].concat(rows.filter(function(r){return r[1]!==0;}).map(function(r){return [r[0],gSpP(r[1])];})).concat(pets(pk,pp));};
   S.push({ic:'⚔️',n:'공격력',v:gSpN(gAtk(g)),rows:mulRows(gFmt(GP.A0*Math.pow(GP.AM,L.atk)),[
     ['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],['⚔️ 무기',gWeapB(g,'atk')],
-    ['💎 루비 강화',GP.RAT*(rl.atk||0)],['🔁 환생 강화',GP.RU*gRu(g,'atk')],['🌸 성장 강화',GP.SG*(rp.atk||0)]],'atk','기본 (3 + 💗 하트 강화 Lv.'+L.atk+')'),note:'하트 강화가 기본 공격력을 키우고, 나머지는 그 위에 곱해져요'});
+    ['💎 루비 강화',gLvF(GP.RAT,rl.atk)-1],['🔁 환생 강화',gLvF(GP.RU,gRu(g,'atk'))-1],['🌸 성장 강화',gLvF(GP.SG,rp.atk)-1]],'atk','기본 (3 + 💗 하트 강화 Lv.'+L.atk+')'),note:'하트 강화가 기본 공격력을 키우고, 나머지는 그 위에 곱해져요'});
   S.push({ic:'⚡',n:'공격 속도',v:gSpN(gSpd(g))+'/초',rows:mulRows('1',[
     ['💗 하트 강화 (Lv.'+L.spd+')',Math.min(GP.SCAP,1+GP.SS*L.spd)-1],['💎 루비 강화',0],['🔁 환생 강화',G_DATA.spd.ru*gRu(g,'spd')],['🌸 성장 강화',G_DATA.spd.rp*(rp.spd||0)],['⚔️ 무기',gWeapB(g,'spd')]],'spd'),note:'하트 강화로는 최대 ×'+GP.SCAP+'까지, 나머지는 곱해져요'});
   S.push({ic:'🗡️',n:'초당 공격력',v:gFmt(gDps(g)),rows:[['공격력',gSpN(gAtk(g))],['× 공격 속도',gSpN(gSpd(g))+'/초']],note:'공격력 × 공격 속도'});
   S.push({ic:'💗',n:'하트 수입',v:'×'+gSpN(gInc(g)),rows:mulRows('×1',[
     ['💗 하트 강화 (Lv.'+L.inc+')',GP.IM*L.inc],['🌱 성장 단계 (Lv.'+g.evo+')',G_EVOM(g.evo)-1],['📖 오라 도감',dex],['🔥 연속 운동 버프',stk],
-    ['💎 루비 강화',GP.RHT*(rl.heart||0)],['🔁 환생 강화',GP.RU*gRu(g,'inc')],['🌸 성장 강화',GP.SG*(rp.inc||0)]],'inc'),note:'모두 곱해져요'});
+    ['💎 루비 강화',gLvF(GP.RHT,rl.heart)-1],['🔁 환생 강화',gLvF(GP.RU,gRu(g,'inc'))-1],['🌸 성장 강화',gLvF(GP.SG,rp.inc)-1]],'inc'),note:'모두 곱해져요'});
   S.push({ic:'🪜',n:'층 건너뛰기',v:gSpP(gSkipP(g)),rows:[['기본','+0%'],['💎 루비 강화',gSpP(G_DATA.skip.rl*(rl.sk||0))],['🔁 환생 강화',gSpP(G_DATA.skip.ru*gRu(g,'sk'))],['🌸 성장 강화',gSpP(G_DATA.skip.rp*(rp.sk||0))]].concat(pets('skip',pp)),note:'더해지고 최대 80%'});
   S.push({ic:'🚀',n:'시작 층',v:gStartStage(g)+'층',rows:[['기본','1층'],['🔁 환생 강화','+'+G_DATA.start.ru*gRu(g,'st')+'층'],['🌸 성장 강화','+'+G_DATA.start.rp*(rp.st||0)+'층']],note:'환생·진화 뒤 이 층에서 시작해요'});
   S.push({ic:'⏱️',n:'보스 제한시간',v:gBossT(g)+'초',rows:[['기본',GP.BOSS_T+'초'],['🌸 성장 강화','+'+Math.min(G_DATA.bt.max,rp.bt||0)+'초']].concat(pets('bt',function(v){return '+'+v+'초';})),note:''});
