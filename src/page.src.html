@@ -671,7 +671,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v102';
+var APPV='v103';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1244,7 +1244,7 @@ function soundCard(){
   return '<section class="card"><div class="fld"><span>소리 크기 <b id="vol-n">'+v+'%</b></span><input type="range" min="0" max="100" step="5" value="'+v+'" data-in="vol" aria-label="소리 크기"><small>삐삐 소리와 음성 크기야. 폰 미디어 볼륨보다 크게는 안 돼.</small></div>'+
     '<button class="btn ghost sm" data-act="soundtest">소리 테스트</button>'+
     '<h2>무게 증감 단위</h2><div class="seg" role="group" aria-label="무게 증감 단위">'+[1,2.5,5].map(function(n){return '<button data-act="kgs" data-v="'+n+'" aria-pressed="'+(ks===n)+'">'+n+'kg</button>';}).join('')+'</div>'+
-    tg('bgmedia','백그라운드 표시','알림창에 남은 시간을 보여줘')+tg('mixmusic','듣던 음악 안 끊기 (실험)','켜면 유튜브·음악이 안 멈춰. 대신 폰이 앱을 잠재워서 알림창 시간이 늦거나 안 뜰 수 있고, 소리 알림도 놓칠 수 있어. 평소엔 꺼두는 걸 추천해')+'<p class="hint">'+esc(ntState())+'</p><button class="btn ghost sm" data-act="nttest">알림 허용 · 테스트</button></section>';
+    tg('bgmedia','백그라운드 표시','알림창에 남은 시간을 보여줘')+tg('mixmusic','듣던 음악 안 끊기 (실험)','켜면 유튜브·음악이 안 멈춰. 대신 폰이 앱을 잠재워서 알림창 시간이 늦거나 안 뜰 수 있고, 소리 알림도 놓칠 수 있어. 평소엔 꺼두는 걸 추천해')+'<p class="hint">'+esc(ntState())+'</p><a class="btn ghost sm" style="display:block;text-align:center;text-decoration:none;margin-top:8px" href="intent:#Intent;action=android.intent.action.SET_TIMER;S.android.intent.extra.alarm.MESSAGE=%EC%9A%B0%ED%94%84%EB%A1%9C%20%ED%85%8C%EC%8A%A4%ED%8A%B8;i.android.intent.extra.alarm.LENGTH=10;B.android.intent.extra.alarm.SKIP_UI=true;end">⏲️ 폰 타이머 연동 실험 (10초)</a><p class="hint">누르면 폰 시계 앱에 10초 타이머를 부탁해. 시계 화면이 뜨는지, 10초 뒤 울리는지, 끝난 뒤 목록에 남는지 알려줘 (안드로이드 전용)</p><button class="btn ghost sm" data-act="nttest">알림 허용 · 테스트</button></section>';
 }
 function rSettings(){
   var canShare=typeof navigator.share==='function',hid=S.ex.filter(function(e){return BI[e.id]&&e.hidden;}).length;
