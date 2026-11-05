@@ -255,11 +255,11 @@ function gStatCard(g){
 }
 var gUpT='h',gGrT='s';
 function gRdy(g){return {e:g.evo>=3&&g.best>=1000,b:g.stage>=1000};}
-function gGlow(g){var r=gRdy(g);[['.gm[data-k=grow]',r.e],['.gm[data-k=up]',r.b],['.gsg[data-t=grow][data-k=e]',r.e],['.gsg[data-t=up][data-k=b]',r.b]].forEach(function(x){var el=document.querySelector(x[0]);if(el)el.classList.toggle('rdy',!!x[1]);});}
+function gGlow(g){var r=gRdy(g);[['.gm[data-k=grow]',r.e],['.gsg[data-t=grow][data-k=e]',r.e],['.gsg[data-t=up][data-k=b]',r.b]].forEach(function(x){var el=document.querySelector(x[0]);if(el)el.classList.toggle('rdy',!!x[1]);});}
 function gSeg(t,cur,arr){return '<div class="gseg g'+arr.length+'">'+arr.map(function(a){return '<button class="gsg'+(cur===a[0]?' on':'')+(a[2]?' rdy':'')+'" data-act="gtab" data-t="'+t+'" data-k="'+a[0]+'">'+a[1]+'</button>';}).join('')+'</div>';}
 var G_MENU=[['grow','🌱','성장'],['up','💪','강화'],['tk','🎁','보상'],['gac','🎟️','뽑기'],['dex','📖','도감'],['vil','🏡','마을'],['stat','📊','통계']];
 function gMenuOn(k){return gSub===k||(k==='vil'&&(gSub==='farm'||gSub==='craft'||gSub==='bld'||gSub==='house'));}
-function gMenuHtml(){var gg=gGet(),rd=gAchReady(gg)>0,rr=gRdy(gg);return '<nav class="gmenu">'+G_MENU.map(function(m){return '<button class="gm'+(gMenuOn(m[0])?' on':'')+((m[0]==='grow'&&rr.e)||(m[0]==='up'&&rr.b)?' rdy':'')+'" data-act="gmenu" data-k="'+m[0]+'"><span>'+m[1]+'</span>'+m[2]+(m[0]==='tk'&&rd?'<i class="gdot"></i>':'')+'</button>';}).join('')+'</nav>';}
+function gMenuHtml(){var gg=gGet(),rd=gAchReady(gg)>0,rr=gRdy(gg);return '<nav class="gmenu">'+G_MENU.map(function(m){return '<button class="gm'+(gMenuOn(m[0])?' on':'')+((m[0]==='grow'&&rr.e)?' rdy':'')+'" data-act="gmenu" data-k="'+m[0]+'"><span>'+m[1]+'</span>'+m[2]+(m[0]==='tk'&&rd?'<i class="gdot"></i>':'')+'</button>';}).join('')+'</nav>';}
 function gDexBonus(g){return gDexB(g)*100;}
 function gDexN(g){return Object.keys(g.dex).length;}
 function gGacCard(g){
