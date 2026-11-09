@@ -268,11 +268,9 @@ function gCpDo(){
   if(c.rb){g.rubies+=c.rb;g.st.rub=(g.st.rub||0)+c.rb;sub.push('💎 루비 +'+c.rb);}
   if(c.tk){g.tickets+=c.tk;sub.push('🎟️ 뽑기권 +'+c.tk);}
   gCpClose();gSfx('coin');gSave();gRefresh();
-  var old=document.getElementById('gfeed');if(old&&old.parentNode)old.parentNode.removeChild(old);
-  var m=document.createElement('div');m.id='gfeed';m.className='gfeed';
-  m.innerHTML='<div class="gfc"><div class="gfb">'+c.msg+'</div><div class="gfs" style="font-size:20px;margin-top:16px">'+sub.join('<br>')+'</div></div>';
-  function cl(){if(m.parentNode)m.parentNode.removeChild(m);}
-  m.addEventListener('click',cl);setTimeout(cl,4000);document.body.appendChild(m);
+  var m=document.createElement('div');m.id='gcpm';m.className='gcpm';
+  m.innerHTML='<div class="gcpw"><div class="gcpi">🎁</div><div class="gcpmsg">'+c.msg+'</div><div class="gcprw">'+sub.map(function(x){return '<span>'+x+'</span>';}).join('')+'</div><button class="btn" data-act="gcpx">확인</button></div>';
+  m.addEventListener('click',function(e){if(e.target===m)gCpClose();});document.body.appendChild(m);
 }
 function gStatCard(g){
   var seg=gSeg('stat',gStT,[['w','🏋️ 운동'],['c','⚔️ 전투력']]);
