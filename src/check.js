@@ -353,7 +353,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v106';
+var APPV='v107';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2168,7 +2168,7 @@ function gSpecHtml(g){
   }).join('');
 }
 /* 쿠폰: 숫자표(G_DATA.coupons)에 적힌 코드를 입력하면 멘트와 함께 보상 (기기당 1번씩) */
-function gCpHtml(){return '<div class="gcp"><b>🎫 쿠폰 입력</b><div class="gcpr"><input id="g-cp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="쿠폰 코드를 입력해줘"><button class="btn sm" data-act="gcp">받기</button></div></div>';}
+function gCpHtml(){return '<div class="gcoup"><b>🎫 쿠폰 입력</b><div class="gcoupr"><input id="g-cp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="쿠폰 코드를 입력해줘"><button class="btn sm" data-act="gcp">받기</button></div></div>';}
 function gCpDo(){
   var g=gGet(),el=document.getElementById('g-cp');if(!el)return;
   var code=String(el.value||'').trim().toLowerCase().replace(/\s+/g,''),c=G_DATA.coupons[code];

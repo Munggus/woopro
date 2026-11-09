@@ -247,7 +247,7 @@ function gSpecHtml(g){
   }).join('');
 }
 /* 쿠폰: 숫자표(G_DATA.coupons)에 적힌 코드를 입력하면 멘트와 함께 보상 (기기당 1번씩) */
-function gCpHtml(){return '<div class="gcp"><b>🎫 쿠폰 입력</b><div class="gcpr"><input id="g-cp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="쿠폰 코드를 입력해줘"><button class="btn sm" data-act="gcp">받기</button></div></div>';}
+function gCpHtml(){return '<div class="gcoup"><b>🎫 쿠폰 입력</b><div class="gcoupr"><input id="g-cp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="쿠폰 코드를 입력해줘"><button class="btn sm" data-act="gcp">받기</button></div></div>';}
 function gCpDo(){
   var g=gGet(),el=document.getElementById('g-cp');if(!el)return;
   var code=String(el.value||'').trim().toLowerCase().replace(/\s+/g,''),c=G_DATA.coupons[code];
