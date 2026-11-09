@@ -829,3 +829,8 @@
 
 /* v100: 하부탭(현재상태/진화, 하트/루비/환생 …)은 스크롤해도 위에 고정 */
 .card>.gseg{position:sticky;top:calc(var(--gh,0px) + var(--gt,0px) + 2px);z-index:5;background:var(--surface);padding:6px 0;margin:-6px 0;box-shadow:0 8px 6px -8px rgba(0,0,0,.18)}
+
+/* v106 쿠폰 */
+.gcp{margin-top:18px;padding:12px;border:1px dashed var(--line);border-radius:14px}
+.gcpr{display:flex;gap:8px;margin-top:8px}
+.gcpr input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font:inherit;font-size:15px;background:var(--surface);color:inherit}

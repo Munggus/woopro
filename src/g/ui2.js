@@ -46,7 +46,7 @@ function gLoad(){
   ['fl','kg','hr','rb','wk'].forEach(function(k){d.rc[k]=Math.min(99999,Math.max(0,Math.floor(gNum(o.rc&&o.rc[k],0))));});
   d.mxe=Math.min(10,Math.max(0,Math.floor(gNum(o.mxe,0))));d.form=Math.min(10,Math.max(-1,Math.floor(gNum(o.form,-1))));
   d.rbEvo=Math.min(10,Math.max(0,Math.floor(gNum(o.rbEvo,0))));
-  d.fm=gFmLoad(o.fm);d.vl=gVlLoad(o.vl);d.mt=gMtLoad(o.mt);gPrMigrate(d);gCrLoad(o,d);
+  d.fm=gFmLoad(o.fm);d.vl=gVlLoad(o.vl);d.mt=gMtLoad(o.mt);gPrMigrate(d);gCrLoad(o,d);d.cp={};if(o.cp&&typeof o.cp==='object')Object.keys(o.cp).forEach(function(k){if(G_DATA.coupons[k]&&o.cp[k])d.cp[k]=1;});
   d.md={};if(o.md&&typeof o.md==='object')Object.keys(o.md).forEach(function(k){if(/^[0-9]_[0-9]$/.test(k))d.md[k]=Math.min(5,Math.max(1,Math.floor(gNum(o.md[k],1))));});
   gMdBackfill(d);
   if(o.ach&&typeof o.ach==='object')Object.keys(o.ach).forEach(function(k){if(/^[a-z]+\d+$/.test(k))d.ach[k]=1;});
@@ -246,20 +246,39 @@ function gSpecHtml(g){
     return '<details class="gspc"><summary><span class="gsi">'+s.ic+'</span><span class="gsn">'+s.n+'</span><b>'+s.v+'</b><i></i></summary><div class="gsb"><table class="gst">'+s.rows.map(function(r){return '<tr><td>'+r[0]+'</td><td><b>'+r[1]+'</b></td></tr>';}).join('')+'</table>'+(s.note?'<div class="gdtn" style="text-align:left">'+s.note+'</div>':'')+'</div></details>';
   }).join('');
 }
+/* 쿠폰: 숫자표(G_DATA.coupons)에 적힌 코드를 입력하면 멘트와 함께 보상 (기기당 1번씩) */
+function gCpHtml(){return '<div class="gcp"><b>🎫 쿠폰 입력</b><div class="gcpr"><input id="g-cp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="쿠폰 코드를 입력해줘"><button class="btn sm" data-act="gcp">받기</button></div></div>';}
+function gCpDo(){
+  var g=gGet(),el=document.getElementById('g-cp');if(!el)return;
+  var code=String(el.value||'').trim().toLowerCase().replace(/\s+/g,''),c=G_DATA.coupons[code];
+  if(!code){toast('코드를 입력해줘');return;}
+  if(!c){toast('없는 쿠폰이야 🥲');return;}
+  if(!g.cp)g.cp={};
+  if(g.cp[code]){toast('이미 쓴 쿠폰이야');return;}
+  g.cp[code]=1;var sub=[];
+  if(c.rb){g.rubies+=c.rb;g.st.rub=(g.st.rub||0)+c.rb;sub.push('💎 루비 +'+c.rb);}
+  if(c.tk){g.tickets+=c.tk;sub.push('🎟️ 뽑기권 +'+c.tk);}
+  gSfx('coin');gSave();gRefresh();
+  var old=document.getElementById('gfeed');if(old&&old.parentNode)old.parentNode.removeChild(old);
+  var m=document.createElement('div');m.id='gfeed';m.className='gfeed';
+  m.innerHTML='<div class="gfc"><div class="gfb">'+c.msg+'</div><div class="gfs" style="font-size:20px;margin-top:16px">'+sub.join('<br>')+'</div></div>';
+  function cl(){if(m.parentNode)m.parentNode.removeChild(m);}
+  m.addEventListener('click',cl);setTimeout(cl,4000);document.body.appendChild(m);
+}
 function gStatCard(g){
   var seg=gSeg('stat',gStT,[['w','🏋️ 운동'],['c','⚔️ 전투력']]);
-  if(gStT==='c')return '<h2>통계</h2>'+seg+gSpecHtml(g);
+  if(gStT==='c')return '<h2>통계</h2>'+seg+gSpecHtml(g)+gCpHtml();
   var st=g.st,d=new Date(g.start);
   var c=[[fmtLong(st.tsec),'총 운동 시간'],[fmtLong(st.sec),'시간 운동 합계'],[Math.floor(st.kg).toLocaleString('en-US')+'kg','누적 중량'],[Math.floor(st.n)+'회','운동 횟수'],[Math.floor(st.days)+'일','운동한 날'],[gFmt(st.rub),'받은 루비'],[g.rebirths+'회','진화'],[g.rbn+'회','환생'],[g.best+'층','최고 기록']];
-  return '<h2>통계 <small style="font-weight:400;font-size:12px;color:var(--ink2)">'+(d.getMonth()+1)+'월 '+d.getDate()+'일부터</small></h2>'+seg+'<div class="gstat">'+c.map(function(x){return '<div><b>'+x[0]+'</b><small>'+x[1]+'</small></div>';}).join('')+'</div>';
+  return '<h2>통계 <small style="font-weight:400;font-size:12px;color:var(--ink2)">'+(d.getMonth()+1)+'월 '+d.getDate()+'일부터</small></h2>'+seg+'<div class="gstat">'+c.map(function(x){return '<div><b>'+x[0]+'</b><small>'+x[1]+'</small></div>';}).join('')+'</div>'+gCpHtml();
 }
 var gUpT='h',gGrT='s';
 function gRdy(g){return {e:g.evo>=3&&g.best>=1000,b:g.stage>=1000};}
-function gGlow(g){var r=gRdy(g);[['.gm[data-k=grow]',r.e],['.gsg[data-t=grow][data-k=e]',r.e],['.gsg[data-t=up][data-k=b]',r.b]].forEach(function(x){var el=document.querySelector(x[0]);if(el)el.classList.toggle('rdy',!!x[1]);});}
+function gGlow(g){var r=gRdy(g);[['.gsg[data-t=grow][data-k=e]',r.e],['.gsg[data-t=up][data-k=b]',r.b]].forEach(function(x){var el=document.querySelector(x[0]);if(el)el.classList.toggle('rdy',!!x[1]);});}
 function gSeg(t,cur,arr){return '<div class="gseg g'+arr.length+'">'+arr.map(function(a){return '<button class="gsg'+(cur===a[0]?' on':'')+(a[2]?' rdy':'')+'" data-act="gtab" data-t="'+t+'" data-k="'+a[0]+'">'+a[1]+'</button>';}).join('')+'</div>';}
 var G_MENU=[['grow','🌱','성장'],['up','💪','강화'],['tk','🎁','보상'],['gac','🎟️','뽑기'],['dex','📖','도감'],['vil','🏡','마을'],['stat','📊','통계']];
 function gMenuOn(k){return gSub===k||(k==='vil'&&(gSub==='farm'||gSub==='craft'||gSub==='bld'||gSub==='house'));}
-function gMenuHtml(){var gg=gGet(),rd=gAchReady(gg)>0,rr=gRdy(gg);return '<nav class="gmenu">'+G_MENU.map(function(m){return '<button class="gm'+(gMenuOn(m[0])?' on':'')+((m[0]==='grow'&&rr.e)?' rdy':'')+'" data-act="gmenu" data-k="'+m[0]+'"><span>'+m[1]+'</span>'+m[2]+(m[0]==='tk'&&rd?'<i class="gdot"></i>':'')+'</button>';}).join('')+'</nav>';}
+function gMenuHtml(){var gg=gGet(),rd=gAchReady(gg)>0,rr=gRdy(gg);return '<nav class="gmenu">'+G_MENU.map(function(m){return '<button class="gm'+(gMenuOn(m[0])?' on':'')+'" data-act="gmenu" data-k="'+m[0]+'"><span>'+m[1]+'</span>'+m[2]+(m[0]==='tk'&&rd?'<i class="gdot"></i>':'')+'</button>';}).join('')+'</nav>';}
 function gDexBonus(g){return gDexB(g)*100;}
 function gDexN(g){return Object.keys(g.dex).length;}
 function gGacCard(g){
