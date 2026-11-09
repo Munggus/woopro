@@ -247,7 +247,16 @@ function gSpecHtml(g){
   }).join('');
 }
 /* 쿠폰: 숫자표(G_DATA.coupons)에 적힌 코드를 입력하면 멘트와 함께 보상 (기기당 1번씩) */
-function gCpHtml(){return '<div class="gcoup"><b>🎫 쿠폰 입력</b><div class="gcoupr"><input id="g-cp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="쿠폰 코드를 입력해줘"><button class="btn sm" data-act="gcp">받기</button></div></div>';}
+function gCpHtml(){return '<button class="btn gcoupb" data-act="gcpo">🎫 쿠폰 입력</button>';}
+function gCpClose(){var m=document.getElementById('gcpm');if(m&&m.parentNode)m.parentNode.removeChild(m);}
+function gCpOpen(){
+  gCpClose();var m=document.createElement('div');m.id='gcpm';m.className='gcpm';
+  m.innerHTML='<div class="gcpb"><h3>🎫 쿠폰 입력</h3><input id="g-cp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="쿠폰 코드를 입력해줘"><div class="gcpbt"><button class="btn ghost" data-act="gcpx">닫기</button><button class="btn" data-act="gcp">받기</button></div></div>';
+  document.body.appendChild(m);
+  var el=document.getElementById('g-cp');el.addEventListener('keydown',function(e){if(e.key==='Enter')gCpDo();});
+  m.addEventListener('click',function(e){if(e.target===m)gCpClose();});
+  setTimeout(function(){el.focus();},60);
+}
 function gCpDo(){
   var g=gGet(),el=document.getElementById('g-cp');if(!el)return;
   var code=String(el.value||'').trim().toLowerCase().replace(/\s+/g,''),c=G_DATA.coupons[code];
@@ -258,7 +267,7 @@ function gCpDo(){
   g.cp[code]=1;var sub=[];
   if(c.rb){g.rubies+=c.rb;g.st.rub=(g.st.rub||0)+c.rb;sub.push('💎 루비 +'+c.rb);}
   if(c.tk){g.tickets+=c.tk;sub.push('🎟️ 뽑기권 +'+c.tk);}
-  gSfx('coin');gSave();gRefresh();
+  gCpClose();gSfx('coin');gSave();gRefresh();
   var old=document.getElementById('gfeed');if(old&&old.parentNode)old.parentNode.removeChild(old);
   var m=document.createElement('div');m.id='gfeed';m.className='gfeed';
   m.innerHTML='<div class="gfc"><div class="gfb">'+c.msg+'</div><div class="gfs" style="font-size:20px;margin-top:16px">'+sub.join('<br>')+'</div></div>';

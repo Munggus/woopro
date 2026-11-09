@@ -834,3 +834,12 @@
 .gcoup{margin-top:18px;padding:12px;border:1px dashed var(--line);border-radius:14px}
 .gcoupr{display:flex;gap:8px;margin-top:8px}
 .gcoupr input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font:inherit;font-size:15px;background:var(--surface);color:inherit}
+
+/* v108 쿠폰 창 */
+.gcoupb{display:block;width:100%;margin-top:18px;padding:14px;font-size:16px}
+.gcpm{position:fixed;inset:0;z-index:310;background:rgba(30,10,30,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.gcpb{width:min(380px,100%);background:var(--surface,#fff);color:var(--ink,#222);border-radius:20px;padding:22px 18px 18px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.gcpb h3{margin:0 0 14px;font-size:20px;text-align:center}
+.gcpb input{width:100%;box-sizing:border-box;padding:16px 14px;font:inherit;font-size:20px;text-align:center;border:2px solid var(--line,#ddd);border-radius:14px;background:var(--surface,#fff);color:inherit}
+.gcpb input:focus{outline:none;border-color:#ec407a}
+.gcpbt{display:flex;gap:10px;margin-top:14px}.gcpbt .btn{flex:1;padding:14px;font-size:16px}
