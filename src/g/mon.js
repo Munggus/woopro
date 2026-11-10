@@ -72,7 +72,7 @@ var G_LOOP=['','반짝 ','황금 ','무지개 ','전설의 '];
 function gLoopN(n){return Math.min(G_LOOP.length-1,Math.floor((n-1)/1000));}
 function gRegIdx(n){return Math.floor((n-1)/100)%G_REG.length;}
 function gMonHasImg(n){var r=gRegIdx(n);return !!(MON_I[r]&&MON_N[r]);}
-function gMonImgIdx(n){var p=(n-1)%100,g=Math.floor(p/10);if(p===99)return 9;if(n%10===0)return g;if(g===9)return (n*7+3)%9;return g;}
+function gMonImgIdx(n){var p=(n-1)%100;if(p===99)return 10;return Math.floor(p/10);}
 function gMonIdx(n){var L=G_MON.length,r=gRegIdx(n)%L,M=G_MON[r].length;return n%10===0?((n/10-1)%M+M)%M:(n*3+Math.floor(n/10))%M;}
 function gMonName(n){
   var lp=G_LOOP[gLoopN(n)];
