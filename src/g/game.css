@@ -854,3 +854,7 @@
 
 /* v110 arena bg readability */
 .garena .gst{display:table;margin-left:auto;margin-right:auto;background:rgba(255,255,255,.78);border-radius:99px;padding:1px 12px}
+/* v111 scrolling arena background */
+.garena{isolation:isolate}
+.gbgl{position:absolute;left:0;top:0;height:100%;aspect-ratio:12/1;z-index:-1;background-repeat:repeat-x;background-size:50% 100%;background-position:0 0;pointer-events:none;will-change:transform}
+.garena .gst{display:block;width:max-content;max-width:92%}

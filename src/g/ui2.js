@@ -108,7 +108,16 @@ function gReward(entry,prN){
 function gShown(g){return g.farm?Math.max(1,g.stage-1):g.stage;}
 function gHeroCls(e){var c='ghw';for(var i=1;i<=e;i++)c+=' l'+i;return c;}
 function gRainHtml(on){var s='';for(var i=0;i<7;i++)s+='<span style="left:'+(6+i*14)+'%;animation-delay:'+(i*.37)+'s;animation-duration:'+(2.2+(i%3)*.5)+'s">⭐</span>';return '<div class="grain'+(on?' on':'')+'" id="g-rain">'+s+'</div>';}
-function gArenaStyle(n){var ri=gRegIdx(n),r=G_REG[ri],b=MON_BG[ri];return 'background:url('+b[0]+') '+b[1]+'% 100%/auto 100% no-repeat,linear-gradient('+r.sky[0]+' 0%,'+r.sky[1]+' 62%,'+r.gr[0]+' 62%,'+r.gr[1]+' 100%)';}
+var gBgX=null,gBgT=0;
+function gBgTf(){if(gBgX===null)gBgX=((MON_BG[0][1]/200-.13)%1+1)%1;return 'translate3d('+(-gBgX*50)+'%,0,0)';}
+function gBgHtml(n){return '<i class="gbgl" id="g-bgl" style="background-image:url('+MON_BG[gRegIdx(n)][0]+');transform:'+gBgTf()+'"></i>';}
+function gBgLoop(t){
+  try{var f=document.getElementById('g-field'),b=document.getElementById('g-bgl'),dt=gBgT?Math.min(.1,(t-gBgT)/1000):0;gBgT=t;
+  if(f&&b&&f.classList.contains('gwk')){gBgTf();gBgX=(gBgX+dt*.03)%1;b.style.transform=gBgTf();}}catch(e){}
+  requestAnimationFrame(gBgLoop);
+}
+if(typeof requestAnimationFrame==='function')requestAnimationFrame(gBgLoop);
+function gArenaStyle(n){var ri=gRegIdx(n),r=G_REG[ri];return 'background:linear-gradient('+r.sky[0]+' 0%,'+r.sky[1]+' 62%,'+r.gr[0]+' 62%,'+r.gr[1]+' 100%)';}
 function gStText(g){var n=g.stage,sh=gShown(g);if(g.pin)return '📌 '+g.pin+'층 고정 사냥';return g.farm?('🔁 '+sh+'층 반복 · 보스 '+n+'층 대기'):(G_REG[gRegIdx(n)].n+' · '+n+'층'+(n%10===0?' · BOSS':''));}
 function gNoteHtml(g){
   if(g.pin)return '<span>📌 '+g.pin+'층에서 계속 사냥 중! 재료 모으기 딱 좋아</span><button class="mini bossb" data-act="gfl" data-f="unpin">🔓 고정 풀기</button>';
@@ -131,7 +140,7 @@ function gChips(g){return '<div class="gres"><span class="chip" id="g-hearts" da
 function gArena(g){
   var n=g.stage,sh=gShown(g),boss=sh%10===0&&!g.farm,r=G_REG[gRegIdx(sh)];
   gMdSee(g,sh);gLastShown=sh;gNoteKey='';gHK=gHeroKey(g);setTimeout(function(){gPreNext(g);},400);
-  return '<div class="garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'')+'" id="g-arena" style="'+gArenaStyle(sh)+'">'+gChips(g)+
+  return '<div class="garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'')+'" id="g-arena" style="'+gArenaStyle(sh)+'">'+gBgHtml(sh)+gChips(g)+
    '<div class="glv" id="g-lv">Lv.'+g.evo+' '+G_NAMES[g.evo]+' 사랑이</div><div class="gst" id="g-st" data-act="gfloor">'+gStText(g)+'</div>'+
    '<div class="gfield" id="g-field">'+gRainHtml(g.evo>=10)+'<div id="g-evw">'+gEvoBtnHtml(g)+'</div><div id="g-buffw">'+gBuffHtml(g)+'</div><button class="gsnd" id="g-snd" data-act="gsnd" aria-label="효과음">'+(g.snd?'🔊':'🔇')+'</button><div class="gbub" id="g-bub" hidden></div>'+gCbHtml()+'<button class="gzoom" id="g-zoom" data-act="gzoom" aria-label="전투 화면 전환">'+G_ZI+'</button>'+gHeroHtml(g)+'<div class="gmon'+gMonCls(sh,boss)+'" id="g-mon">'+gMonSvg(sh)+'</div></div>'+
    '<div class="gbt" id="g-bt"'+(boss?'':' hidden')+'><i id="g-bti" style="width:100%"></i></div>'+
@@ -494,7 +503,7 @@ function gSetH(id,t){var e=$(id);if(e&&e.innerHTML!==t)e.innerHTML=t;}
 function gPaintStage(g,pop){
   var sh=gShown(g),boss=sh%10===0&&!g.farm,ar=$('g-arena'),mon=$('g-mon');if(!ar||!mon)return;
   gMdSee(g,sh);var r=G_REG[gRegIdx(sh)];
-  ar.className='garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'');ar.style.cssText=gArenaStyle(sh);
+  ar.className='garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'');ar.style.cssText=gArenaStyle(sh);var bl=$('g-bgl');if(bl)bl.style.backgroundImage='url('+MON_BG[gRegIdx(sh)][0]+')';
   mon.className='gmon'+(pop?' pop':'')+gMonCls(sh,boss);mon.innerHTML=gMonSvg(sh);
   gSet('g-mn',gMonName(sh));gLastShown=sh;gPreNext(g);
 }

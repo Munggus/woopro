@@ -353,7 +353,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v110';
+var APPV='v111';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -906,25 +906,13 @@ function bkDue(){return !!S.settings.bkRemind&&Date.now()-(+S.settings.lastBk||0
 function markBk(){S.settings.lastBk=Date.now();S.settings.bkSnooze=0;save();}
 function bkOpen(){
   var a=bkAge();
-  $('bk-body').innerHTML=mas('shy',110)+'<p>'+(a==null?'아직 백업한 적이 없어.':'마지막 백업이 '+a+'일 전이야.')+'<br>기록이 사라지면 속상하니까,<br>카톡 &lsquo;나와의 채팅&rsquo;에 백업 파일을 보내두자!</p>'+
-    '<button class="btn primary wide" data-act="bksend">카톡으로 백업 보내기</button><button class="btn ghost wide" data-act="bksendt">파일이 안 가면: 코드 글자로 보내기</button><button class="btn ghost wide" data-act="bklater">내일 다시 알려줘</button>';
+  $('bk-body').innerHTML=mas('shy',110)+'<p>'+(a==null?'아직 백업한 적이 없어.':'마지막 백업이 '+a+'일 전이야.')+'<br>기록이 사라지면 속상하니까,<br>백업 코드를 복사해서<br>카톡 &lsquo;나와의 채팅&rsquo;에 붙여넣어 두자!</p>'+
+    '<button class="btn primary wide" data-act="bksend">백업 코드 복사하기</button><button class="btn ghost wide" data-act="bklater">내일 다시 알려줘</button>';
   $('bkq').hidden=false;
 }
 function bkCheck(){if(!bkDue()||Q||!$('bkq').hidden||!$('shq').hidden||!$('heq').hidden||!$('exitq').hidden)return;bkOpen();}
 function bkSend(){
-  var code=makeCodeWith(true,incImg),name='우프로운동해-백업-'+ymd(Date.now())+'.txt',ok=function(){markBk();$('bkq').hidden=true;render();toast('백업을 보냈어! 🐣');},
-      bad=function(e){if(!e||e.name!=='AbortError')toast('공유가 안 됐어. 설정의 코드 복사를 써줘');};
-  try{
-    var f=new File([code],name,{type:'text/plain'});
-    if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f]}).then(ok,bad);return;}
-  }catch(e){}
-  bkSendText();
-}
-function bkSendText(){
-  var code=makeCodeWith(true,incImg),ok=function(){markBk();$('bkq').hidden=true;render();toast('백업을 보냈어! 🐣');},
-      bad=function(e){if(!e||e.name!=='AbortError')toast('공유가 안 됐어. 코드 복사를 써줘');};
-  try{if(navigator.share){navigator.share({text:code}).then(ok,bad);return;}}catch(e){}
-  copyPlain(code);markBk();$('bkq').hidden=true;render();
+  var code=makeCodeWith(true,incImg);copyPlain(code);markBk();$('bkq').hidden=true;render();toast('백업 코드를 복사했어! 카톡 나와의 채팅에 붙여넣어줘 🐣');
 }
 function soundCard(){
   var v=S.settings.volume==null?100:S.settings.volume,ks=kgStep();
@@ -942,9 +930,9 @@ function rSettings(){
   stepRow('prep','시작 전 준비','초',S.settings.prep,'sstep','')+'</section>'+soundCard()+
   '<section class="card"><h2>테마</h2><div class="seg" role="group" aria-label="테마">'+[['auto','자동'],['light','라이트'],['dark','다크']].map(function(a){return '<button data-act="theme" data-v="'+a[0]+'" aria-pressed="'+(S.settings.theme===a[0])+'">'+a[1]+'</button>';}).join('')+'</div>'+
   (hid?'<button class="btn ghost sm" data-act="unhide">숨긴 기본 운동 '+hid+'개 되돌리기</button>':'')+'</section>'+
-  '<section class="card"><h2>백업 · 공유</h2><p class="hint">운동 설정, 루틴, 기록, 사랑이 키우기 데이터를 파일 하나로 묶어. 카톡 &lsquo;나와의 채팅&rsquo;에 보내두면 새 폰에서도 그대로 복원할 수 있어.</p>'+
+  '<section class="card"><h2>백업 · 공유</h2><p class="hint">운동 설정, 루틴, 기록, 사랑이 키우기 데이터를 코드 하나로 묶어. 복사해서 카톡 &lsquo;나와의 채팅&rsquo;에 붙여넣어 두면 새 폰에서도 그대로 복원할 수 있어.</p>'+
   tg('bkRemind','주간 백업 알림','7일마다 알려줘 · 마지막 백업: '+(bkAge()==null?'아직 없음':bkAge()===0?'오늘':bkAge()+'일 전'))+
-  '<button class="btn primary" data-act="bksend">카톡으로 백업 파일 보내기</button><button class="btn ghost" data-act="bksendt">코드 글자로 보내기 (파일이 안 갈 때)</button><button class="btn ghost" data-act="bkpick">백업 파일에서 불러오기</button>'+
+  ''+
   '<label class="chk" for="inc-hist"><input type="checkbox" id="inc-hist" data-in="inchist"'+(incHist?' checked':'')+'> 운동 기록도 포함</label>'+
   '<label class="chk" for="inc-img"><input type="checkbox" id="inc-img" data-in="incimg"'+(incImg?' checked':'')+'> 내 사진도 포함 ('+photos+'장, 코드가 아주 길어져)</label>'+
   '<textarea id="code-out" readonly rows="3" aria-label="백업 코드">'+esc(makeCode())+'</textarea>'+
@@ -1250,7 +1238,7 @@ function gMonSvg(n){
 }
 var MON_N=[["뽑기고양이", "로봇꼬마", "오리조종사", "토끼인형", "빙글팽이", "게임패드", "블록꼬마", "드론친구", "공룡수레", "파랑젤리컵", "장난감왕 토끼공주"], ["방울방울이", "비누깔깔이", "고무오리", "스펀지콩", "칫솔병정", "치약꼬마", "펌프비누", "욕조보트", "입욕공", "샤워헤드", "거품왕 욕조대장"], ["달걀프라이", "문어요리사", "주먹밥꼬마", "프라이팬이", "냄비콩", "햄버거둥이", "컵케이크", "레몬주스컵", "냉장고꼬마", "토스터콩", "문어 셰프 대장"], ["쿠션콩", "책꼬마", "리모컨병정", "게임패드", "팝콘그릇", "스탠드요정", "휴지곽이", "머그컵콩", "화분둥이", "수납함이", "소파 위 공주님"], ["정글짐꼬마", "모래통콩", "바람개비", "스프링말", "트램폴린", "미끄럼틀친구", "시소꼬마", "터널둥이", "라바콘", "그네병정", "우당탕탕 성 대장"], ["장바구니콩", "카트꼬마", "우유팩", "시리얼상자", "탄산캔", "식빵병정", "채소상자", "바코드스캐너", "계산대꼬마", "블루베리요거트", "마트왕 카트 대장"], ["해바라기콩", "꽃덤불이", "파랑새", "소풍바구니", "바람개비꽃", "나무그네", "축구공", "물통꼬마", "다람쥐", "벤치병정", "분수 요정 대장"], ["곰돌이", "뽑기기계", "로봇친구", "오리자동차", "토끼인형", "빙글팽이", "게임패드", "공룡블록", "드론꼬마", "장난감 자동차", "장난감 곰돌이 왕"], ["팝콘통", "솜사탕콩", "풍선다발", "아이스크림", "회전목마", "찻잔둥이", "범퍼카", "롤러코스터", "매표소꼬마", "깜짝상자", "관람차 마술사 대장"], ["선물상자", "파티고깔", "풍선꼬마", "컵케이크", "조각케이크", "생일초", "레모네이드", "축하편지", "폭죽이", "마카롱", "생일파티 공주님"]];
 var MON_I=[["img/m0_0.d2817937.png", "img/m0_1.ea05bc42.png", "img/m0_2.b22a965b.png", "img/m0_3.d0b9377b.png", "img/m0_4.75aa5955.png", "img/m0_5.f38369d7.png", "img/m0_6.d9b34148.png", "img/m0_7.c436d49f.png", "img/m0_8.d6c2a99a.png", "img/m0_9.9257920c.png", "img/m0_10.fc84bf12.png"], ["img/m1_0.46808293.png", "img/m1_1.44b365af.png", "img/m1_2.1cad0172.png", "img/m1_3.c16b730f.png", "img/m1_4.abf78943.png", "img/m1_5.aa78c9c4.png", "img/m1_6.e0a0a754.png", "img/m1_7.6adb8e6f.png", "img/m1_8.d6a4480b.png", "img/m1_9.67c794ed.png", "img/m1_10.e03570da.png"], ["img/m2_0.85b381a6.png", "img/m2_1.e85e01e6.png", "img/m2_2.b8a9465f.png", "img/m2_3.9e450401.png", "img/m2_4.8281731d.png", "img/m2_5.ec9617ca.png", "img/m2_6.b8ec162f.png", "img/m2_7.a1f0271f.png", "img/m2_8.eccc44b4.png", "img/m2_9.039de10e.png", "img/m2_10.64928c65.png"], ["img/m3_0.e4da9a86.png", "img/m3_1.519f459c.png", "img/m3_2.f93847f0.png", "img/m3_3.0fd8c167.png", "img/m3_4.bcc8ad31.png", "img/m3_5.701b3523.png", "img/m3_6.2fb70986.png", "img/m3_7.421e39ac.png", "img/m3_8.040bf64d.png", "img/m3_9.684a9a60.png", "img/m3_10.9df741b0.png"], ["img/m4_0.98ccd905.png", "img/m4_1.4782eb88.png", "img/m4_2.ad7dc453.png", "img/m4_3.be29e152.png", "img/m4_4.662798a3.png", "img/m4_5.19962455.png", "img/m4_6.454c994a.png", "img/m4_7.63e0f61c.png", "img/m4_8.d283e383.png", "img/m4_9.2c0e252c.png", "img/m4_10.933ed523.png"], ["img/m5_0.daf2365d.png", "img/m5_1.72c09c6c.png", "img/m5_2.f4f802e0.png", "img/m5_3.fdb0da7c.png", "img/m5_4.ba6703d5.png", "img/m5_5.4dbc9647.png", "img/m5_6.27953d49.png", "img/m5_7.d19ff50e.png", "img/m5_8.adb60059.png", "img/m5_9.7129bc43.png", "img/m5_10.a2c16415.png"], ["img/m6_0.0d97599e.png", "img/m6_1.36144b45.png", "img/m6_2.4fafc794.png", "img/m6_3.69bf8d11.png", "img/m6_4.2c8f0f46.png", "img/m6_5.14dee4e9.png", "img/m6_6.216c7ea5.png", "img/m6_7.10b7c886.png", "img/m6_8.0b5a6a88.png", "img/m6_9.d3ad0306.png", "img/m6_10.33a94bdc.png"], ["img/m7_0.5b1c1798.png", "img/m7_1.136a9063.png", "img/m7_2.05fe82ab.png", "img/m7_3.d012f45b.png", "img/m7_4.e72fd09a.png", "img/m7_5.ba68816b.png", "img/m7_6.7a8be66e.png", "img/m7_7.e6f423d0.png", "img/m7_8.9bac1aa5.png", "img/m7_9.6ab5fa2b.png", "img/m7_10.4cb46bfa.png"], ["img/m8_0.44fefec5.png", "img/m8_1.fd5a1fa6.png", "img/m8_2.56ed4d05.png", "img/m8_3.308707aa.png", "img/m8_4.d7ed59df.png", "img/m8_5.b8197bdc.png", "img/m8_6.ef3c9f59.png", "img/m8_7.18e4c247.png", "img/m8_8.f5a5e424.png", "img/m8_9.2177b245.png", "img/m8_10.14fbf301.png"], ["img/m9_0.2d0087d8.png", "img/m9_1.8722cc68.png", "img/m9_2.dfd1dfac.png", "img/m9_3.f55421a7.png", "img/m9_4.8dea53b5.png", "img/m9_5.6145bb2d.png", "img/m9_6.161329ff.png", "img/m9_7.a18c6002.png", "img/m9_8.a5c6e896.png", "img/m9_9.4281be50.png", "img/m9_10.a9fc4f5b.png"]];
-var MON_BG=[["img/bg0.2429b6f1.webp", 42], ["img/bg1.7b1a0350.webp", 62], ["img/bg2.89f65a9f.webp", 50], ["img/bg3.7a1bfd2e.webp", 45], ["img/bg4.af21a611.webp", 35], ["img/bg5.7d406df0.webp", 58], ["img/bg6.f8346b61.webp", 45], ["img/bg7.be25bec6.webp", 50], ["img/bg8.a76aa794.webp", 18], ["img/bg9.497d616d.webp", 50]];
+var MON_BG=[["img/bg0.248822e0.webp", 42], ["img/bg1.5ad5e183.webp", 62], ["img/bg2.618ac506.webp", 50], ["img/bg3.77804e5d.webp", 45], ["img/bg4.12ba115a.webp", 35], ["img/bg5.9cf58dc5.webp", 58], ["img/bg6.af26ad9f.webp", 45], ["img/bg7.5944abfa.webp", 50], ["img/bg8.c41c7e36.webp", 18], ["img/bg9.e9b1712d.webp", 50]];
 var SPR_S=["img/hs0.34e66829.png","img/hs1.0e475c33.png","img/hs2.d6e9b2a7.png","img/hs3.d5cd080a.png","img/hs4.bcac3bb2.png","img/hs5.5e69e6b3.png","img/hs6.ce99181e.png","img/hs7.c8486624.png","img/hs8.4c9fe917.png","img/hs9.3ecf7cb8.png","img/hs10.c19b1c66.png"];
 var SPR_F=["img/hf0.40adcf0f.png","img/hf1.7c0bcec6.png","img/hf2.34f5f089.png","img/hf3.f7e32e4c.png","img/hf4.8d02c0ba.png","img/hf5.10b701b2.png","img/hf6.774ad451.png","img/hf7.4383278f.png","img/hf8.b9360a7e.png","img/hf9.84d7497d.png","img/hf10.121d49bb.png"];
 var G_CPL=[{"id": "v00", "n": "핑크포니", "c": "veh", "r": 3, "a": "mv"}, {"id": "v01", "n": "포근알파카", "c": "veh", "r": 1, "a": "mv"}, {"id": "v02", "n": "별사슴", "c": "veh", "r": 2, "a": "mv"}, {"id": "v03", "n": "뽀송코기", "c": "veh", "r": 0, "a": "mv"}, {"id": "v04", "n": "눈꽃하울", "c": "veh", "r": 2, "a": "skip"}, {"id": "v05", "n": "통통핑크", "c": "veh", "r": 0, "a": "skip"}, {"id": "v06", "n": "몽글양", "c": "veh", "r": 0, "a": "mv"}, {"id": "v07", "n": "멋돼롱", "c": "veh", "r": 0, "a": "skip"}, {"id": "v08", "n": "초록거북", "c": "veh", "r": 1, "a": "skip"}, {"id": "v09", "n": "새싹카피", "c": "veh", "r": 1, "a": "mv"}, {"id": "v10", "n": "레인보우콘", "c": "veh", "r": 3, "a": "skip"}, {"id": "v11", "n": "빛날개키린", "c": "veh", "r": 3, "a": "mv"}, {"id": "v12", "n": "체리드래곤", "c": "veh", "r": 3, "a": "skip"}, {"id": "v13", "n": "하늘그리핀", "c": "veh", "r": 2, "a": "mv"}, {"id": "v14", "n": "구름여우", "c": "veh", "r": 3, "a": "mv"}, {"id": "v15", "n": "눈꽃곰이", "c": "veh", "r": 0, "a": "mv"}, {"id": "v16", "n": "대나무팡", "c": "veh", "r": 1, "a": "skip"}, {"id": "v17", "n": "말랑토끼", "c": "veh", "r": 0, "a": "skip"}, {"id": "v18", "n": "별밤냥이", "c": "veh", "r": 1, "a": "mv"}, {"id": "v19", "n": "물빛키린", "c": "veh", "r": 3, "a": "skip"}, {"id": "g00", "n": "멍멍시바", "c": "gnd", "r": 0, "a": "atk"}, {"id": "g01", "n": "하얀냥이", "c": "gnd", "r": 0, "a": "bt"}, {"id": "g02", "n": "토토래빗", "c": "gnd", "r": 0, "a": "atk"}, {"id": "g03", "n": "다람팡", "c": "gnd", "r": 0, "a": "bt"}, {"id": "g04", "n": "고슴토리", "c": "gnd", "r": 1, "a": "atk"}, {"id": "g05", "n": "조개수달", "c": "gnd", "r": 1, "a": "bt"}, {"id": "g06", "n": "레서팡", "c": "gnd", "r": 1, "a": "atk"}, {"id": "g07", "n": "라쿤이", "c": "gnd", "r": 1, "a": "bt"}, {"id": "g08", "n": "광부두더지", "c": "gnd", "r": 2, "a": "atk"}, {"id": "g09", "n": "노랑버섯", "c": "gnd", "r": 1, "a": "atk"}, {"id": "g10", "n": "싹콩이", "c": "gnd", "r": 0, "a": "atk"}, {"id": "g11", "n": "버섯둥이", "c": "gnd", "r": 0, "a": "bt"}, {"id": "g12", "n": "잎새요정", "c": "gnd", "r": 2, "a": "bt"}, {"id": "g13", "n": "아홉꼬리", "c": "gnd", "r": 3, "a": "atk"}, {"id": "g14", "n": "물방울냥", "c": "gnd", "r": 3, "a": "bt"}, {"id": "g15", "n": "바위골렘", "c": "gnd", "r": 3, "a": "atk"}, {"id": "g16", "n": "나무수호랑", "c": "gnd", "r": 2, "a": "atk"}, {"id": "g17", "n": "눈구름양", "c": "gnd", "r": 3, "a": "bt"}, {"id": "g18", "n": "꼬마로봇", "c": "gnd", "r": 2, "a": "bt"}, {"id": "g19", "n": "마법냥이", "c": "gnd", "r": 3, "a": "atk"}, {"id": "s00", "n": "천사냥이", "c": "sky", "r": 3, "a": "inc"}, {"id": "s01", "n": "삐약링", "c": "sky", "r": 0, "a": "inc"}, {"id": "s02", "n": "눈부엉이", "c": "sky", "r": 1, "a": "inc"}, {"id": "s03", "n": "제트펭펭", "c": "sky", "r": 2, "a": "inc"}, {"id": "s04", "n": "나비벨", "c": "sky", "r": 1, "a": "rub"}, {"id": "s05", "n": "불꽃토리", "c": "sky", "r": 1, "a": "inc"}, {"id": "s06", "n": "물방울이", "c": "sky", "r": 0, "a": "rub"}, {"id": "s07", "n": "초록요정", "c": "sky", "r": 0, "a": "inc"}, {"id": "s08", "n": "몽실구름", "c": "sky", "r": 2, "a": "rub"}, {"id": "s09", "n": "반짝별이", "c": "sky", "r": 2, "a": "inc"}, {"id": "s10", "n": "보라박쥐", "c": "sky", "r": 0, "a": "rub"}, {"id": "s11", "n": "미니드래곤", "c": "sky", "r": 3, "a": "rub"}, {"id": "s12", "n": "불사조링", "c": "sky", "r": 3, "a": "inc"}, {"id": "s13", "n": "핑코윙", "c": "sky", "r": 0, "a": "inc"}, {"id": "s14", "n": "꽃요정이", "c": "sky", "r": 1, "a": "rub"}, {"id": "s15", "n": "달밤냥이", "c": "sky", "r": 3, "a": "rub"}, {"id": "s16", "n": "구름유니", "c": "sky", "r": 2, "a": "rub"}, {"id": "s17", "n": "유령젤리", "c": "sky", "r": 1, "a": "inc"}, {"id": "s18", "n": "천사링", "c": "sky", "r": 0, "a": "rub"}, {"id": "s19", "n": "바다드래곤", "c": "sky", "r": 3, "a": "inc"}];
@@ -2035,7 +2023,16 @@ function gReward(entry,prN){
 function gShown(g){return g.farm?Math.max(1,g.stage-1):g.stage;}
 function gHeroCls(e){var c='ghw';for(var i=1;i<=e;i++)c+=' l'+i;return c;}
 function gRainHtml(on){var s='';for(var i=0;i<7;i++)s+='<span style="left:'+(6+i*14)+'%;animation-delay:'+(i*.37)+'s;animation-duration:'+(2.2+(i%3)*.5)+'s">⭐</span>';return '<div class="grain'+(on?' on':'')+'" id="g-rain">'+s+'</div>';}
-function gArenaStyle(n){var ri=gRegIdx(n),r=G_REG[ri],b=MON_BG[ri];return 'background:url('+b[0]+') '+b[1]+'% 100%/auto 100% no-repeat,linear-gradient('+r.sky[0]+' 0%,'+r.sky[1]+' 62%,'+r.gr[0]+' 62%,'+r.gr[1]+' 100%)';}
+var gBgX=null,gBgT=0;
+function gBgTf(){if(gBgX===null)gBgX=((MON_BG[0][1]/200-.13)%1+1)%1;return 'translate3d('+(-gBgX*50)+'%,0,0)';}
+function gBgHtml(n){return '<i class="gbgl" id="g-bgl" style="background-image:url('+MON_BG[gRegIdx(n)][0]+');transform:'+gBgTf()+'"></i>';}
+function gBgLoop(t){
+  try{var f=document.getElementById('g-field'),b=document.getElementById('g-bgl'),dt=gBgT?Math.min(.1,(t-gBgT)/1000):0;gBgT=t;
+  if(f&&b&&f.classList.contains('gwk')){gBgTf();gBgX=(gBgX+dt*.03)%1;b.style.transform=gBgTf();}}catch(e){}
+  requestAnimationFrame(gBgLoop);
+}
+if(typeof requestAnimationFrame==='function')requestAnimationFrame(gBgLoop);
+function gArenaStyle(n){var ri=gRegIdx(n),r=G_REG[ri];return 'background:linear-gradient('+r.sky[0]+' 0%,'+r.sky[1]+' 62%,'+r.gr[0]+' 62%,'+r.gr[1]+' 100%)';}
 function gStText(g){var n=g.stage,sh=gShown(g);if(g.pin)return '📌 '+g.pin+'층 고정 사냥';return g.farm?('🔁 '+sh+'층 반복 · 보스 '+n+'층 대기'):(G_REG[gRegIdx(n)].n+' · '+n+'층'+(n%10===0?' · BOSS':''));}
 function gNoteHtml(g){
   if(g.pin)return '<span>📌 '+g.pin+'층에서 계속 사냥 중! 재료 모으기 딱 좋아</span><button class="mini bossb" data-act="gfl" data-f="unpin">🔓 고정 풀기</button>';
@@ -2058,7 +2055,7 @@ function gChips(g){return '<div class="gres"><span class="chip" id="g-hearts" da
 function gArena(g){
   var n=g.stage,sh=gShown(g),boss=sh%10===0&&!g.farm,r=G_REG[gRegIdx(sh)];
   gMdSee(g,sh);gLastShown=sh;gNoteKey='';gHK=gHeroKey(g);setTimeout(function(){gPreNext(g);},400);
-  return '<div class="garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'')+'" id="g-arena" style="'+gArenaStyle(sh)+'">'+gChips(g)+
+  return '<div class="garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'')+'" id="g-arena" style="'+gArenaStyle(sh)+'">'+gBgHtml(sh)+gChips(g)+
    '<div class="glv" id="g-lv">Lv.'+g.evo+' '+G_NAMES[g.evo]+' 사랑이</div><div class="gst" id="g-st" data-act="gfloor">'+gStText(g)+'</div>'+
    '<div class="gfield" id="g-field">'+gRainHtml(g.evo>=10)+'<div id="g-evw">'+gEvoBtnHtml(g)+'</div><div id="g-buffw">'+gBuffHtml(g)+'</div><button class="gsnd" id="g-snd" data-act="gsnd" aria-label="효과음">'+(g.snd?'🔊':'🔇')+'</button><div class="gbub" id="g-bub" hidden></div>'+gCbHtml()+'<button class="gzoom" id="g-zoom" data-act="gzoom" aria-label="전투 화면 전환">'+G_ZI+'</button>'+gHeroHtml(g)+'<div class="gmon'+gMonCls(sh,boss)+'" id="g-mon">'+gMonSvg(sh)+'</div></div>'+
    '<div class="gbt" id="g-bt"'+(boss?'':' hidden')+'><i id="g-bti" style="width:100%"></i></div>'+
@@ -2421,7 +2418,7 @@ function gSetH(id,t){var e=$(id);if(e&&e.innerHTML!==t)e.innerHTML=t;}
 function gPaintStage(g,pop){
   var sh=gShown(g),boss=sh%10===0&&!g.farm,ar=$('g-arena'),mon=$('g-mon');if(!ar||!mon)return;
   gMdSee(g,sh);var r=G_REG[gRegIdx(sh)];
-  ar.className='garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'');ar.style.cssText=gArenaStyle(sh);
+  ar.className='garena'+(boss?' boss':'')+(r.d?' dk':'')+(gSm?' sm':'');ar.style.cssText=gArenaStyle(sh);var bl=$('g-bgl');if(bl)bl.style.backgroundImage='url('+MON_BG[gRegIdx(sh)][0]+')';
   mon.className='gmon'+(pop?' pop':'')+gMonCls(sh,boss);mon.innerHTML=gMonSvg(sh);
   gSet('g-mn',gMonName(sh));gLastShown=sh;gPreNext(g);
 }
@@ -3590,10 +3587,8 @@ var acts={
   copycode:function(){var el=$('code-out');copyText(el.value,el);markBk();},
   sharecode:function(){var t=$('code-out').value;try{navigator.share({text:t}).then(function(){markBk();},function(){});}catch(e){toast('공유가 막혀 있어. 코드 복사를 써줘');}},
   bksend:function(){bkSend();},
-  bksendt:function(){bkSendText();},
   bkno:function(){$('bkq').hidden=true;},
   bklater:function(){S.settings.bkSnooze=Date.now()+86400000;save();$('bkq').hidden=true;toast('내일 다시 알려줄게');},
-  bkpick:function(){var i=$('bk-file');if(i)i.click();},
   restore:function(){
     var raw,next;
     try{raw=dec(codeIn);next=sanitize(raw);}catch(e){toast('코드를 읽을 수 없어. 처음부터 끝까지 복사했는지 확인해줘');return;}

@@ -671,7 +671,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v110';
+var APPV='v111';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1224,25 +1224,13 @@ function bkDue(){return !!S.settings.bkRemind&&Date.now()-(+S.settings.lastBk||0
 function markBk(){S.settings.lastBk=Date.now();S.settings.bkSnooze=0;save();}
 function bkOpen(){
   var a=bkAge();
-  $('bk-body').innerHTML=mas('shy',110)+'<p>'+(a==null?'아직 백업한 적이 없어.':'마지막 백업이 '+a+'일 전이야.')+'<br>기록이 사라지면 속상하니까,<br>카톡 &lsquo;나와의 채팅&rsquo;에 백업 파일을 보내두자!</p>'+
-    '<button class="btn primary wide" data-act="bksend">카톡으로 백업 보내기</button><button class="btn ghost wide" data-act="bksendt">파일이 안 가면: 코드 글자로 보내기</button><button class="btn ghost wide" data-act="bklater">내일 다시 알려줘</button>';
+  $('bk-body').innerHTML=mas('shy',110)+'<p>'+(a==null?'아직 백업한 적이 없어.':'마지막 백업이 '+a+'일 전이야.')+'<br>기록이 사라지면 속상하니까,<br>백업 코드를 복사해서<br>카톡 &lsquo;나와의 채팅&rsquo;에 붙여넣어 두자!</p>'+
+    '<button class="btn primary wide" data-act="bksend">백업 코드 복사하기</button><button class="btn ghost wide" data-act="bklater">내일 다시 알려줘</button>';
   $('bkq').hidden=false;
 }
 function bkCheck(){if(!bkDue()||Q||!$('bkq').hidden||!$('shq').hidden||!$('heq').hidden||!$('exitq').hidden)return;bkOpen();}
 function bkSend(){
-  var code=makeCodeWith(true,incImg),name='우프로운동해-백업-'+ymd(Date.now())+'.txt',ok=function(){markBk();$('bkq').hidden=true;render();toast('백업을 보냈어! 🐣');},
-      bad=function(e){if(!e||e.name!=='AbortError')toast('공유가 안 됐어. 설정의 코드 복사를 써줘');};
-  try{
-    var f=new File([code],name,{type:'text/plain'});
-    if(navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f]}).then(ok,bad);return;}
-  }catch(e){}
-  bkSendText();
-}
-function bkSendText(){
-  var code=makeCodeWith(true,incImg),ok=function(){markBk();$('bkq').hidden=true;render();toast('백업을 보냈어! 🐣');},
-      bad=function(e){if(!e||e.name!=='AbortError')toast('공유가 안 됐어. 코드 복사를 써줘');};
-  try{if(navigator.share){navigator.share({text:code}).then(ok,bad);return;}}catch(e){}
-  copyPlain(code);markBk();$('bkq').hidden=true;render();
+  var code=makeCodeWith(true,incImg);copyPlain(code);markBk();$('bkq').hidden=true;render();toast('백업 코드를 복사했어! 카톡 나와의 채팅에 붙여넣어줘 🐣');
 }
 function soundCard(){
   var v=S.settings.volume==null?100:S.settings.volume,ks=kgStep();
@@ -1260,9 +1248,9 @@ function rSettings(){
   stepRow('prep','시작 전 준비','초',S.settings.prep,'sstep','')+'</section>'+soundCard()+
   '<section class="card"><h2>테마</h2><div class="seg" role="group" aria-label="테마">'+[['auto','자동'],['light','라이트'],['dark','다크']].map(function(a){return '<button data-act="theme" data-v="'+a[0]+'" aria-pressed="'+(S.settings.theme===a[0])+'">'+a[1]+'</button>';}).join('')+'</div>'+
   (hid?'<button class="btn ghost sm" data-act="unhide">숨긴 기본 운동 '+hid+'개 되돌리기</button>':'')+'</section>'+
-  '<section class="card"><h2>백업 · 공유</h2><p class="hint">운동 설정, 루틴, 기록, 사랑이 키우기 데이터를 파일 하나로 묶어. 카톡 &lsquo;나와의 채팅&rsquo;에 보내두면 새 폰에서도 그대로 복원할 수 있어.</p>'+
+  '<section class="card"><h2>백업 · 공유</h2><p class="hint">운동 설정, 루틴, 기록, 사랑이 키우기 데이터를 코드 하나로 묶어. 복사해서 카톡 &lsquo;나와의 채팅&rsquo;에 붙여넣어 두면 새 폰에서도 그대로 복원할 수 있어.</p>'+
   tg('bkRemind','주간 백업 알림','7일마다 알려줘 · 마지막 백업: '+(bkAge()==null?'아직 없음':bkAge()===0?'오늘':bkAge()+'일 전'))+
-  '<button class="btn primary" data-act="bksend">카톡으로 백업 파일 보내기</button><button class="btn ghost" data-act="bksendt">코드 글자로 보내기 (파일이 안 갈 때)</button><button class="btn ghost" data-act="bkpick">백업 파일에서 불러오기</button>'+
+  ''+
   '<label class="chk" for="inc-hist"><input type="checkbox" id="inc-hist" data-in="inchist"'+(incHist?' checked':'')+'> 운동 기록도 포함</label>'+
   '<label class="chk" for="inc-img"><input type="checkbox" id="inc-img" data-in="incimg"'+(incImg?' checked':'')+'> 내 사진도 포함 ('+photos+'장, 코드가 아주 길어져)</label>'+
   '<textarea id="code-out" readonly rows="3" aria-label="백업 코드">'+esc(makeCode())+'</textarea>'+
@@ -1676,10 +1664,8 @@ var acts={
   copycode:function(){var el=$('code-out');copyText(el.value,el);markBk();},
   sharecode:function(){var t=$('code-out').value;try{navigator.share({text:t}).then(function(){markBk();},function(){});}catch(e){toast('공유가 막혀 있어. 코드 복사를 써줘');}},
   bksend:function(){bkSend();},
-  bksendt:function(){bkSendText();},
   bkno:function(){$('bkq').hidden=true;},
   bklater:function(){S.settings.bkSnooze=Date.now()+86400000;save();$('bkq').hidden=true;toast('내일 다시 알려줄게');},
-  bkpick:function(){var i=$('bk-file');if(i)i.click();},
   restore:function(){
     var raw,next;
     try{raw=dec(codeIn);next=sanitize(raw);}catch(e){toast('코드를 읽을 수 없어. 처음부터 끝까지 복사했는지 확인해줘');return;}
