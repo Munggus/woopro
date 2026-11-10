@@ -858,3 +858,24 @@
 .garena{isolation:isolate}
 .gbgl{position:absolute;left:0;top:0;height:100%;aspect-ratio:12/1;z-index:-1;background-repeat:repeat-x;background-size:50% 100%;background-position:0 0;pointer-events:none;will-change:transform}
 .garena .gst{display:block;width:max-content;max-width:92%}
+/* v112 clearer arena UI over backgrounds */
+.garena .gres .chip{background:#fff;color:#3b2547;border:2px solid #3b2547;font-weight:900;box-shadow:0 2px 0 rgba(59,37,71,.35)}
+.garena .gres .chip.rb{background:#ffe3ee;color:#a3123f}
+.garena .glv{border:2px solid #3b2547;color:#3b2547;box-shadow:0 2px 0 rgba(59,37,71,.4)}
+.garena .gst{background:#fff;border:2px solid #3b2547;color:#3b2547;font-weight:900;box-shadow:0 2px 0 rgba(59,37,71,.3)}
+.garena .gbuff{border:2px solid #3b2547;box-shadow:0 0 0 2px #fff,0 3px 8px rgba(59,37,71,.4)}
+.garena .gbuff b{text-shadow:0 1px 0 rgba(59,37,71,.7)}
+.garena .gbuff.off{background:#fff;color:#3b2547;border-color:#3b2547;box-shadow:0 2px 0 rgba(59,37,71,.35)}
+.garena .gsnd{background:#fff;border:2px solid #3b2547;color:#3b2547;box-shadow:0 2px 0 rgba(59,37,71,.4)}
+.garena .gzoom{background:#3b2547;border:2px solid #fff;box-shadow:0 0 0 2px #3b2547,0 2px 6px rgba(59,37,71,.4)}
+.gcmb small{color:#fff;-webkit-text-stroke:3px #3b2547;paint-order:stroke fill;text-shadow:0 2px 0 rgba(59,37,71,.5);font-size:11px}
+.gcmb b{-webkit-text-stroke:5px #3b2547;paint-order:stroke fill;text-shadow:0 3px 0 rgba(59,37,71,.55)}
+.gcmb[data-t="4"] b{-webkit-text-stroke:0;filter:drop-shadow(1.5px 0 0 #3b2547) drop-shadow(-1.5px 0 0 #3b2547) drop-shadow(0 1.5px 0 #3b2547) drop-shadow(0 -1.5px 0 #3b2547)}
+.gcbx{color:#fff;-webkit-text-stroke:3px #3b2547;paint-order:stroke fill;font-size:12px}
+.gcbg,.gcbt{border:2px solid #fff;box-shadow:0 0 0 2px #3b2547;background:rgba(59,37,71,.55)}
+.gcbg{height:10px}
+.ghero{filter:drop-shadow(1.5px 0 0 #3b2547) drop-shadow(-1.5px 0 0 #3b2547) drop-shadow(0 1.5px 0 #3b2547) drop-shadow(0 -1.5px 0 #3b2547) drop-shadow(0 3px 3px rgba(59,37,71,.35))}
+.ghero.pop{filter:brightness(1.15) drop-shadow(1.5px 0 0 #3b2547) drop-shadow(-1.5px 0 0 #3b2547) drop-shadow(0 1.5px 0 #3b2547) drop-shadow(0 -1.5px 0 #3b2547)}
+.gmon{filter:drop-shadow(1.5px 0 0 #3b2547) drop-shadow(-1.5px 0 0 #3b2547) drop-shadow(0 1.5px 0 #3b2547) drop-shadow(0 -1.5px 0 #3b2547) drop-shadow(0 3px 3px rgba(59,37,71,.3))}
+.garena.boss .gmon{filter:drop-shadow(1.5px 0 0 #3b2547) drop-shadow(-1.5px 0 0 #3b2547) drop-shadow(0 1.5px 0 #3b2547) drop-shadow(0 -1.5px 0 #3b2547) drop-shadow(0 0 10px rgba(255,80,80,.7))}
+.gcp{filter:drop-shadow(1.5px 0 0 #3b2547) drop-shadow(-1.5px 0 0 #3b2547) drop-shadow(0 1.5px 0 #3b2547) drop-shadow(0 -1.5px 0 #3b2547) drop-shadow(0 2px 2px rgba(59,37,71,.3))}
