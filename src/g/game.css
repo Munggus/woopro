@@ -879,3 +879,11 @@
 .gmon{filter:drop-shadow(1.5px 0 0 #3b2547) drop-shadow(-1.5px 0 0 #3b2547) drop-shadow(0 1.5px 0 #3b2547) drop-shadow(0 -1.5px 0 #3b2547) drop-shadow(0 3px 3px rgba(59,37,71,.3))}
 .garena.boss .gmon{filter:drop-shadow(1.5px 0 0 #3b2547) drop-shadow(-1.5px 0 0 #3b2547) drop-shadow(0 1.5px 0 #3b2547) drop-shadow(0 -1.5px 0 #3b2547) drop-shadow(0 0 10px rgba(255,80,80,.7))}
 .gcp{filter:drop-shadow(1.5px 0 0 #3b2547) drop-shadow(-1.5px 0 0 #3b2547) drop-shadow(0 1.5px 0 #3b2547) drop-shadow(0 -1.5px 0 #3b2547) drop-shadow(0 2px 2px rgba(59,37,71,.3))}
+/* v113 short screens (foldables, small windows): free up room for the menus */
+@media (max-height:780px){
+ .ghead{display:none}
+ .garena.sm{--k:.4;padding:5px 6px 6px}
+ .garena.sm .gres{margin-bottom:3px}
+ .garena.sm .gres .chip{padding:2px 8px;font-size:12px}
+ .garena.sm .glv,.garena.sm .gst{display:none}
+}
