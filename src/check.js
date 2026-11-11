@@ -353,7 +353,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v115';
+var APPV='v116';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -962,7 +962,7 @@ var G_DATA={
  ult:{ru:0.08},                                        /* 필살기 위력: 환생강화 1레벨당 */
  start:{ru:4,rp:10},                                   /* 시작 층: 환생강화 / 성장강화 레벨당 */
  /* 필살기 [위력배수, 아이콘, 이름] / 재사용 대기(초) / 짧은 이름 */
- ults:[[2,'💘','하트 빔'],[3.5,'☄️','별똥별 소나기'],[6,'🌈','무지개 대폭발'],[5,'🤝','도와줘 친구들']],
+ ults:[[2,'💘','하트 빔'],[3.5,'☄️','별똥별 소나기'],[6,'🌈','무지개 대폭발'],[10,'🤝','도와줘 친구들']],
  ultCd:[20,40,60,90],
  ultShort:['하트빔','별똥별','무지개','친구들'],
  /* 환생(1000층 이상)·성장포인트 보상 */
