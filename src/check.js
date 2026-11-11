@@ -353,7 +353,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v113';
+var APPV='v114';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2882,7 +2882,7 @@ function gRM(){try{return window.matchMedia('(prefers-reduced-motion:reduce)').m
 function gCbHtml(){return '<div class="gcmb" id="g-cb" hidden><small>COMBO</small><b id="g-cbn">0</b><span class="gcbx" id="g-cbx"></span><div class="gcbt"><i id="g-cbt"></i></div><div class="gcbg"><i id="g-cbg"></i><u></u><u></u><u></u></div></div><div class="gults" id="g-ults" hidden>'+[1,2,3,4].map(function(i){return '<button class="gult" data-act="gult" data-l="'+i+'"><span>'+G_ULT[i-1][1]+'</span><b>'+G_USH[i-1]+'</b><em class="gcdt"></em></button>';}).join('')+'</div><div class="gtaph" id="g-taph">화면을 톡톡 눌러봐! 👆</div>';}
 function gFxEnsure(){
   var hw=$('g-hw'),a=$('g-arena');
-  if(hw&&!hw.querySelector('.gfist'))hw.insertAdjacentHTML('beforeend','<div class="gfist"></div><div class="gfire"><span></span><span></span><span></span><span></span><span></span><span></span></div>');
+  if(hw&&!hw.querySelector('.gfist'))hw.insertAdjacentHTML('beforeend','<div class="gfist"></div><div class="gflB"></div><div class="gflF"></div><div class="gflE"></div>');
   if(a&&!$('g-burn'))a.insertAdjacentHTML('beforeend','<div class="gburn" id="g-burn"><span class="fb"></span><span class="ft"></span><span class="fl"></span><span class="fr"></span></div>');
 }
 function gCbUi(g){

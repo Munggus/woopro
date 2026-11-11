@@ -1199,6 +1199,17 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
  .garena.sm .glv,.garena.sm .gst{display:none}
 }
 
+/* v114 combo fire sprites (back / front / ember, 8 frames) */
+.gflB,.gflF,.gflE{position:absolute;pointer-events:none;opacity:0;transition:opacity .25s;background-repeat:no-repeat;background-size:800% 100%;animation:gfsp .8s infinite;animation-timing-function:steps(1,end)}
+.gflB{left:calc(-70px*var(--k));bottom:calc(-6px*var(--k));width:calc(340px*var(--k));height:calc(182px*var(--k));z-index:2;background-image:url(img/fire_back.320f8202.png)}
+.gflF{left:calc(-25px*var(--k));bottom:calc(-4px*var(--k));width:calc(250px*var(--k));height:calc(96px*var(--k));z-index:5;background-image:url(img/fire_front.bc1bfbfb.png)}
+.gflE{left:calc(-50px*var(--k));bottom:calc(30px*var(--k));width:calc(300px*var(--k));height:calc(119px*var(--k));z-index:6;background-image:url(img/fire_ember.d2f5779e.png);animation-duration:1.1s}
+.ghw.gfi .gflB,.ghw.gfi .gflF,.ghw.gfi .gflE{opacity:1}
+.ghw.gmx .gflB,.ghw.gmx .gflF,.ghw.gmx .gflE{filter:hue-rotate(195deg) saturate(1.5) brightness(1.15)}
+.ghw.gmx .gflB{transform:scale(1.12);transform-origin:50% 100%}
+@keyframes gfsp{0%{background-position:0 0}12.5%{background-position:14.2857% 0}25%{background-position:28.5714% 0}37.5%{background-position:42.8571% 0}50%{background-position:57.1429% 0}62.5%{background-position:71.4286% 0}75%{background-position:85.7143% 0}87.5%{background-position:100% 0}100%{background-position:100% 0}}
+@media (prefers-reduced-motion:reduce){.gflB,.gflF,.gflE{animation:none}}
+
 </style>
 
 <div id="app">
@@ -1612,7 +1623,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v113';
+var APPV='v114';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -4141,7 +4152,7 @@ function gRM(){try{return window.matchMedia('(prefers-reduced-motion:reduce)').m
 function gCbHtml(){return '<div class="gcmb" id="g-cb" hidden><small>COMBO</small><b id="g-cbn">0</b><span class="gcbx" id="g-cbx"></span><div class="gcbt"><i id="g-cbt"></i></div><div class="gcbg"><i id="g-cbg"></i><u></u><u></u><u></u></div></div><div class="gults" id="g-ults" hidden>'+[1,2,3,4].map(function(i){return '<button class="gult" data-act="gult" data-l="'+i+'"><span>'+G_ULT[i-1][1]+'</span><b>'+G_USH[i-1]+'</b><em class="gcdt"></em></button>';}).join('')+'</div><div class="gtaph" id="g-taph">화면을 톡톡 눌러봐! 👆</div>';}
 function gFxEnsure(){
   var hw=$('g-hw'),a=$('g-arena');
-  if(hw&&!hw.querySelector('.gfist'))hw.insertAdjacentHTML('beforeend','<div class="gfist"></div><div class="gfire"><span></span><span></span><span></span><span></span><span></span><span></span></div>');
+  if(hw&&!hw.querySelector('.gfist'))hw.insertAdjacentHTML('beforeend','<div class="gfist"></div><div class="gflB"></div><div class="gflF"></div><div class="gflE"></div>');
   if(a&&!$('g-burn'))a.insertAdjacentHTML('beforeend','<div class="gburn" id="g-burn"><span class="fb"></span><span class="ft"></span><span class="fl"></span><span class="fr"></span></div>');
 }
 function gCbUi(g){
