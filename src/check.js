@@ -353,7 +353,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v114';
+var APPV='v115';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -958,11 +958,11 @@ var G_DATA={
  dly:{min:0.5,rp:0.93,rl:0.97},                        /* 이동 대기시간: 레벨마다 곱해지는 값 */
  bt:{max:20},                                          /* 보스 제한시간 성장강화 최대 +초 */
  skip:{rp:0.03,ru:0.02,rl:0.015,max:0.8},              /* 층 건너뛰기 확률 */
- combo:{per:0.03,perRp:0.001,keep:3,keepRl:0.1,T0:10,Tmin:6,rlStep:3,full:100},
+ combo:{per:0.03,perRp:0.001,keep:3,keepRl:0.1,T0:20,Tmin:12,rlStep:3,full:100},
  ult:{ru:0.08},                                        /* 필살기 위력: 환생강화 1레벨당 */
  start:{ru:4,rp:10},                                   /* 시작 층: 환생강화 / 성장강화 레벨당 */
  /* 필살기 [위력배수, 아이콘, 이름] / 재사용 대기(초) / 짧은 이름 */
- ults:[[4,'💘','하트 빔'],[7,'☄️','별똥별 소나기'],[12,'🌈','무지개 대폭발'],[10,'🤝','도와줘 친구들']],
+ ults:[[2,'💘','하트 빔'],[3.5,'☄️','별똥별 소나기'],[6,'🌈','무지개 대폭발'],[5,'🤝','도와줘 친구들']],
  ultCd:[20,40,60,90],
  ultShort:['하트빔','별똥별','무지개','친구들'],
  /* 환생(1000층 이상)·성장포인트 보상 */
@@ -1086,7 +1086,7 @@ function gBossT(g){return GP.BOSS_T+Math.min(G_DATA.bt.max,(g.rp.bt||0))+gPb(g,'
 function gSkipP(g){return Math.min(G_DATA.skip.max,G_DATA.skip.rp*(g.rp.sk||0)+G_DATA.skip.ru*gRu(g,'sk')+G_DATA.skip.rl*((g.rl&&g.rl.sk)||0)+gPb(g,'skip'));}
 function gCbPer(g){return G_DATA.combo.per+G_DATA.combo.perRp*((g.rp&&g.rp.cbd)||0)+gPb(g,'cbd');}
 function gCbKeep(g){return G_DATA.combo.keep+G_DATA.combo.keepRl*((g.rl&&g.rl.cbt)||0)+gPb(g,'cbt');}
-function gCbT(g){var r=Math.floor(((g.rl&&g.rl.cbn)||0)/G_DATA.combo.rlStep)+Math.floor(gPb(g,'cbn')+1e-9);return Math.max(G_DATA.combo.Tmin,G_DATA.combo.T0-r);}
+function gCbT(g){var r=2*(Math.floor(((g.rl&&g.rl.cbn)||0)/G_DATA.combo.rlStep)+Math.floor(gPb(g,'cbn')+1e-9));return Math.max(G_DATA.combo.Tmin,G_DATA.combo.T0-r);}
 function gUlt(g){return (1+G_DATA.ult.ru*gRu(g,'ult'))*(1+gPb(g,'ult'))*(1+gGb(g,'ult'));}
 var G_ULT=G_DATA.ults;
 var G_UCD=G_DATA.ultCd,G_USH=G_DATA.ultShort;
@@ -2160,7 +2160,7 @@ function gSpecs(g){
   S.push({ic:'💎',n:'운동 루비 보상',v:'×'+gSpN((1+0.1*(rp.rub||0))*(1+0.1*g.evo)*(1+gPb(g,'rub'))),rows:[['기본','×1'],['🌸 성장 강화 (루비 획득량)',gSpP(0.1*(rp.rub||0))],['🌱 성장 단계 (Lv.'+g.evo+')',gSpP(0.1*g.evo)]].concat(pets('rub',pp)),note:'모두 곱해져요'});
   S.push({ic:'🔥',n:'콤보 파워',v:'콤보당 '+gSpP(gCbPer(g)),rows:[['기본','+3%'],['🌸 성장 강화 (콤보 파워)',gSpP(G_DATA.combo.perRp*(rp.cbd||0))]].concat(pets('cbd',pp)),note:'콤보 1개당 추가 데미지 (100콤보면 ×100)'});
   S.push({ic:'⏳',n:'콤보 유지시간',v:(Math.round(gCbKeep(g)*10)/10)+'초',rows:[['기본','3초'],['💎 루비 강화','+'+(Math.round(0.1*(rl.cbt||0)*10)/10)+'초']].concat(pets('cbt',function(v){return '+'+(Math.round(v*10)/10)+'초';})),note:'마지막 공격 뒤 이 시간이 지나면 콤보가 끊겨요'});
-  S.push({ic:'🎯',n:'필살기 필요 타수',v:gCbT(g)+'타',rows:[['기본','10타'],['💎 루비 강화','−'+Math.floor((rl.cbn||0)/3)+'타']].concat(pets('cbn',function(v){return '−'+Math.floor(v+1e-9)+'타';})),note:'하트빔 기준 · 별똥별 ×2 · 무지개 ×3 (최소 6타)'});
+  S.push({ic:'🎯',n:'필살기 필요 타수',v:gCbT(g)+'타',rows:[['기본','20타'],['💎 루비 강화','−'+2*Math.floor((rl.cbn||0)/3)+'타']].concat(pets('cbn',function(v){return '−'+2*Math.floor(v+1e-9)+'타';})),note:'하트빔 기준 · 별똥별 ×2 · 무지개 ×3 (최소 12타)'});
   S.push({ic:'💥',n:'필살기 위력',v:'×'+gSpN(gUlt(g)),rows:[['기본','×1'],['🔁 환생 강화',gSpP(G_DATA.ult.ru*gRu(g,'ult'))],['⚔️ 무기',gSpP(gWeapB(g,'ult'))]].concat(pets('ult',pp)),note:'곱해져요'});
   return S;
 }
@@ -2888,7 +2888,7 @@ function gFxEnsure(){
 function gCbUi(g){
   gFxEnsure();
   var hw0=$('g-hw'),ar0=$('g-arena'),n0=gCb.n;
-  if(hw0){hw0.classList.toggle('gcmo',n0>0);hw0.style.setProperty('--cb',Math.min(n0,50));hw0.classList.toggle('gfi',n0>=50);hw0.classList.toggle('gmx',n0>=100);}
+  if(hw0){hw0.classList.toggle('gcmo',n0>0);hw0.style.setProperty('--cb',Math.min(n0,50));hw0.classList.toggle('gfi',n0>=20);hw0.style.setProperty('--fs',(0.7+0.15*Math.floor(Math.min(n0,100)/20)).toFixed(2));hw0.classList.toggle('gmx',n0>=100);}
   if(ar0){ar0.classList.toggle('gblz',n0>=50);ar0.classList.toggle('gmx',n0>=100);}
   var cb=$('g-cb');if(!cb)return;
   var n=gCb.n,T=gCbT(g),lv=gCbLvl(g);

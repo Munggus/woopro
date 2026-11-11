@@ -14,7 +14,7 @@ function gFxEnsure(){
 function gCbUi(g){
   gFxEnsure();
   var hw0=$('g-hw'),ar0=$('g-arena'),n0=gCb.n;
-  if(hw0){hw0.classList.toggle('gcmo',n0>0);hw0.style.setProperty('--cb',Math.min(n0,50));hw0.classList.toggle('gfi',n0>=50);hw0.classList.toggle('gmx',n0>=100);}
+  if(hw0){hw0.classList.toggle('gcmo',n0>0);hw0.style.setProperty('--cb',Math.min(n0,50));hw0.classList.toggle('gfi',n0>=20);hw0.style.setProperty('--fs',(0.7+0.15*Math.floor(Math.min(n0,100)/20)).toFixed(2));hw0.classList.toggle('gmx',n0>=100);}
   if(ar0){ar0.classList.toggle('gblz',n0>=50);ar0.classList.toggle('gmx',n0>=100);}
   var cb=$('g-cb');if(!cb)return;
   var n=gCb.n,T=gCbT(g),lv=gCbLvl(g);
