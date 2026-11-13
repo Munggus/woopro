@@ -1209,6 +1209,15 @@ header.brand>img.mas{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-co
 @keyframes gfsp{0%{background-position:0 0}12.5%{background-position:14.2857% 0}25%{background-position:28.5714% 0}37.5%{background-position:42.8571% 0}50%{background-position:57.1429% 0}62.5%{background-position:71.4286% 0}75%{background-position:85.7143% 0}87.5%{background-position:100% 0}100%{background-position:100% 0}}
 @media (prefers-reduced-motion:reduce){.gflB,.gflF,.gflE{animation:none}}
 
+/* v118: 불꽃 폭 좁히기 + 발 밑에 맞추기 / 다크모드 창고·먹이 칸 글자색 */
+.gflB,.gflF,.gflE{transform:scale(calc(.85 + (var(--fs,1) - .85)*.35),var(--fs,1))}
+.gflB{left:calc(15px*var(--k));bottom:calc(-4.8px*var(--k));width:calc(165px*var(--k));height:calc(170px*var(--k));transform-origin:50% 93.5%}
+.gflF{left:calc(15px*var(--k));bottom:calc(-4.6px*var(--k));width:calc(165px*var(--k));height:calc(90px*var(--k));transform-origin:50% 88%}
+.gflE{left:calc(15px*var(--k));bottom:calc(24px*var(--k));width:calc(165px*var(--k));height:calc(110px*var(--k));transform-origin:50% 100%}
+.gii{color:#4a3a2a}
+.gcrb{color:#4a3a2a}.gcrb b{color:#4a3a2a}
+.gcrb.lock{color:#4a3a2a}
+
 </style>
 
 <div id="app">
@@ -1622,7 +1631,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v117';
+var APPV='v118';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}

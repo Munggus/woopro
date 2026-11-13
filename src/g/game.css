@@ -897,3 +897,12 @@
 .ghw.gmx .gflB,.ghw.gmx .gflF,.ghw.gmx .gflE{filter:hue-rotate(195deg) saturate(1.5) brightness(1.15)}
 @keyframes gfsp{0%{background-position:0 0}12.5%{background-position:14.2857% 0}25%{background-position:28.5714% 0}37.5%{background-position:42.8571% 0}50%{background-position:57.1429% 0}62.5%{background-position:71.4286% 0}75%{background-position:85.7143% 0}87.5%{background-position:100% 0}100%{background-position:100% 0}}
 @media (prefers-reduced-motion:reduce){.gflB,.gflF,.gflE{animation:none}}
+
+/* v118: 불꽃 폭 좁히기 + 발 밑에 맞추기 / 다크모드 창고·먹이 칸 글자색 */
+.gflB,.gflF,.gflE{transform:scale(calc(.85 + (var(--fs,1) - .85)*.35),var(--fs,1))}
+.gflB{left:calc(15px*var(--k));bottom:calc(-4.8px*var(--k));width:calc(165px*var(--k));height:calc(170px*var(--k));transform-origin:50% 93.5%}
+.gflF{left:calc(15px*var(--k));bottom:calc(-4.6px*var(--k));width:calc(165px*var(--k));height:calc(90px*var(--k));transform-origin:50% 88%}
+.gflE{left:calc(15px*var(--k));bottom:calc(24px*var(--k));width:calc(165px*var(--k));height:calc(110px*var(--k));transform-origin:50% 100%}
+.gii{color:#4a3a2a}
+.gcrb{color:#4a3a2a}.gcrb b{color:#4a3a2a}
+.gcrb.lock{color:#4a3a2a}
