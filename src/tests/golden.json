@@ -92,7 +92,7 @@
  "환생성장|gCbKeep": 4,
  "환생성장|gCbT": 14,
  "환생성장|gUlt": 1.56,
- "환생성장|gStartStage": 77,
+ "환생성장|gStartStage": 286,
  "환생성장|gRBGain": 0,
  "환생성장|gRPGain": 51,
  "최대|gAtk": 22005260257496990,
@@ -106,7 +106,7 @@
  "최대|gCbKeep": 5,
  "최대|gCbT": 12,
  "최대|gUlt": 3,
- "최대|gStartStage": 301,
+ "최대|gStartStage": 2251,
  "최대|gRBGain": 0,
  "최대|gRPGain": 74,
  "cost.atk@0": 10,
@@ -260,5 +260,9 @@
  "rpcost.rpg@0": 6,
  "rpcost.rpg@5": 63,
  "rpcost.rpg@10": 660,
- "rpcost.rpg@20": 72536
+ "rpcost.rpg@20": 72536,
+ "rpcost.rbg@0": 5,
+ "rpcost.rbg@5": 53,
+ "rpcost.rbg@10": 550,
+ "rpcost.rbg@20": 60447
 }
