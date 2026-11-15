@@ -906,3 +906,6 @@
 .gii{color:#4a3a2a}
 .gcrb{color:#4a3a2a}.gcrb b{color:#4a3a2a}
 .gcrb.lock{color:#4a3a2a}
+
+/* v122: 강화 목록 설명 안 잘리게 */
+.grow .xt b,.grow .xt small{white-space:normal;overflow:visible;text-overflow:clip}

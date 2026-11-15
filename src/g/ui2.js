@@ -89,21 +89,21 @@ function gAutoBoss(g){
   if(g.ra!==1||!g.farm||g.pin||g.stage%10!==0||gDps(g)*gBossT(g)<1.1*gHp(g.stage))return false;
   g.farm=false;g.hp=gHp(g.stage);g.bt=0;g.dlyLeft=0;return true;
 }
-function gAdvAuto(g,dt){
+function gAdvAuto(g,dt,off){
   if(g.ra!==1)return gAdvance(g,dt);
   var n=Math.max(1,Math.min(1200,Math.ceil(dt))),st=dt/n,h=0,s=0,b=0;
-  for(var i=0;i<n;i++){var r=gAdvance(g,st);h+=r.h;s+=r.s;b+=gAuto(g);gAutoBoss(g);}
+  for(var i=0;i<n;i++){var r=gAdvance(g,st);h+=r.h;s+=r.s;b+=gAuto(g);if(off)gAutoBoss(g);}
   return {h:h,s:s,b:b};
 }
 function gRAutoRow(g){
   var on=g.ra===1,has=g.ra>0;
-  return '<li class="grow"><span class="gic">'+gRuby(26)+'</span><span class="xt"><b>자동 하트 힘 키우기 <em>'+(has?(on?'켜짐':'꺼짐'):'잠김')+'</em></b><small>하트가 모이면 1초마다 힘 키우기·장난감 모으기·운동화 신기를 자동으로 올리고, 보스를 이길 만큼 세지면 자동으로 도전해요 (오프라인 중에도!)</small></span>'+
+  return '<li class="grow"><span class="gic">'+gRuby(26)+'</span><span class="xt"><b>자동 하트 힘 키우기 <em>'+(has?(on?'켜짐':'꺼짐'):'잠김')+'</em></b><small>하트가 모이면 1초마다 힘 키우기·장난감 모으기·운동화 신기를 자동으로 올리고, 오프라인 중엔 보스를 이길 만큼 세지면 자동으로 도전도 해요 (온라인에선 직접!)</small></span>'+
    (has?'<button class="mini '+(on?'pri':'')+'" data-act="grauto">'+(on?'끄기':'켜기')+'</button>':'<button class="mini rb" data-act="grauto"'+(g.rubies>=G_RAC?'':' disabled')+'>'+gRuby(14)+' '+G_RAC+'</button>')+'</li>';
 }
 function gCatch(){
   var g=gGet(),now=Date.now(),dt=(now-g.last)/1000;
   if(!(dt>0)){g.last=now;return;}
-  var raw=dt,lt=g.last,cap=G_CAP+gBfV('cap',lt);dt=Math.min(dt,cap)*(1+gBfV('off',lt));gMatAcc={};gDropQ.length=0;var r=gAdvAuto(g,dt);g.last=now;var dr=gMatAcc;gMatAcc={};gDropQ.length=0;
+  var raw=dt,lt=g.last,cap=G_CAP+gBfV('cap',lt);dt=Math.min(dt,cap)*(1+gBfV('off',lt));gMatAcc={};gDropQ.length=0;var r=gAdvAuto(g,dt,raw>=60);g.last=now;var dr=gMatAcc;gMatAcc={};gDropQ.length=0;
   if(raw>=60)gOff={sec:raw,h:r.h,s:r.s,cap:raw>cap,dr:dr,au:r.b||0};
   gSave();
 }
@@ -541,7 +541,7 @@ function gTick(){
   var pf=g.farm,pst=g.stage,pfail=g.fails,psh=gShown(g);
   var ggp=(typeof gGoldPre==='function')&&gGoldPre(g,dt,now);
   if(!ggp)gAdvance(g,dt);g.last=now;
-  if(g.ra===1&&now-gAutoT>=1000){gAutoT=now;if(gAuto(g)>0&&nav.tab==='game'&&gUpT==='h')setTimeout(gRefresh,0);if(gAutoBoss(g)){gSave();toast('⚔️ 힘이 모여서 보스에 자동 도전!');gPaintStage(g,true);gNoteKey='';gSetH('g-note',gNoteHtml(g));gSet('g-st',gStText(g));}}if(typeof gDropFlush==='function')gDropFlush();
+  if(g.ra===1&&now-gAutoT>=1000){gAutoT=now;if(gAuto(g)>0&&nav.tab==='game'&&gUpT==='h')setTimeout(gRefresh,0);}if(typeof gDropFlush==='function')gDropFlush();
   if(typeof gGoldPost==='function')gGoldPost(g,pst,pf,now);
   var sh=gShown(g),hp=$('g-hp');if(!hp)return;
   if(g.fails!==pfail){toast('보스한테 졌어… 아래 층에서 힘을 모을게! 💪');gSfx('fail');gBubble('farm');}
