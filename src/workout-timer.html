@@ -1631,7 +1631,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v119';
+var APPV='v120';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -2693,6 +2693,8 @@ function gPlotCard(g){
     h+='<button class="gpl'+(ripe?' rip':'')+'" data-act="gf" data-f="'+(ripe?'harv':'water')+'" data-i="'+i+'"><span class="gpe">'+em+'</span><b>'+c.n+(ripe?' 다 익었어!':'')+'</b>'+(ripe?'<small>눌러서 수확 ✨</small>':'<small data-pt="'+i+'">'+gHM(rem)+' 남음 · 💧'+p.w+'/'+G_WMAX+'</small>')+(ripe?'':gBar(1-rem/tot,'pk'))+'</button>';
   });
   h+='</div>';
+  var nE=f.pl.filter(function(p){return !p.c;}).length,nR=f.pl.filter(function(p){return p.c&&gPlRemain(p,now)<=0;}).length;
+  if(nE||nR)h+='<div class="gfw gbulk">'+(nE?'<button class="btn sm gevob" data-act="gf" data-f="seedall">🌱 일괄 심기 ('+nE+'칸)</button>':'')+(nR?'<button class="btn sm gevob" data-act="gf" data-f="harvall">🌾 일괄 수확 ('+nR+'칸)</button>':'')+'</div>';
   if(f.np<16){var cost=10*(f.np-3);h+='<button class="mini rb" style="margin-top:8px" data-act="gf" data-f="bpl">'+gRuby(14)+' '+cost+' 밭 한 칸 넓히기 ('+f.np+'→'+(f.np+1)+')</button>';}
   return h+'<p class="hint" style="font-size:12px">익고 있는 밭을 누르면 💧 물을 줘서 15%(최소 1시간)만큼 빨리 키울 수 있어 (밭마다 3번까지).</p>';
 }
@@ -2707,6 +2709,8 @@ function gPenCard(g){
   if(!f.an.length)h+='<p class="hint" style="text-align:center">아직 마당이 텅 비었어! 내 동료 중에서 친구를 데려와 봐 🐾</p>';
   h+='<div class="gfw"><span class="chip">🐄 농장 Lv.'+gVlLv('farm')+' · 생산 '+gStars(gVlLv('farm'))+'</span></div><div class="gfw"><span class="chip">🐾 마당 <b>'+f.an.length+'</b>/'+f.ns+'칸</span><button class="mini" data-act="gf" data-f="addm"'+(f.an.length<f.ns?'':' disabled')+'>+ 동물 들이기</button>'+(f.ns<10?'<button class="mini rb" data-act="gf" data-f="bsl">'+gRuby(14)+' '+(30*(f.ns-2))+' 칸 늘리기</button>':'')+'</div>';
   var cl=f.an.reduce(function(s,a){return s+a.n;},0);
+  var nH=f.an.filter(function(a){return now>a.fu;}).length;
+  if(nH)h+='<button class="btn sm gevob" data-act="gf" data-f="feedall">🍽️ 일괄 밥주기 ('+nH+'마리)</button> ';
   if(cl)h+='<button class="btn sm gevob" data-act="gf" data-f="colall">🧺 생산물 모두 모으기 ('+cl+'개)</button>';
   return h+'<p class="hint" style="font-size:12px">동물을 누르면 먹이(🥕🍓…)를 줄 수 있어. 배부른 동안 우유🥛·달걀🥚·반짝가루✨를 만들어줘! 등급이 높고 ★이 많을수록 더 빨라.</p>';
 }
@@ -2756,6 +2760,40 @@ var G_F={
  seed:function(b){
   var f=gFm(),i=+b.dataset.i,g=gGet(),base=gFmBase(g);
   var pl=gVlLv('plot');gFModal('<div class="gdmn">🌱 무엇을 심을까? <small>텃밭 Lv.'+pl+'</small></div><div class="gcr">'+G_CROP.map(function(c){var lk=c.rv>pl;return '<button class="gcrb'+(lk?' lock':'')+'" data-act="gf" data-f="plant" data-i="'+i+'" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+' '+gStars(c.rv)+'</b>'+(lk?'<small>🔒 텃밭 Lv.'+c.rv+'</small>':'<small>'+gHM(c.t*1000)+'</small>')+'</button>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
+ },
+ seedall:function(b){
+  var pl=gVlLv('plot'),n=gFm().pl.filter(function(p){return !p.c;}).length;if(!n)return;
+  gFModal('<div class="gdmn">🌱 빈 밭 '+n+'칸에 뭘 심을까? <small>텃밭 Lv.'+pl+'</small></div><div class="gcr">'+G_CROP.map(function(c){var lk=c.rv>pl;return '<button class="gcrb'+(lk?' lock':'')+'" data-act="gf" data-f="plantall" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+' '+gStars(c.rv)+'</b>'+(lk?'<small>🔒 텃밭 Lv.'+c.rv+'</small>':'<small>'+gHM(c.t*1000)+'</small>')+'</button>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
+ },
+ plantall:function(b){
+  var f=gFm(),cc=G_CRM[b.dataset.k];if(!cc)return;
+  if(cc.rv>gVlLv('plot')){toast('🔒 텃밭이 Lv.'+cc.rv+'이 되면 심을 수 있어!');return;}
+  var now=Date.now(),n=0;f.pl.forEach(function(p){if(!p.c){p.c=cc.k;p.t=now;p.w=0;n++;}});
+  gSfx('buy');gSave();gDexModalClose();gRefresh();toast(cc.e+' '+cc.n+' '+n+'칸 심었어! 🌱');
+ },
+ harvall:function(b){
+  var f=gFm(),now=Date.now(),tot={},cnt=0,bonus=gBfV('harv');
+  f.pl.forEach(function(p){if(!p.c||gPlRemain(p,now)>0)return;var c=G_CRM[p.c],n=1+(Math.random()<.3+bonus?1:0);f.inv[c.k]=(f.inv[c.k]||0)+n;tot[c.k]=(tot[c.k]||0)+n;cnt++;p.c='';p.t=0;p.w=0;});
+  if(!cnt)return;
+  var msg=Object.keys(tot).map(function(k){return G_CRM[k].e+tot[k];}).join(' ');
+  gSfx('coin');gSave();gRefresh();toast(msg+' 수확! 🎉');
+ },
+ feedall:function(b){
+  var f=gFm(),now=Date.now(),hungry=f.an.filter(function(a){return now>a.fu;}).length;if(!hungry)return;
+  var foods=G_CROP.filter(function(c){return (f.inv[c.k]||0)>0;});
+  if(!foods.length){toast('먹이로 줄 작물이 없어. 텃밭에서 수확해봐 🌱');return;}
+  gFModal('<div class="gdmn">🍽️ 배고픈 친구 '+hungry+'마리, 뭘 먹일까?</div><div class="gcr"><button class="gcrb" data-act="gf" data-f="feedgo" data-k="auto"><span>✨</span><b>알아서 주기</b><small>싼 먹이부터</small></button>'+foods.map(function(c){return '<button class="gcrb" data-act="gf" data-f="feedgo" data-k="'+c.k+'"><span>'+c.e+'</span><b>'+c.n+' ×'+f.inv[c.k]+'</b><small>'+c.f+'시간 배부름</small></button>';}).join('')+'</div><button class="mini" data-act="gdxx">닫기</button>');
+ },
+ feedgo:function(b){
+  var g=gGet(),f=gFm(),k=b.dataset.k,now=Date.now(),n=0;
+  var order=(k==='auto'?G_CROP.slice().sort(function(a,c){return a.rv-c.rv;}):[G_CRM[k]]).filter(Boolean);
+  f.an.forEach(function(a){
+    gAnSync(g,a,now);if(a.fu>=now)return;
+    for(var i=0;i<order.length;i++){var c=order[i];if((f.inv[c.k]||0)<=0)continue;
+      f.inv[c.k]--;a.fu=now+c.f*3600000;a.lp=now;n++;break;}
+  });
+  if(!n){toast('먹일 수 있는 먹이가 모자라 🥕');return;}
+  gSfx('coin');gSave();gDexModalClose();gRefresh();toast('친구 '+n+'마리가 냠냠! 😋');
  },
  plant:function(b){var f=gFm(),p=f.pl[+b.dataset.i];if(!p||p.c)return;var cc=G_CRM[b.dataset.k];if(!cc)return;if(cc.rv>gVlLv('plot')){toast('🔒 텃밭이 Lv.'+cc.rv+'이 되면 심을 수 있어!');return;}p.c=b.dataset.k;p.t=Date.now();p.w=0;gSfx('buy');gSave();gDexModalClose();gRefresh();},
  water:function(b){
