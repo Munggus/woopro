@@ -909,3 +909,13 @@
 
 /* v122: 강화 목록 설명 안 잘리게 */
 .grow .xt b,.grow .xt small{white-space:normal;overflow:visible;text-overflow:clip}
+
+/* v123: 콤보 테두리 불꽃 = 드라이브 8프레임 액자 */
+.gburn{z-index:4;box-shadow:inset 0 0 18px 2px rgba(255,90,20,.35);animation:none}
+.gburn span{display:none}
+.gburn::before{content:"";position:absolute;inset:-2%;background:url(img/fb0.dd2a3dba.webp) center/100% 100% no-repeat;animation:gfrm 1.12s linear infinite}
+@keyframes gfrm{0.0%,12.49%{background-image:url(img/fb0.dd2a3dba.webp)}12.5%,24.99%{background-image:url(img/fb1.7d738d69.webp)}25.0%,37.49%{background-image:url(img/fb2.9f940aa3.webp)}37.5%,49.99%{background-image:url(img/fb3.61dfab36.webp)}50.0%,62.49%{background-image:url(img/fb4.02d5dd2d.webp)}62.5%,74.99%{background-image:url(img/fb5.eb07d906.webp)}75.0%,87.49%{background-image:url(img/fb6.9e585e75.webp)}87.5%,99.99%{background-image:url(img/fb7.47aa906c.webp)}}
+@media (prefers-reduced-motion:reduce){.gburn::before{animation:none}}
+.gburn{z-index:1}
+.gburn::before{inset:-4%}
+.garena .gres{position:relative;z-index:5}
