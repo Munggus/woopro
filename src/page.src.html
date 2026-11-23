@@ -644,8 +644,8 @@ function kaStart(){
     KA.volume=1;var p=KA.play();if(p&&p.catch)p.catch(function(){toast('백그라운드 표시를 못 켰어. 설정에서 다시 켜봐');});
     if('mediaSession' in navigator){
       var ms=navigator.mediaSession;
-      ms.setActionHandler('play',function(){try{KA.play();}catch(e){}});
-      ms.setActionHandler('pause',function(){try{KA.play();}catch(e){}if(Q&&!Q.done&&Q.ph!=='set'&&Q.ph!=='cready'&&Q.ph!=='plan')acts.tmain();});
+      ms.setActionHandler('play',function(){try{KA.play();}catch(e){}if(Q&&!Q.done&&Q.paused&&!Q.swapP)acts.tmain();});
+      ms.setActionHandler('pause',function(){try{KA.play();}catch(e){}if(Q&&!Q.done&&Q.ph!=='set'&&Q.ph!=='cready'&&Q.ph!=='plan'&&Q.ph!=='rest'&&!Q.paused)acts.tmain();});
       ms.setActionHandler('nexttrack',function(){if(Q&&!Q.done)(Q.ph==='set'?acts.tmain:acts.tskip)();});
     }
   }catch(e){}
@@ -671,7 +671,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v123';
+var APPV='v124';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -1388,7 +1388,7 @@ function switchTo(ch,isNew){
   var ci=Q.items.indexOf(cur);Q.items.splice(curDone?ci+1:ci,0,ch);Q.ei=Q.items.indexOf(ch);
   showPane('run');enterExercise();
 }
-function isCardioIt(it){var xe=getEx(it.id)||it;return it.type!=='weight'&&xe.cat==='cardio';}
+function isCardioIt(it){return it.type!=='weight';}/* 초로 재는 운동(유산소·플랭크 등) 전부: 시작 버튼을 눌러야 카운트 시작 */
 function enterWork(it,sec){if(isCardioIt(it)){Q.ph='cready';Q.rs=sec;Q.dur=sec;Q.lastS=null;}else{Q.ph='work';startCount(sec);}}
 function startCount(sec){Q.endAt=Date.now()+sec*1000;Q.dur=sec;Q.lastS=null;}
 function unpause(){if(Q.paused){Q.paused=false;Q.pausedMs+=Date.now()-Q.pauseAt;}}
