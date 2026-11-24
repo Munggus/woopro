@@ -353,7 +353,7 @@ function ntUpdate(m){
   try{navigator.serviceWorker.getRegistration().then(function(r){if(r)r.showNotification(m.t,{body:m.a,tag:'wt-timer',silent:true,renotify:false,icon:'icon-192.png',badge:'icon-192.png',requireInteraction:true});});}catch(e){}
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden)ntClose();else if(Q&&!Q.done){try{mediaUpdate();}catch(e){}}});
-var APPV='v124';
+var APPV='v125';
 function ntState(){
   var st='지원 안 함';try{if('Notification' in window)st={granted:'허용됨',denied:'거절됨(폰 설정에서 켜야 해)',default:'아직 안 물어봄'}[Notification.permission]||Notification.permission;}catch(e){}
   var sa=false;try{sa=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;}catch(e){}
@@ -3457,7 +3457,7 @@ function paintRun(){
   num.classList.toggle('wt',ph==='set');
   if(ph==='prep'){label.textContent='준비';ex.textContent='첫 운동: '+it.name;adj.innerHTML='';}
   else if(ph==='rest'){label.textContent='휴식';ex.textContent=nextTarget();adj.innerHTML='<button class="adjb" data-act="trest">+15초</button>';}
-  else if(ph==='work'||ph==='cready'){label.textContent=it.name;ex.textContent=ph==='cready'?'준비되면 시작 버튼을 눌러줘!':lastLine;var xe=getEx(it.id)||it;adj.innerHTML=xe.cat==='cardio'?'<div class="adjadd"><button class="adjb" data-act="twork" data-m="1">+1분</button><button class="adjb" data-act="twork" data-m="5">+5분</button><button class="adjb" data-act="twork" data-m="10">+10분</button></div>':'';}
+  else if(ph==='work'||ph==='cready'){label.textContent=it.name;ex.textContent=ph==='cready'?'준비되면 시작 버튼을 눌러줘!':lastLine;var xe=getEx(it.id)||it;adj.innerHTML=xe.cat==='cardio'?'<div class="adjadd"><button class="adjb" data-act="twork" data-m="-10">−10분</button><button class="adjb" data-act="twork" data-m="-5">−5분</button><button class="adjb" data-act="twork" data-m="-1">−1분</button><button class="adjb" data-act="twork" data-m="1">+1분</button><button class="adjb" data-act="twork" data-m="5">+5분</button><button class="adjb" data-act="twork" data-m="10">+10분</button></div>':'';}
   else{
     label.textContent=it.name;ex.textContent=lastLine;
     num.innerHTML=(it.kg>0?fmtKg(it.kg)+'<small>kg</small>× ':'')+it.reps+'<small>회</small>';
@@ -3679,7 +3679,10 @@ var acts={
   pcancel:function(){closeSession();},
   pgo:beginSession,
   qadj:function(b){var it=Q.items[Q.ei],k=b.dataset.k,st=k==='kg'?kgStep():1;it[k]=numClamp(k,it[k]+(+b.dataset.d)*st,it[k]);paintRun();},
-  twork:function(b){if(!Q||Q.done||(Q.ph!=='work'&&Q.ph!=='cready'))return;var m=+(b&&b.dataset&&b.dataset.m)||1;if(Q.ph==='cready'){Q.rs+=60*m;Q.dur=Q.rs;toast(m+'분 늘렸어!');paintRun();paintTick();return;}if(Q.paused)Q.remain+=60000*m;else Q.endAt+=60000*m;Q.dur+=60*m;toast(m+'분 늘렸어!');paintRun();paintTick();},
+  twork:function(b){if(!Q||Q.done||(Q.ph!=='work'&&Q.ph!=='cready'))return;var m=+(b&&b.dataset&&b.dataset.m)||1,d=60*m;
+    if(Q.ph==='cready'){var nr=Math.max(60,Q.rs+d);if(nr===Q.rs){toast('더 못 줄여! 최소 1분이야');return;}Q.rs=nr;Q.dur=nr;toast(m>0?m+'분 늘렸어!':(-m)+'분 줄였어!');paintRun();paintTick();return;}
+    var rem=Math.round(remainMs()/1000),adj=Math.max(5,rem+d)-rem;if(!adj){toast('더 못 줄여!');return;}
+    if(Q.paused)Q.remain+=adj*1000;else Q.endAt+=adj*1000;Q.dur+=adj;toast(m>0?m+'분 늘렸어!':(-m)+'분 줄였어!');paintRun();paintTick();},
   trest:function(){if(Q.paused)Q.remain+=15000;else Q.endAt+=15000;Q.dur+=15;paintRun();},
   tmain:function(){
     if(!Q||Q.done)return;
